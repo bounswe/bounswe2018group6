@@ -2,7 +2,7 @@
 
 ## Introduction
 
-.Welcome to our group project repository for CmpE 352/451 course offered at [Bogazici University](http://www.boun.edu.tr/en_US) in Spring 2018 semester, continued on Fall 2018 semester. We are [Group 6](https://github.com/bounswe/bounswe2018group6/wiki) and our project is [A Social Platform For Cultural Activities](https://github.com/bounswe/bounswe2018group6/blob/master/ProjectDescription.pdf).
+Welcome to our group project repository for CmpE 352/451 course offered at [Bogazici University](http://www.boun.edu.tr/en_US) in Spring 2018 semester, continued on Fall 2018 semester. We are [Group 6](https://github.com/bounswe/bounswe2018group6/wiki) and our project is [A Social Platform For Cultural Activities](https://github.com/bounswe/bounswe2018group6/blob/master/ProjectDescription.pdf).
 You can check our [Wiki Page](https://github.com/bounswe/bounswe2018group6/wiki) as it's a thorough resource for details.
 
 ## Group Members
