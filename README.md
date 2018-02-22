@@ -2,7 +2,7 @@
 Cultidate is a social platform for cultural activities. You can create events, join other events, interact with the others, get event recommendations, create your own profile, add other users as friends and message them privately.
 
 ## CmpE 352/451 Project - Group 6
-This project is maintaining by Group 6 in CmpE 352/451 course offered at [Bogazici University](http://www.boun.edu.tr/en_US) in Spring 2018 semester, continued on Fall 2018 semester. You can view [project description](https://github.com/bounswe/bounswe2018group6/blob/master/ProjectDescription.pdf) and our [Wiki Page](https://github.com/bounswe/bounswe2018group6/wiki) as it's a thorough resource for details.
+This project is being maintained by Group 6 in CmpE 352/451 course offered at [Bogazici University](http://www.boun.edu.tr/en_US) in Spring 2018 semester, continued on Fall 2018 semester. You can view [project description](https://github.com/bounswe/bounswe2018group6/blob/master/ProjectDescription.pdf) and our [Wiki Page](https://github.com/bounswe/bounswe2018group6/wiki) as it's a thorough resource for details.
 
 ## Group Members
   1. [Erkam Ağralı](https://github.com/bounswe/bounswe2018group6/wiki/Erkam-A%C4%9Fral%C4%B1) (*Communicator*)
