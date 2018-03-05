@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/badge/REQUIREMENTS-UP--TO--DATE-yellow.svg?style=flat-square" alt="Requirements Analysis">
 </a>
 <a href="https://github.com/bounswe/bounswe2018group6/raw/master/wiki_assets/Cultidate_ProjectPlan.pdf">
-    <img src="https://img.shields.io/badge/REQUIREMENTS-UP--TO--DATE-yellow.svg?style=flat-square" alt="Project Plan">
+    <img src="https://img.shields.io/badge/PROJECT%20PLAN-UP--TO--DATE-green.svg?style=flat-square" alt="Project Plan">
 </a>
 <a href="https://github.com/bounswe/bounswe2018group6/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/LICENSE-MIT-ff69b4.svg?style=flat-square" alt="License">
