@@ -1,4 +1,26 @@
 ![cultidate logo](https://raw.githubusercontent.com/bounswe/bounswe2018group6/master/wiki_assets/logo.png)
+
+<p align="center">
+<a href="https://piazza.com/class_profile/get_resource/jd5vcsniag3zz/jdjamwhms276zd">
+    <img src="https://img.shields.io/badge/DESCRIPTION--lightgrey.svg?style=flat-square" alt="Description">
+</a>
+<a href="https://github.com/bounswe/bounswe2018group6/wiki">
+    <img src="https://img.shields.io/badge/WIKI--orange.svg?style=flat-square" alt="Wiki">
+</a>
+<a href="https://github.com/bounswe/bounswe2018group6/wiki/Requirements-Analysis">
+    <img src="https://img.shields.io/badge/REQUIREMENTS-UP--TO--DATE-yellow.svg?style=flat-square" alt="Requirements Analysis">
+</a>
+<a href="https://github.com/bounswe/bounswe2018group6/raw/master/wiki_assets/Cultidate_ProjectPlan.pdf">
+    <img src="https://img.shields.io/badge/REQUIREMENTS-UP--TO--DATE-yellow.svg?style=flat-square" alt="Project Plan">
+</a>
+<a href="https://github.com/bounswe/bounswe2018group6/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/LICENSE-MIT-ff69b4.svg?style=flat-square" alt="License">
+</a>
+<a href="https://twitter.com/BounCmpe352">
+    <img src="https://img.shields.io/twitter/follow/BounCmpe352.svg?style=flat-square&logo=twitter&label=Follow" alt="Twitter Follow">
+</a>
+</p>
+
 Cultidate is a social platform for cultural activities. You can create events, join other events, interact with the others, get event recommendations, create your own profile, add other users as friends and message them privately.
 
 ## Team
