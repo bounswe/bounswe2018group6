@@ -1,0 +1,15 @@
+
+# for /hw_twitterapi/
+# Created by https://www.gitignore.io/api/django
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+/hw_twitterapi/local_settings.py
+/hw_twitterapi/db.sqlite3
+/hw_twitterapi/media
+/hw_twitterapi/twitterapi/secret_key.py
+
+# End of https://www.gitignore.io/api/django
