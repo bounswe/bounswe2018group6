@@ -1,4 +1,5 @@
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 import json
 import tweepy
 import time
@@ -27,7 +28,9 @@ def twitter_auth():
 
 
 def timegraph(request, user_id):
-    return HttpResponse("The user_is requested is %s." % user_id)
+    context = {} # dictionary to be sent to template page in order to show it on frontend
+    return render(request, 'twitterapiapp/simple_page.html', context) # rendered with html file and context dictionary
+    #return HttpResponse("The user_is requested is %s." % user_id) # pure HTTP response
 
 
 def timegraph_api(request, user_id):

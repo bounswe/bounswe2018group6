@@ -22,3 +22,6 @@ __pycache__/
 
 ### PyCharm ###
 hw_twitterapi/.idea/
+
+### VSCode ###
+hw_twitterapi/.vscode/
