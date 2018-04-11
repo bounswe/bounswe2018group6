@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
-from secret_key import *
+from .secret_key import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
