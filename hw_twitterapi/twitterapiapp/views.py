@@ -49,3 +49,11 @@ def proc_twitter_api(user_id):
 # Firstly, call twitter_auth() in both of your methods and then
 # For the first method, do your work and return JSON for the API,
 # For the second method, do your work and return HTML response for the frontend.
+
+def followings_api(request, screen_name):
+    api = twitter_auth()
+    queries = request.GET.dict()
+    friends = []
+    for friend in tweepy.Cursor(api.friends, screen_name=screen_name, include_user_entities=False).items(int(queries['count']) or 20):
+        friends.append(friend._json)
+    return JsonResponse(friends, safe=False, json_dumps_params={'ensure_ascii':False, 'indent':4})

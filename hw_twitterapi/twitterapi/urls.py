@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('timegraph/', include('twitterapiapp.urls')),
+    path('', include('twitterapiapp.urls')),
     path('admin/', admin.site.urls),
 ]
