@@ -8,4 +8,6 @@ urlpatterns = [
 
     # from the root: /timegraph/user_id
     path('<str:user_id>', views.timegraph),
+
+    # TODO Add two paths for each Twitter endpoint, one for the API and the other for the frontend.
 ]

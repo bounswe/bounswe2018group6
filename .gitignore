@@ -1,5 +1,5 @@
 
-# Sorry MacOS 
+# Sorry MacOS
 .DS_Store
 
 # for /hw_twitterapi/
@@ -14,5 +14,11 @@ __pycache__/
 /hw_twitterapi/db.sqlite3
 /hw_twitterapi/media
 /hw_twitterapi/twitterapi/secret_key.py
+/hw_twitterapi/twitter_key.txt
+/hw_twitterapi/twitterapiapp/twitter_key.txt
+/hw_twitterapi/twitterapienv
 
 # End of https://www.gitignore.io/api/django
+
+### PyCharm ###
+hw_twitterapi/.idea/
