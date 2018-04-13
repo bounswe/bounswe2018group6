@@ -19,6 +19,10 @@
         <p>API call: <code>{% include "twitterapiapp/server" %}/api/followings/screen_name?count=20</code></p>
         <p>Gets the list of users that the user with given screen name follows. By default, gets last 20 users, however custom number can be set using (optional) 'count' parameter.</p>
 
+        <h1 class="mt-1">Followers of a User</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/followers/username?count=10</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/followers/username</code></p>
+        <p>Followers of specified user.</p>
     </div>
 
 {% endblock %}
