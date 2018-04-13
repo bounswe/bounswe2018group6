@@ -32,7 +32,7 @@ def find_users(request, search_name):
     context = {} # dictionary to be sent to template page in order to show it on frontend
     if proc_find_user_api(search_name):
         context['Tweets'] = proc_find_user_api(search_name)    
-    return render(request, 'twitterapiapp/simple_page.html', context) # rendered with html file and context dictionary
+    return render(request, 'twitterapiapp/find_users.html', context) # rendered with html file and context dictionary
     #return HttpResponse("The user_is requested is %s." % user_id) # pure HTTP response
 
 
