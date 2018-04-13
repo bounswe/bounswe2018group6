@@ -34,7 +34,7 @@ def retweet(request, username):
     # dictionary to be sent to template page in order to show it on frontend
     context = process_retweet_api(username)
     # rendered with html file and context dictionary
-    return render(request, 'twitterapiapp/simple_page.html', context)
+    return render(request, 'twitterapiapp/retweet.html', context)
 
 
 def retweet_api(request, username):
