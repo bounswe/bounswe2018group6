@@ -29,6 +29,23 @@ def main_page(request):
     return
 
 
+def trends_by_place_api(request, WOEID):
+    api = twitter_auth()
+    print("trends_by_place api authenticaion is successful")
+    response = api.trends_place(WOEID)
+    print("trends_by_place api call is successful")
+    return JsonResponse(response, safe=False)
+
+
+def trends_by_place(request, WOEID):
+    api = twitter_auth()
+    print("trends_by_place api authenticaion is successful")
+    response = api.trends_place(WOEID)
+    print("trends_by_place api call is successful")
+    context = {'trends': response[0]['trends'], 'locations': response[0]['locations'], 'as_of': response[0]['as_of']}
+    return render(request, 'twitterapiapp/trends_place.html', context)
+
+
 def find_users(request, search_name):
     context = {} # dictionary to be sent to template page in order to show it on frontend
     if proc_find_user_api(search_name):

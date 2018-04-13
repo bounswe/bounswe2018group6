@@ -6,6 +6,12 @@ urlpatterns = [
     
     path('', views.main_page),
 
+    # from the root: /api/trends-by-place/WOEID
+    path('api/trends-by-place/<int:WOEID>', views.trends_by_place_api),
+
+    # from the root: /trends-by-place/WOEID
+    path('trends-by-place/<int:WOEID>', views.trends_by_place),
+
     # from the root: api/find_users/name
     path('api/find_users/<str:search_name>', views.find_users_api),
 
