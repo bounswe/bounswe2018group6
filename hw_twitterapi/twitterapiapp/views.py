@@ -2,15 +2,13 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import json
 import tweepy
-import time
 
 def twitter_auth():
     '''Authenticates user and returns api object. It's called from each method.'''
-    tokens_file = 'twitter_key.txt'
 
     # Assumes you have a file with name twitter_key.txt
     # in this directory which stores tokens in this order
-    with open(tokens_file) as f_in:
+    with open('twitter_key.txt') as f_in:
         consumer_key = f_in.readline().rstrip('\n')
         consumer_secret = f_in.readline().rstrip('\n')
         access_token = f_in.readline().rstrip('\n')
@@ -23,30 +21,44 @@ def twitter_auth():
                      retry_delay=10,
                      retry_errors=set([401, 404, 500, 503]),
                      wait_on_rate_limit_notify=True)
-
     return api
 
-def main_page(request):
-    '''Main page handler'''
-    return render(request, 'twitterapiapp/main_page.html')
+
+def find_friends(request, user_id):
+    context = {}
+    if proc_find_friends_api(user_id):
+        context['Friend'] = proc_find_friends_api(user_id)
+    return render(request, 'twitterapiapp/simple_page.html', context)
 
 
-def timegraph(request, user_id):
-    context = {} # dictionary to be sent to template page in order to show it on frontend
-    return render(request, 'twitterapiapp/simple_page.html', context) # rendered with html file and context dictionary
-    #return HttpResponse("The user_is requested is %s." % user_id) # pure HTTP response
+def find_friends_api(request, user_id):
 
+    response_data = proc_find_friends_api(user_id)
 
-def timegraph_api(request, user_id):
-    # get the resulting dict.
-    response_data = proc_twitter_api(user_id)
-    # dict object will automatically converted to a application/json http response.
     return JsonResponse(response_data)
 
 
-def proc_twitter_api(user_id):
-    '''Takes user_id, process the data and returns a dictionary object containing the api response content.'''
-    return {}
+def proc_find_friends_api(user_id):
+    api = twitter_auth()
+    search = tweepy.Cursor(api.friends, q=user_id).items()
+    response_dict = {}
+    friend_limit = 20
+    friends = []
+    counter = 0
+    while True:
+        try:
+            result = next(search)
+            friends.append(result)
+            counter += 1
+            if counter > friend_limit:
+                break
+            if friends:
+                for i, friend in enumerate(friends):
+                        temp = friend.json['status']['text']
+                        response_dict.update({'Friend'+str(i):temp})
+        except:
+            return {}
+    return response_dict
 
 # TODO
 # Add two methods that were specified in urls.py for your paths.
