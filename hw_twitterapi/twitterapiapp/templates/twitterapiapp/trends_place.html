@@ -1,0 +1,30 @@
+{% extends "twitterapiapp/base.html" %}
+
+{% block title %}Trending Topics in {{locations.0.name}}{% endblock %}
+
+{% block content %}
+    {# this is a comment. for django's template language, refer to https://docs.djangoproject.com/en/2.0/intro/tutorial03/#use-the-template-system #}
+    {# please make your own copy of this page. #}
+
+    <h1>Trends for: {{ locations.0.name }} <span class="text-muted">(woeid: {{ locations.0.woeid }})</span></h1>
+    
+    <h4>as of: {{ as_of }}</h4>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Popular</th>
+            <th scope="col">Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for topic in trends %}
+            <tr>
+              <td>{{ forloop.counter }}. <a href="{{ topic.url }}">{{ topic.name }}</a>{% if topic.promoted_content is not null %} (promoted){% endif %}</td>
+              <td>{{ topic.tweet_volume }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
