@@ -8,10 +8,10 @@
     
     
     <div class="py-2">
-        <h1 class="mt-1">API Name</h1>
-        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/user_id</code></p>
-        <p>API call: <code>{% include "twitterapiapp/server" %}/api/user_id</code></p>
-        <p>API explanation.</p>
+        <h1 class="mt-1">Find Following List of a User</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/followings/screen_name?count=20</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/followings/screen_name?count=20</code></p>
+        <p>Gets the list of users that the user with given screen name follows. By default, gets last 20 users, however custom number can be set using (optional) 'count' parameter.</p>
     </div>
 
 

@@ -53,3 +53,49 @@ def proc_twitter_api(user_id):
 # Firstly, call twitter_auth() in both of your methods and then
 # For the first method, do your work and return JSON for the API,
 # For the second method, do your work and return HTML response for the frontend.
+
+
+def process_followings(request, screen_name):
+    api = twitter_auth()
+    # Obtain queries from the request and check if user queried a count parameter.
+    queries = request.GET.dict()
+    count = int(queries['count']) if 'count' in queries else 20;
+    # List that stores all User's found as json objects.
+    friends = []
+
+    c = tweepy.Cursor(api.friends,
+                      screen_name=screen_name,
+                      include_user_entities=False).items(count)
+    while True:
+        try:
+            friend = c.next()
+            friends.append(friend._json)
+        except tweepy.TweepError:
+            response = {
+                'error':'Twitter rate limit exceeded, please try again 15 minutes later.',
+                'followings':friends
+            }
+            return response
+        except StopIteration:
+            break
+
+    response = {
+        'error':'',
+        'followings':friends
+    }
+    return response
+
+
+def followings_api(request, screen_name):
+    response = process_followings(request, screen_name)
+    return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii':False, 'indent':4})
+
+
+def followings(request, screen_name):
+    response = process_followings(request, screen_name)
+    context = {
+        'user':screen_name,
+        'error':response['error'],
+        'followings':response['followings']
+    }
+    return render(request, 'twitterapiapp/followings_page.html', context)
