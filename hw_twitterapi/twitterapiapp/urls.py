@@ -12,4 +12,8 @@ urlpatterns = [
     path('retweet/<str:username>', views.retweet),
 
     # TODO Add two paths for each Twitter endpoint, one for the API and the other for the frontend.
+
+    # API and frontend paths for 'followings' endpoint
+    path('api/followings/<str:screen_name>', views.followings_api),
+    path('followings/<str:screen_name>', views.followings),
 ]
