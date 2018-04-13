@@ -28,7 +28,7 @@ def find_friends(request, user_id):
     context = {}
     if proc_find_friends_api(user_id):
         context['Friend'] = proc_find_friends_api(user_id)
-    return render(request, 'twitterapiapp/friends.html', context)
+    return render(request, 'twitterapiapp/simple_page.html', context)
 
 
 def find_friends_api(request, user_id):
