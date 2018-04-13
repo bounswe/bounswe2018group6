@@ -5,18 +5,36 @@
             <h1>Twitter API Applications</h1>
             <p class="lead">Here are usages of Twitter API developed by <strong><a href="https://github.com/bounswe/bounswe2018group6">BounSWE2018Group6</a></strong>. You can use this web interface, or can make your own API requests.</p>
     </div>
-    
-    
+
     <div class="py-2">
+
         <h1 class="mt-1">Trends by Location</h1>
         <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/trends-by-place/woeid</code></p>
         <p>API call: <code>{% include "twitterapiapp/server" %}/api/trends-by-place/woeid</code></p>
         <p>Gathers trends information by place. Use WOEID (Where On Earth ID).</p>
+
+        <h1 class="mt-1">Find Users</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/find_user</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/find_user</code></p>
+        <p>Based on your search query it founds most relevant 5 accounts for that search. Then it displays last
+        tweet of that 5 accounts, if exists.</p>
+
+        <h1 class="mt-1">Retweet</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/retweet/username</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/retweet/username</code></p>
+        <p>Retweets the last tweet of specified user.</p>
+
+        <h1 class="mt-1">Find Following List of a User</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/followings/screen_name?count=20</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/followings/screen_name?count=20</code></p>
+        <p>Gets the list of users that the user with given screen name follows. By default, gets last 20 users, however custom number can be set using (optional) 'count' parameter.</p>
+
+
+        <h1 class="mt-1">Followers of a User</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/followers/username?count=10</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/followers/username</code></p>
+        <p>Followers of specified user.</p>
+      
     </div>
-
-
-    
-    {# do not forget adding your api here. you can use above examples. #}
-
 
 {% endblock %}
