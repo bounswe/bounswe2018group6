@@ -26,6 +26,10 @@ def twitter_auth():
 
     return api
 
+def main_page(request):
+    '''Main page handler'''
+    return render(request, 'twitterapiapp/main_page.html')
+
 
 def timegraph(request, user_id):
     context = {} # dictionary to be sent to template page in order to show it on frontend
