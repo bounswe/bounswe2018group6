@@ -1,0 +1,22 @@
+{% extends "twitterapiapp/base.html" %}
+
+{% block content %}
+    <div class="jumbotron">
+            <h1>Twitter API Applications</h1>
+            <p class="lead">Here are usages of Twitter API developed by <strong><a href="https://github.com/bounswe/bounswe2018group6">BounSWE2018Group6</a></strong>. You can use this web interface, or can make your own API requests.</p>
+    </div>
+    
+    
+    <div class="py-2">
+        <h1 class="mt-1">API Name</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/user_id</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/user_id</code></p>
+        <p>API explanation.</p>
+    </div>
+
+
+
+    {# do not forget adding your api here. you can use above examples. #}
+
+
+{% endblock %}

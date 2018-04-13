@@ -5,10 +5,11 @@ import tweepy
 
 def twitter_auth():
     '''Authenticates user and returns api object. It's called from each method.'''
+    tokens_file = 'twitter_key.txt'
 
     # Assumes you have a file with name twitter_key.txt
     # in this directory which stores tokens in this order
-    with open('twitter_key.txt') as f_in:
+    with open(tokens_file) as f_in:
         consumer_key = f_in.readline().rstrip('\n')
         consumer_secret = f_in.readline().rstrip('\n')
         access_token = f_in.readline().rstrip('\n')
@@ -23,6 +24,9 @@ def twitter_auth():
                      wait_on_rate_limit_notify=True)
     return api
 
+def main_page(request):
+    '''Main page handler'''
+    return render(request, 'twitterapiapp/main_page.html')
 
 def find_users(request, search_name):
     context = {} # dictionary to be sent to template page in order to show it on frontend
