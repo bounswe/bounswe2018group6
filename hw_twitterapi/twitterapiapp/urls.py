@@ -7,11 +7,11 @@ urlpatterns = [
     # main page
     path('', views.main_page),
 
-    # from the root: /api/timegraph/user_id
-    path('api/timegraph/<str:user_id>', views.timegraph_api),
+    # from the root: /api/trends-by-place/WOEID
+    path('api/trends-by-place/<int:WOEID>', views.trends_by_place_api),
 
-    # from the root: /timegraph/user_id
-    path('timegraph/<str:user_id>', views.timegraph),
+    # from the root: /trends-by-place/WOEID
+    path('trends-by-place/<int:WOEID>', views.trends_by_place),
 
     # TODO Add two paths for each Twitter endpoint, one for the API and the other for the frontend.
 ]

@@ -31,6 +31,24 @@ def main_page(request):
     return render(request, 'twitterapiapp/main_page.html')
 
 
+def trends_by_place_api(request, WOEID):
+    api = twitter_auth()
+    print("trends_by_place api authenticaion is successful")
+    response = api.trends_place(WOEID)
+    print("trends_by_place api call is successful")
+    return JsonResponse(response, safe=False)
+
+
+def trends_by_place(request, WOEID):
+    api = twitter_auth()
+    print("trends_by_place api authenticaion is successful")
+    response = api.trends_place(WOEID)
+    print("trends_by_place api call is successful")
+    context = {'trends': response[0]['trends'], 'locations': response[0]['locations'], 'as_of': response[0]['as_of']}
+    return render(request, 'twitterapiapp/trends_place.html', context)
+
+
+
 def timegraph(request, user_id):
     context = {} # dictionary to be sent to template page in order to show it on frontend
     return render(request, 'twitterapiapp/simple_page.html', context) # rendered with html file and context dictionary
