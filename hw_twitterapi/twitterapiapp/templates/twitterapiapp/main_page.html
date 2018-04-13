@@ -8,17 +8,23 @@
     
     
     <div class="py-2">
+
         <h1 class="mt-1">Find Users</h1>
         <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/find_user</code></p>
         <p>API call: <code>{% include "twitterapiapp/server" %}/api/find_user</code></p>
         <p>Based on your search query it founds most relevant 5 accounts for that search. Then it displays last
-        tweet of that 5 accounts, if exists.
-        </p>
+        tweet of that 5 accounts, if exists.</p>
+
+        <h1 class="mt-1">Retweet</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/retweet/username</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/retweet/username</code></p>
+        <p>Retweets the last tweet of specified user.</p>
+
+        <h1 class="mt-1">Find Following List of a User</h1>
+        <p>Web interface for API call: <code>{% include "twitterapiapp/server" %}/followings/screen_name?count=20</code></p>
+        <p>API call: <code>{% include "twitterapiapp/server" %}/api/followings/screen_name?count=20</code></p>
+        <p>Gets the list of users that the user with given screen name follows. By default, gets last 20 users, however custom number can be set using (optional) 'count' parameter.</p>
+
     </div>
-
-
-
-    {# do not forget adding your api here. you can use above examples. #}
-
 
 {% endblock %}
