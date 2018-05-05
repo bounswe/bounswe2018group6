@@ -14,7 +14,7 @@
             <input class="form-control" type="text" placeholder="Where On Earth IDentifier" id="trendsByLocation_woeid">
             <button class="btn btn-primary ml-2" data-url="" id="trendsByLocation_send">Send</button>
         </div>
-        <p>Web interface: <code><a href="http://206.189.12.235/trends-by-place/1" id="trendsByLocation_web">http://206.189.12.235/trends-by-place/1</a></code></p>
+        <p>Web interface for API call: <code><a href="http://206.189.12.235/trends-by-place/1" id="trendsByLocation_web">http://206.189.12.235/trends-by-place/1</a></code></p>
         <p>API call: <code><a href="http://206.189.12.235/api/trends-by-place/1" id="trendsByLocation_api">http://206.189.12.235/api/trends-by-place/1</a></code></p>
         <p>Gathers trends information by place. Use WOEID (Where On Earth ID).</p>
 
@@ -25,7 +25,7 @@
             <input class="form-control" type="text" placeholder="Search Name" id="findUsers_searchName">
             <button class="btn btn-primary ml-2" data-url="" id="findUsers_send">Send</button>
         </div>
-        <p>Web interface: <code><a href="http://206.189.12.235/find_users/search-name" id="findUsers_web">http://206.189.12.235/find_users/search-name</a></code></p>
+        <p>Web interface for API call: <code><a href="http://206.189.12.235/find_users/search-name" id="findUsers_web">http://206.189.12.235/find_users/search-name</a></code></p>
         <p>API call: <code><a href="http://206.189.12.235/api/find_users/search-name" id="findUsers_api">http://206.189.12.235/api/find_users/search-name</a></code></p>
         <p>Based on your search query it founds most relevant 5 accounts for that search. Then it displays last
         tweet of that 5 accounts, if exists.</p>
@@ -37,7 +37,7 @@
             <input class="form-control" type="text" placeholder="Username" id="retweet_username">
             <button class="btn btn-primary ml-2" data-url="" id="retweet_send">Send</button>
         </div>
-        <p>Web interface: <code><a href="http://206.189.12.235/retweet/username" id="retweet_web">http://206.189.12.235/retweet/username</a></code></p>
+        <p>Web interface for API call: <code><a href="http://206.189.12.235/retweet/username" id="retweet_web">http://206.189.12.235/retweet/username</a></code></p>
         <p>API call: <code><a href="http://206.189.12.235/api/retweet/username" id="retweet_api">http://206.189.12.235/api/retweet/username</a></code></p>
         <p>Retweets the last tweet of specified user.</p>
 
@@ -49,15 +49,26 @@
             <input class="form-control ml-2" type="text" placeholder="Count" id="followings_count">
             <button class="btn btn-primary ml-2" data-url="" id="followings_send">Send</button>
         </div>        
-        <p>Web interface: <code><a href="http://206.189.12.235/followings/screen_name?count=20" id="followings_web">http://206.189.12.235/followings/screen_name?count=20</a></code></p>
+        <p>Web interface for API call: <code><a href="http://206.189.12.235/followings/screen_name?count=20" id="followings_web">http://206.189.12.235/followings/screen_name?count=20</a></code></p>
         <p>API call: <code><a href="http://206.189.12.235/api/followings/screen_name?count=20" id="followings_api">http://206.189.12.235/api/followings/screen_name?count=20</a></code></p>
         <p>Gets the list of users that the user with given screen name follows. By default, gets last 20 users, however custom number can be set using (optional) 'count' parameter.</p>
 
-        {% comment "Hide non-merged api documentation." %}
+        <hr>
+
+        <h1 class="mt-1">Recent Favorite Statistics of a User<span class="text-muted">(by <a href="https://github.com/mfatihm">mfatihm</a>)</span></h1>
+        <div class="form-inline my-2">
+            <input class="form-control" type="text" placeholder="Username" id="recent_favorites_username">
+            <button class="btn btn-primary ml-2" data-url="" id="recent_favorites_send">Send</button>
+        </div>
+        <p>Web interface for API call: <code><a href="{% url 'twitterapiapp:recent_favorites_api' 'issizPecorin'%}">{% url 'twitterapiapp:recent_favorites_api' 'issizPecorin'%}</a></code></p>
+        <p>API call: <code><a href="{% url 'twitterapiapp:recent_favorites' 'issizPecorin'%}">{% url 'twitterapiapp:recent_favorites' 'issizPecorin'%}</a></code></p>
+        <p>Recent Favorite Statistics of a User.</p>
+
+        {% comment "Hide unmerged api documentation." %}
         <hr>
 
         <h1 class="mt-1">Followers of a User</h1>
-        <p>Web interface: <code><a href="http://206.189.12.235/followers/username?count=10">http://206.189.12.235/followers/username?count=10</a></code></p>
+        <p>Web interface for API call: <code><a href="http://206.189.12.235/followers/username?count=10">http://206.189.12.235/followers/username?count=10</a></code></p>
         <p>API call: <code><a href="http://206.189.12.235/api/followers/username">http://206.189.12.235/api/followers/username</a></code></p>
         <p>Followers of specified user.</p>
         {% endcomment %}
@@ -70,7 +81,8 @@
             "trendsByLocation": "trends-by-place/",
             "findUsers": "find_users/",
             "retweet": "retweet/",
-            "followings_username": "followings/"
+            "followings_username": "followings/",
+            "recent_favorites": "recent_favorites/"
         };
         
         onload = function() {
@@ -122,6 +134,18 @@
             });
             followings_send.addEventListener("click", function() {
                 window.open(getWebAddress("followings") + followings_send.getAttribute('data-url'));
+            });
+
+            //recent favorites
+            recent_favorites_username = document.getElementById('recent_favorites_username');
+            recent_favorites_send = document.getElementById('fecent_favorites_send');
+            recent_favorites_username.addEventListener("input", function() {
+                var newVal = recent_favorites_username.value;
+                changeURIs('recent_favorites', newVal);
+                recent_favorites_send.setAttribute('data-url', newVal);
+            });
+            recent_favorites_send.addEventListener("click", function() {
+                window.open(getWebAddress("recent_favorites") + recent_favorites_send.getAttribute('data-url'));
             });
 
         };

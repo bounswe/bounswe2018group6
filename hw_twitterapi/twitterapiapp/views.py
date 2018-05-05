@@ -175,3 +175,27 @@ def followings(request, screen_name):
         'followings':response['followings']
     }
     return render(request, 'twitterapiapp/followings_page.html', context)
+
+
+def recent_favorites(request, screen_name):
+    context = proc_recent_fovorites(request, screen_name)
+    return render(request, 'twitterapiapp/recent_favorites.html', context)
+
+
+def recent_favorites_api(request, screen_name):
+    response = proc_recent_fovorites(request, screen_name)
+    return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+
+def proc_recent_fovorites(request, screen_name):
+
+    api = twitter_auth()
+    tweet_count, retweet_count = 0, 0
+
+    # print out each favorited tweet
+    for page in tweepy.Cursor(api.favorites, id=screen_name, wait_on_rate_limit=True, count=200).pages(200):
+
+        for status in page:
+            tweet_count, retweet_count = tweet_count+1, retweet_count + status.retweet_count
+
+    return {'tweet_count': tweet_count, 'retweet_count': retweet_count, 'retweet_average': retweet_count/tweet_count}
