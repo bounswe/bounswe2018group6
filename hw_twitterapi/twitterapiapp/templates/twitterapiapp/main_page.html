@@ -81,7 +81,7 @@
             "trendsByLocation": "trends-by-place/",
             "findUsers": "find_users/",
             "retweet": "retweet/",
-            "followings_username": "followings/",
+            "followings": "followings/",
             "recent_favorites": "recent_favorites/"
         };
 
@@ -128,7 +128,18 @@
             followings_count = document.getElementById('followings_count');
             followings_send = document.getElementById('followings_send');
             followings_username.addEventListener("input", function() {
-                var newVal = followings_username.value + '?count=' + followings_count.value;
+                var newVal = followings_username.value;
+                if (followings_count.value) {
+                    newVal += '?count=' + followings_count.value;
+                }
+                changeURIs('followings', newVal);
+                followings_send.setAttribute('data-url', newVal);
+            });
+            followings_count.addEventListener("input", function() {
+                var newVal = followings_username.value;
+                if (followings_count.value) {
+                    newVal += '?count=' + followings_count.value;
+                }
                 changeURIs('followings', newVal);
                 followings_send.setAttribute('data-url', newVal);
             });
