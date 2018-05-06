@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    {{tweet_count}}<br/>
-    {{retweet_count}}<br/>
-    {{retweet_average}}<br/>
-</body>
-</html>
+{% extends "twitterapiapp/base.html" %}
+
+{% block title %} Atif's Retweet app {% endblock %}
+
+{% block content %}
+    <h3> Number of favorited tweets: </h3>{{tweet_count}}<br/>
+    <h3> Number of rt's of favorited tweets: </h3>{{retweet_count}}<br/>
+    <h3> Ratio: </h3>{{retweet_average}}<br/>
+
+{% endblock %}
