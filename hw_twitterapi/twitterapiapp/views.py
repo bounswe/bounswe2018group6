@@ -49,7 +49,7 @@ def trends_by_place(request, WOEID):
 def find_users(request, search_name):
     context = {} # dictionary to be sent to template page in order to show it on frontend
     if proc_find_user_api(search_name):
-        context['Tweets'] = proc_find_user_api(search_name)    
+        context['Tweets'] = proc_find_user_api(search_name)
     return render(request, 'twitterapiapp/find_users.html', context) # rendered with html file and context dictionary
     #return HttpResponse("The user_is requested is %s." % user_id) # pure HTTP response
 
@@ -65,7 +65,7 @@ def proc_find_user_api(search_name):
     '''Takes search query, finds best 5 accounts for that search and returns
     last tweet of that 5 accounts.'''
     api = twitter_auth()
-    search = tweepy.Cursor(api.search_users, q=search_name).items() 
+    search = tweepy.Cursor(api.search_users, q=search_name).items()
     response_dict = {}
     tweet_limit = 5
     # Name of output JSON file
@@ -113,7 +113,7 @@ def process_retweet_api(username):
         return dicts
 
     list_of_status = []
-    # Collect user's status whose name is username and store them into list_of_status. 
+    # Collect user's status whose name is username and store them into list_of_status.
     for status in api.user_timeline(screen_name = username, count=100, include_rts=False):
         list_of_status.append(status.id)
     # Handle the empty status situation.
@@ -126,7 +126,7 @@ def process_retweet_api(username):
         retweet_text = retweet._json['text']
     else:
         retweet_text = "You have already retweeted this Tweet."
-        
+
     dicts['Retweet'] = retweet_text
     return dicts
 
@@ -175,3 +175,27 @@ def followings(request, screen_name):
         'followings':response['followings']
     }
     return render(request, 'twitterapiapp/followings_page.html', context)
+
+
+def recent_favorites(request, screen_name):
+    context = proc_recent_favorites(request, screen_name)
+    return render(request, 'twitterapiapp/recent_favorites.html', context)
+
+
+def recent_favorites_api(request, screen_name):
+    response = proc_recent_favorites(request, screen_name)
+    return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+
+
+def proc_recent_favorites(request, screen_name):
+
+    api = twitter_auth()
+    tweet_count, retweet_count = 0, 0
+
+    # print out each favorited tweet
+    for page in tweepy.Cursor(api.favorites, id=screen_name, wait_on_rate_limit=True, count=200).pages(200):
+
+        for status in page:
+            tweet_count, retweet_count = tweet_count+1, retweet_count + status.retweet_count
+
+    return {'tweet_count': tweet_count, 'retweet_count': retweet_count, 'retweet_average': retweet_count/tweet_count}

@@ -48,12 +48,23 @@
             <input class="form-control" type="text" placeholder="Username" id="followings_username">
             <input class="form-control ml-2" type="text" placeholder="Count" id="followings_count">
             <button class="btn btn-primary ml-2" data-url="" id="followings_send">Send</button>
-        </div>        
+        </div>
         <p>Web interface: <code><a href="http://206.189.12.235/followings/screen_name?count=20" id="followings_web">http://206.189.12.235/followings/screen_name?count=20</a></code></p>
         <p>API call: <code><a href="http://206.189.12.235/api/followings/screen_name?count=20" id="followings_api">http://206.189.12.235/api/followings/screen_name?count=20</a></code></p>
         <p>Gets the list of users that the user with given screen name follows. By default, gets last 20 users, however custom number can be set using (optional) 'count' parameter.</p>
 
-        {% comment "Hide non-merged api documentation." %}
+        <hr>
+
+        <h1 class="mt-1">Recent Favorite Statistics of a User<span class="text-muted">(by <a href="https://github.com/mfatihm">mfatihm</a>)</span></h1>
+        <div class="form-inline my-2">
+            <input class="form-control" type="text" placeholder="Username" id="recent_favorites_username">
+            <button class="btn btn-primary ml-2" data-url="" id="recent_favorites_send">Send</button>
+        </div>
+        <p>Web interface: <code><a href="http://206.189.12.235/recent_favorites/screen_name?count=20" id="recent_favorites_web">http://206.189.12.235/recent_favorites/screen_name?count=20</a></code></p>
+        <p>API call: <code><a href="http://206.189.12.235/api/recent_favorites/screen_name?count=20" id="recent_favorites_api">http://206.189.12.235/api/recent_favorites/screen_name?count=20</a></code></p>
+        <p>Recent Favorite Statistics of a User.</p>
+
+        {% comment "Hide unmerged api documentation." %}
         <hr>
 
         <h1 class="mt-1">Followers of a User</h1>
@@ -70,9 +81,10 @@
             "trendsByLocation": "trends-by-place/",
             "findUsers": "find_users/",
             "retweet": "retweet/",
-            "followings_username": "followings/"
+            "followings_username": "followings/",
+            "recent_favorites": "recent_favorites/"
         };
-        
+
         onload = function() {
 
             // trendsByLocation
@@ -122,6 +134,18 @@
             });
             followings_send.addEventListener("click", function() {
                 window.open(getWebAddress("followings") + followings_send.getAttribute('data-url'));
+            });
+
+            //recent favorites
+            recent_favorites_username = document.getElementById('recent_favorites_username');
+            recent_favorites_send = document.getElementById('recent_favorites_send');
+            recent_favorites_username.addEventListener("input", function() {
+                var newVal = recent_favorites_username.value;
+                changeURIs('recent_favorites', newVal);
+                recent_favorites_send.setAttribute('data-url', newVal);
+            });
+            recent_favorites_send.addEventListener("click", function() {
+                window.open(getWebAddress("recent_favorites") + recent_favorites_send.getAttribute('data-url'));
             });
 
         };
