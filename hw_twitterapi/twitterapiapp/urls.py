@@ -31,4 +31,12 @@ urlpatterns = [
     #Recent favorites
     path('api/recent_favorites/<str:screen_name>', views.recent_favorites_api),
     path('recent_favorites/<str:screen_name>', views.recent_favorites),
+
+    # from the root: api/followers/name
+    path('api/find_followers/<str:follower>', views.find_followers_api),
+
+    # from the root: /find_topic/topic
+    path('find_followers/<str:follower>', views.find_followers),
 ]
+
+
