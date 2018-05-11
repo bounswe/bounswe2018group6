@@ -66,13 +66,13 @@
 
         <hr>
 
-        <<h1 class="mt-1">Foloowers of a User<span class="text-muted">(by <a href="https://github.com/isikz">isikz</a>)</span></h1>
+        <<h1 class="mt-1">Followers of a User<span class="text-muted">(by <a href="https://github.com/isikz">isikz</a>)</span></h1>
         <div class="form-inline my-2">
             <input class="form-control" type="text" placeholder="Username" id="followers=username">
             <button class="btn btn-primary ml-2" data-url="" id="followers_send">Send</button>
         </div>
-        <p>Web interface: <code><a href="http://206.189.12.235/find_followers/follower?count=20" id="followers_web">http://206.189.12.235/followers/screen_name?count=20</a></code></p>
-        <p>API call: <code><a href="http://206.189.12.235/api/find_followers/follower?count=20" id="followers_api">http://206.189.12.235/api/followers/screen_name?count=20</a></code></p>
+        <p>Web interface: <code><a href="http://206.189.12.235/find_follower/follower?count=20" id="followers_web">http://206.189.12.235/followers/screen_name?count=20</a></code></p>
+        <p>API call: <code><a href="http://206.189.12.235/api/find_follower/follower?count=20" id="followers_api">http://206.189.12.235/api/followers/screen_name?count=20</a></code></p>
         <p>Followers of specified user.</p>
     </div>
 
@@ -161,11 +161,11 @@
             followers_send = document.getElementById('followers_send');
             followers_username.addEventListener("input", function() {
                 var newVal = followers_username.value;
-                changeURIs('followers', newVal);
+                changeURIs('find_followers', newVal);
                 followers_send.setAttribute('data-url', newVal);
             });
             followers_send.addEventListener("click", function() {
-                window.open(getWebAddress("followers") + followers_send.getAttribute('data-url'));
+                window.open(getWebAddress("find_followers") + followers_send.getAttribute('data-url'));
             });
         };
         // Changes link attributes and texts
