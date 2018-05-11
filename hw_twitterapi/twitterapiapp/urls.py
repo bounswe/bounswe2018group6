@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    
+
     path('', views.main_page),
 
     # from the root: /api/trends-by-place/WOEID
@@ -28,9 +28,15 @@ urlpatterns = [
     path('api/followings/<str:screen_name>', views.followings_api),
     path('followings/<str:screen_name>', views.followings),
 
+    #Recent favorites
+    path('api/recent_favorites/<str:screen_name>', views.recent_favorites_api),
+    path('recent_favorites/<str:screen_name>', views.recent_favorites),
+
     # from the root: api/followers/name
     path('api/find_followers/<str:follower>', views.find_followers_api),
 
     # from the root: /find_topic/topic
     path('find_followers/<str:follower>', views.find_followers),
 ]
+
+
