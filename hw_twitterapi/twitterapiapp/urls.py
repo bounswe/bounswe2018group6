@@ -27,4 +27,10 @@ urlpatterns = [
     # API and frontend paths for 'followings' endpoint
     path('api/followings/<str:screen_name>', views.followings_api),
     path('followings/<str:screen_name>', views.followings),
+
+    # from the root: api/followers/name
+    path('api/find_followers/<str:follower>', views.find_followers_api),
+
+    # from the root: /find_topic/topic
+    path('find_followers/<str:follower>', views.find_followers),
 ]

@@ -175,3 +175,42 @@ def followings(request, screen_name):
         'followings':response['followings']
     }
     return render(request, 'twitterapiapp/followings_page.html', context)
+
+def find_followers(request, follower):
+    context = {}
+    if proc_find_followers_api(follower):
+        context['Followers'] = proc_find_followers_api(follower)
+    return render(request, 'twitterapiapp/followers_page.html', context)   # rendered with html file and context dictionary
+
+
+def find_followers_api(request, follower):
+    # get the resulting dict.
+    response_data = proc_find_followers_api(follower)
+    # dict object will automatically converted to a application/json http response.
+    return JsonResponse(request, response_data)
+
+
+def proc_find_followers_api(follower):
+    api = twitter_auth()
+    search = tweepy.Cursor(api.followers, q=follower).items()
+    response_dict = {}
+    follower_limit = 10
+
+    followers = []
+    counter = 0
+    while True:
+        try:
+            result = next(search)
+            followers.append(result)
+            counter += 1
+            if counter > follower_limit:
+                break
+            if followers:
+                for i, follower in enumerate(followers):
+                    temp = follower.json['status']['text']
+                    response_dict.update({'Tweet' + str(i):temp})
+
+        except:
+            return{}
+    '''Takes user_id, process the data and returns a dictionary object containing the api response content.'''
+    return response_dict
