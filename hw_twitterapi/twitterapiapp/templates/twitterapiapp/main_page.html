@@ -99,6 +99,7 @@
             trendsByLocation_send.addEventListener('click', function() {
                 window.open(getWebAddress("trendsByLocation") + trendsByLocation_send.getAttribute('data-url'));
             });
+
             // findUsers
             findUsers_searchName = document.getElementById('findUsers_searchName');
             findUsers_send = document.getElementById('findUsers_send');
@@ -110,6 +111,7 @@
             findUsers_send.addEventListener("click", function() {
                 window.open(getWebAddress("findUsers") + findUsers_send.getAttribute('data-url'));
             });
+
             // retweet
             retweet_username = document.getElementById('retweet_username');
             retweet_send = document.getElementById('retweet_send');
@@ -121,6 +123,7 @@
             retweet_send.addEventListener("click", function() {
                 window.open(getWebAddress("retweet") + retweet_send.getAttribute('data-url'));
             });
+
             // followings
             followings_username = document.getElementById('followings_username');
             followings_count = document.getElementById('followings_count');
@@ -144,6 +147,7 @@
             followings_send.addEventListener("click", function() {
                 window.open(getWebAddress("followings") + followings_send.getAttribute('data-url'));
             });
+
             //recent favorites
             recent_favorites_username = document.getElementById('recent_favorites_username');
             recent_favorites_send = document.getElementById('recent_favorites_send');
@@ -175,6 +179,7 @@
             var api = document.getElementById(id + "_api");
             var web_address = getWebAddress(id) + input;
             var api_address = getApiAddress(id) + input;
+
             web.innerHTML = web_address;
             api.innerHTML = api_address;
             web.href = web_address;

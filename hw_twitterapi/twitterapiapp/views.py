@@ -47,8 +47,7 @@ def trends_by_place(request, WOEID):
     try:
         response = api.trends_place(WOEID)
         print("trends_by_place api call is successful")
-        context = {'error': False, 'trends': response[0]['trends'], 'locations': response[0]['locations'],
-                   'as_of': response[0]['as_of']}
+        context = {'error': False,'trends': response[0]['trends'], 'locations': response[0]['locations'], 'as_of': response[0]['as_of']}
     except:
         context = {'error': True, 'error_text': 'Invalid WOEID'}
     return render(request, 'twitterapiapp/trends_place.html', context)
@@ -58,8 +57,8 @@ def find_users(request, search_name):
     context = {}  # dictionary to be sent to template page in order to show it on frontend
     if proc_find_user_api(search_name):
         context['Tweets'] = proc_find_user_api(search_name)
-    return render(request, 'twitterapiapp/find_users.html', context)  # rendered with html file and context dictionary
-    # return HttpResponse("The user_is requested is %s." % user_id) # pure HTTP response
+    return render(request, 'twitterapiapp/find_users.html', context) # rendered with html file and context dictionary
+    #return HttpResponse("The user_is requested is %s." % user_id) # pure HTTP response
 
 
 def find_users_api(request, search_name):
@@ -122,7 +121,7 @@ def process_retweet_api(username):
 
     list_of_status = []
     # Collect user's status whose name is username and store them into list_of_status.
-    for status in api.user_timeline(screen_name=username, count=100, include_rts=False):
+    for status in api.user_timeline(screen_name = username, count=100, include_rts=False):
         list_of_status.append(status.id)
     # Handle the empty status situation.
     if len(list_of_status) == 0:
@@ -201,12 +200,10 @@ def proc_recent_favorites(request, screen_name):
 
     # print out each favorited tweet
     for page in tweepy.Cursor(api.favorites, id=screen_name, wait_on_rate_limit=True, count=200).pages(200):
-
         for status in page:
-            tweet_count, retweet_count = tweet_count + 1, retweet_count + status.retweet_count
+            tweet_count, retweet_count = tweet_count+1, retweet_count + status.retweet_count
 
-    return {'tweet_count': tweet_count, 'retweet_count': retweet_count, 'retweet_average': retweet_count / tweet_count}
-
+    return {'tweet_count': tweet_count, 'retweet_count': retweet_count, 'retweet_average': retweet_count/tweet_count}
 
 def find_followers(request, follower):
     context = {}
