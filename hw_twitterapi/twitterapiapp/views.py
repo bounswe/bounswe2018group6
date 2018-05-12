@@ -3,6 +3,7 @@ from django.shortcuts import render
 import json
 import tweepy
 
+
 def twitter_auth():
     '''Authenticates user and returns api object. It's called from each method.'''
     tokens = open('twitter_key.txt')
@@ -23,6 +24,7 @@ def twitter_auth():
                      retry_errors=set([401, 404, 500, 503]),
                      wait_on_rate_limit_notify=True)
     return api
+
 
 def main_page(request):
     return render(request, 'twitterapiapp/main_page.html')
@@ -52,7 +54,7 @@ def trends_by_place(request, WOEID):
 
 
 def find_users(request, search_name):
-    context = {} # dictionary to be sent to template page in order to show it on frontend
+    context = {}  # dictionary to be sent to template page in order to show it on frontend
     if proc_find_user_api(search_name):
         context['Tweets'] = proc_find_user_api(search_name)
     return render(request, 'twitterapiapp/find_users.html', context) # rendered with html file and context dictionary
@@ -85,8 +87,8 @@ def proc_find_user_api(search_name):
                 break
             if users:
                 for i, user in enumerate(users):
-                        temp = user._json['status']['text']
-                        response_dict.update({'Tweet'+str(i):temp})
+                    temp = user._json['status']['text']
+                    response_dict.update({'Tweet' + str(i): temp})
         except:
             return {}
     return response_dict
@@ -153,31 +155,31 @@ def process_followings(request, screen_name):
             friends.append(friend._json)
         except tweepy.TweepError:
             response = {
-                'error':'Twitter rate limit exceeded, please try again 15 minutes later.',
-                'followings':friends
+                'error': 'Twitter rate limit exceeded, please try again 15 minutes later.',
+                'followings': friends
             }
             return response
         except StopIteration:
             break
 
     response = {
-        'error':'',
-        'followings':friends
+        'error': '',
+        'followings': friends
     }
     return response
 
 
 def followings_api(request, screen_name):
     response = process_followings(request, screen_name)
-    return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii':False, 'indent':4})
+    return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 4})
 
 
 def followings(request, screen_name):
     response = process_followings(request, screen_name)
     context = {
-        'user':screen_name,
-        'error':response['error'],
-        'followings':response['followings']
+        'user': screen_name,
+        'error': response['error'],
+        'followings': response['followings']
     }
     return render(request, 'twitterapiapp/followings_page.html', context)
 
@@ -193,14 +195,50 @@ def recent_favorites_api(request, screen_name):
 
 
 def proc_recent_favorites(request, screen_name):
-
     api = twitter_auth()
     tweet_count, retweet_count = 0, 0
 
     # print out each favorited tweet
     for page in tweepy.Cursor(api.favorites, id=screen_name, wait_on_rate_limit=True, count=200).pages(200):
-
         for status in page:
             tweet_count, retweet_count = tweet_count+1, retweet_count + status.retweet_count
 
     return {'tweet_count': tweet_count, 'retweet_count': retweet_count, 'retweet_average': retweet_count/tweet_count}
+
+def find_followers(request, follower):
+    context = {}
+    if proc_find_followers_api(follower):
+        context['Followers'] = proc_find_followers_api(follower)
+    return render(request, 'twitterapiapp/follower.html', context)  # rendered with html file and context dictionary
+
+
+def find_followers_api(request, follower):
+    # get the resulting dict.
+    response_data = proc_find_followers_api(follower)
+    # dict object will automatically converted to a application/json http response.
+    return JsonResponse(request, response_data)
+
+
+def proc_find_followers_api(follower):
+    api = twitter_auth()
+    search = tweepy.Cursor(api.followers, id=follower).items()
+    response_dict = {}
+    follower_limit = 10
+
+    followers = []
+    counter = 0
+    while True:
+        try:
+            result = next(search)
+            followers.append(result)
+            counter += 1
+            if counter > follower_limit:
+                break
+            if followers:
+                for i, follower in enumerate(followers):
+                    temp = follower.screen_name
+                    response_dict.update({'Tweet' + str(i): temp})
+        except:
+            return {}
+
+    return response_dict

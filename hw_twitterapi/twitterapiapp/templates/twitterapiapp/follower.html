@@ -1,0 +1,10 @@
+{% extends "twitterapiapp/base.html" %}
+
+{% block title %} Zeynep's API app {% endblock %}
+
+{% block content %}
+    {% for key, value in Followers.items %}
+    	<h1>{{ value }}</h1>
+        {% endfor %}
+
+{% endblock %}
