@@ -25,3 +25,9 @@ hw_twitterapi/.idea/
 
 ### VSCode ###
 hw_twitterapi/.vscode/
+
+
+# Backend
+.env
+env/
+venv/
