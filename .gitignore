@@ -21,10 +21,10 @@ __pycache__/
 # End of https://www.gitignore.io/api/django
 
 ### PyCharm ###
-hw_twitterapi/.idea/
+.idea/
 
 ### VSCode ###
-hw_twitterapi/.vscode/
+.vscode/
 
 
 # Backend
