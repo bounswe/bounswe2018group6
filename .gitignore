@@ -31,3 +31,5 @@ hw_twitterapi/.vscode/
 .env
 env/
 venv/
+backend/db.sqlite3
+backend/media/
