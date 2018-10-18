@@ -4,9 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import android.widget.EditText
 import cmpe.boun.culdidate.R
-import cmpe.boun.cultidate.activity.ForgotPassActivity
-import cmpe.boun.cultidate.activity.RegisterActivity
+import cmpe.boun.cultidate.MainActivity
+import android.widget.Toast
 
 class LoginActivity : AppCompatActivity() {
 
@@ -15,17 +16,33 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val registerButton = findViewById<Button>(R.id.register_button)
-
-        registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
         val forgetButton = findViewById<Button>(R.id.forget_button)
+        val mail = findViewById<EditText>(R.id.text_mail)
+        val loginButton = findViewById<Button>(R.id.login_button)
 
         forgetButton.setOnClickListener {
             val intent = Intent(this, ForgotPassActivity::class.java)
             startActivity(intent)
         }
 
+        registerButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        loginButton.setOnClickListener {
+            if (!isEmailValid(mail.text)) {
+                Toast.makeText(applicationContext, "Invalid email address!", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+    }
+
+    fun isEmailValid(email: CharSequence): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
