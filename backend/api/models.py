@@ -12,6 +12,7 @@ class Event(models.Model):
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
                                      related_name='performed_events')
+    comments = GenericRelation('Comment')
     location = GenericRelation('Location')
     medias = GenericRelation('Media')
     tags = models.ManyToManyField('Tag', db_table='event_tags', related_name='events')
@@ -69,9 +70,17 @@ class Media(models.Model):
 
 
 class Comment(models.Model):
+    """
+   Different models (User, Event etc.) may need Location, so it's implemented
+   according to `contenttypes` framework in order to be a generic model.
+   (https://docs.djangoproject.com/en/2.1/ref/contrib/contenttypes/)
+   """
+
     # Related fields
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comments', on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, related_name='comments', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     # Own fields
     content = models.TextField()

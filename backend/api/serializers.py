@@ -5,21 +5,30 @@ from api.models import Comment, Event, Media, Tag
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
+    content_type = serializers.CharField()
+
     class Meta:
         model = Comment
-        fields = ('id', 'event', 'content')
+        fields = ('id', 'content', 'content_type', 'object_id')
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        comment = Comment.objects.create(owner=owner, **validated_data)
+        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
+            .get_object_for_this_type(id=validated_data.pop('object_id'))
+        comment = Comment.objects.create(owner=owner, content_object=content_object, **validated_data)
         return comment
 
 
 class CommentDetailsSerializer(serializers.ModelSerializer):
+    content_type = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = ('id', 'owner', 'event', 'content', 'created', 'updated')
+        fields = ('id', 'owner', 'content_type', 'object_id', 'content', 'created', 'updated')
         read_only_fields = ('owner', 'event', 'created', 'updated')
+
+    def get_content_type(self, obj):
+        return obj.content_type.model
 
 
 class MediaCreateSerializer(serializers.ModelSerializer):
@@ -31,9 +40,9 @@ class MediaCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        content_object = ContentType.objects.get(model=validated_data['content_type'])\
-            .get_object_for_this_type(id=validated_data['object_id'])
-        media = Media.objects.create(owner=owner, content_object=content_object, url=validated_data['url'])
+        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
+            .get_object_for_this_type(id=validated_data.pop('object_id'))
+        media = Media.objects.create(owner=owner, content_object=content_object, **validated_data)
         return media
 
 

@@ -17,7 +17,7 @@ class CommentCreate(mixins.CreateModelMixin,
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, owner=request.user, **kwargs)
+        return self.create(request, *args, **kwargs)
 
 
 class CommentDetails(mixins.RetrieveModelMixin,
