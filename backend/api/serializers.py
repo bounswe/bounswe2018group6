@@ -1,7 +1,26 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from api.models import Comment, Event, Media, Tag
+from api.models import AttendanceStatus, Comment, Event, Media, Tag
+
+
+class AttendanceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceStatus
+        fields = ('id', 'event', 'status')
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        attendance_status, created = AttendanceStatus.objects.update_or_create(
+            user=user, event=validated_data['event'], defaults={'status':validated_data['status']})
+        return attendance_status
+
+
+class AttendanceDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceStatus
+        fields = ('id', 'user', 'event', 'status')
+        read_only_fields = ('id', 'user', 'event', 'status')
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
@@ -25,7 +44,7 @@ class CommentDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'owner', 'content_type', 'object_id', 'content', 'created', 'updated')
-        read_only_fields = ('owner', 'event', 'created', 'updated')
+        read_only_fields = ('owner', 'content_type', 'object_id', 'created', 'updated')
 
     def get_content_type(self, obj):
         return obj.content_type.model
@@ -64,9 +83,19 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class EventSummarySerializer(serializers.ModelSerializer):
+    own_attendance_status = serializers.SerializerMethodField()
+
     class Meta:
         model = Event
-        fields = ('id', 'title', 'description', 'date', 'price')
+        fields = ('id', 'owner', 'title', 'description', 'date', 'price',
+                  'created', 'updated', 'own_attendance_status')
+
+    def get_own_attendance_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_attendance = obj.attendance_status.all().filter(user=user).first()
+            return '' if own_attendance is None else own_attendance.status
+        return ''
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
@@ -93,15 +122,24 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
+    attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
+    own_attendance_status = serializers.SerializerMethodField()
     comments = CommentDetailsSerializer(many=True, read_only=True)
     medias = MediaDetailsSerializer(many=True)
     tags = TagSerializer(many=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price',
-                  'organizer_url', 'created', 'updated', 'comments', 'medias', 'tags')
+        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'organizer_url', 'created', 'updated',
+                  'attendance_status', 'own_attendance_status', 'comments', 'medias', 'tags')
         read_only_fields = ('owner', 'created', 'updated')
+
+    def get_own_attendance_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_attendance = obj.attendance_status.all().filter(user=user).first()
+            return '' if own_attendance is None else own_attendance.status
+        return ''
 
     # TODO Fix problems
     # def update(self, instance, validated_data):
