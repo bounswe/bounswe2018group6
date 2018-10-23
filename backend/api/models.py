@@ -71,10 +71,10 @@ class Media(models.Model):
 
 class Comment(models.Model):
     """
-   Different models (User, Event etc.) may need Location, so it's implemented
-   according to `contenttypes` framework in order to be a generic model.
-   (https://docs.djangoproject.com/en/2.1/ref/contrib/contenttypes/)
-   """
+    Different models (User, Event etc.) may need Location, so it's implemented
+    according to `contenttypes` framework in order to be a generic model.
+    (https://docs.djangoproject.com/en/2.1/ref/contrib/contenttypes/)
+    """
 
     # Related fields
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comments', on_delete=models.CASCADE)
