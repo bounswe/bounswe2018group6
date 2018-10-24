@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from api.models import AttendanceStatus, Comment, Event, Media, Tag
+from api.models import AttendanceStatus, Comment, Event, FollowStatus, Media, Tag
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
@@ -20,7 +20,7 @@ class AttendanceDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceStatus
         fields = ('id', 'user', 'event', 'status')
-        read_only_fields = ('id', 'user', 'event', 'status')
+        read_only_fields = ('id', 'user', 'status')
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
@@ -48,6 +48,28 @@ class CommentDetailsSerializer(serializers.ModelSerializer):
 
     def get_content_type(self, obj):
         return obj.content_type.model
+
+
+class FollowCreateDeleteSerializer(serializers.ModelSerializer):
+    content_type = serializers.CharField()
+
+    class Meta:
+        model = FollowStatus
+        fields = ('id', 'content_type', 'object_id')
+
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
+            .get_object_for_this_type(id=validated_data.pop('object_id'))
+        follow_status = FollowStatus.objects.create(owner=owner, content_object=content_object, **validated_data)
+        return follow_status
+
+
+class FollowDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowStatus
+        fields = ('id', 'owner')
+        read_only_fields = ('id', 'owner')
 
 
 class MediaCreateSerializer(serializers.ModelSerializer):
@@ -84,17 +106,26 @@ class TagSerializer(serializers.ModelSerializer):
 
 class EventSummarySerializer(serializers.ModelSerializer):
     own_attendance_status = serializers.SerializerMethodField()
+    own_follow_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
         fields = ('id', 'owner', 'title', 'description', 'date', 'price',
-                  'created', 'updated', 'own_attendance_status')
+                  'created', 'updated', 'own_attendance_status', 'follower_count',
+                  'own_follow_status')
 
     def get_own_attendance_status(self, obj):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_attendance = obj.attendance_status.all().filter(user=user).first()
             return '' if own_attendance is None else own_attendance.status
+        return ''
+
+    def get_own_follow_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_follow = obj.followers.all().filter(owner=user).first()
+            return 'N' if own_follow is None else 'Y'
         return ''
 
 
@@ -125,13 +156,16 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
     own_attendance_status = serializers.SerializerMethodField()
     comments = CommentDetailsSerializer(many=True, read_only=True)
+    followers = FollowDetailsSerializer(many=True, read_only=True)
+    own_follow_status = serializers.SerializerMethodField()
     medias = MediaDetailsSerializer(many=True)
     tags = TagSerializer(many=True)
 
     class Meta:
         model = Event
         fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'organizer_url', 'created', 'updated',
-                  'attendance_status', 'own_attendance_status', 'comments', 'medias', 'tags')
+                  'attendance_status', 'own_attendance_status', 'comments', 'followers', 'follower_count',
+                  'own_follow_status', 'medias', 'tags')
         read_only_fields = ('owner', 'created', 'updated')
 
     def get_own_attendance_status(self, obj):
@@ -139,6 +173,13 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated:
             own_attendance = obj.attendance_status.all().filter(user=user).first()
             return '' if own_attendance is None else own_attendance.status
+        return ''
+
+    def get_own_follow_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_follow = obj.followers.all().filter(owner=user).first()
+            return 'N' if own_follow is None else 'Y'
         return ''
 
     # TODO Fix problems

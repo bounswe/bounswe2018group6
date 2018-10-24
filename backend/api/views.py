@@ -2,13 +2,16 @@ from rest_framework import generics, mixins
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
-from api.models import AttendanceStatus, Comment, Event, Media, Tag
+from api.models import (AttendanceStatus, Comment, Event, FollowStatus, Media,
+                        Tag)
 from api.permissions import IsOwnerOrReadOnly
 from api.serializers import (AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
                              EventCreateSerializer, EventDetailsSerializer,
-                             EventSummarySerializer, MediaCreateSerializer,
-                             MediaDetailsSerializer, TagSerializer)
+                             EventSummarySerializer,
+                             FollowCreateDeleteSerializer,
+                             MediaCreateSerializer, MediaDetailsSerializer,
+                             TagSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -86,6 +89,20 @@ class EventView(MultiSerializerViewMixin,
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class FollowView(mixins.CreateModelMixin,
+                 mixins.DestroyModelMixin,
+                 generics.GenericAPIView):
+    queryset = FollowStatus.objects.all()
+    serializer_class = FollowCreateDeleteSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

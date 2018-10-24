@@ -13,6 +13,8 @@ class Event(models.Model):
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
                                      related_name='performed_events')
     comments = GenericRelation('Comment')
+    followers = GenericRelation('FollowStatus')
+    follower_count = models.IntegerField(default=0)  # TODO Move this field to a base `Followable` class
     location = GenericRelation('Location')
     medias = GenericRelation('Media')
     tags = models.ManyToManyField('Tag', db_table='event_tags', related_name='events')
@@ -25,6 +27,37 @@ class Event(models.Model):
     organizer_url = models.URLField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
+class Comment(models.Model):
+    """
+    Different models (User, Event etc.) may need Location, so it's implemented
+    according to `contenttypes` framework in order to be a generic model.
+    (https://docs.djangoproject.com/en/2.1/ref/contrib/contenttypes/)
+    """
+
+    # Related fields
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comments', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    # Own fields
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+
+class FollowStatus(models.Model):
+    # Related fields
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followings', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        # A user cannot follow the same item more than once
+        unique_together = ('owner', 'content_type', 'object_id')
 
 
 class Location(models.Model):
@@ -69,23 +102,8 @@ class Media(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
 
-class Comment(models.Model):
-    """
-    Different models (User, Event etc.) may need Location, so it's implemented
-    according to `contenttypes` framework in order to be a generic model.
-    (https://docs.djangoproject.com/en/2.1/ref/contrib/contenttypes/)
-    """
-
-    # Related fields
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comments', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    # Own fields
-    content = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
 
 
 class AttendanceStatus(models.Model):
@@ -103,7 +121,3 @@ class AttendanceStatus(models.Model):
     class Meta:
         # There can be only one attendance status between User and Event.
         unique_together = ('user', 'event')
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=20)
