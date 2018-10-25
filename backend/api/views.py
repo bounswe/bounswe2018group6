@@ -3,7 +3,7 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
 from api.models import (AttendanceStatus, Comment, Event, FollowStatus, Media,
-                        Tag)
+                        Tag, VoteStatus)
 from api.permissions import IsOwnerOrReadOnly
 from api.serializers import (AttendanceCreateDestroySerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
@@ -11,7 +11,7 @@ from api.serializers import (AttendanceCreateDestroySerializer,
                              EventSummarySerializer,
                              FollowCreateDeleteSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
-                             TagSerializer)
+                             TagSerializer, VoteCreateDeleteSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -137,3 +137,17 @@ class TagList(mixins.ListModelMixin,
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class VoteView(mixins.CreateModelMixin,
+               mixins.DestroyModelMixin,
+               generics.GenericAPIView):
+    queryset = VoteStatus.objects.all()
+    serializer_class = VoteCreateDeleteSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

@@ -13,15 +13,14 @@ class AttendanceCreateDestroySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context.get("request").user
         attendance_status, created = AttendanceStatus.objects.update_or_create(
-            user=user, event=validated_data['event'], defaults={'status':validated_data['status']})
+            owner=user, event=validated_data['event'], defaults={'status':validated_data['status']})
         return attendance_status
 
 
 class AttendanceDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceStatus
-        fields = ('id', 'user', 'event', 'status')
-        read_only_fields = ('id', 'user', 'status')
+        fields = ('id', 'owner', 'event', 'status')
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
@@ -70,7 +69,6 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowStatus
         fields = ('id', 'owner')
-        read_only_fields = ('id', 'owner')
 
 
 class MediaCreateSerializer(serializers.ModelSerializer):
@@ -105,61 +103,69 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-# class VoteCreateUpdateDeleteSerializer(serializers.ModelSerializer):
-#     content_type = serializers.CharField()
-#
-#     class Meta:
-#         model = FollowStatus
-#         fields = ('id', 'content_type', 'object_id', 'vote')
-#
-#     def create(self, validated_data):
-#         owner = self.context.get("request").user
-#         vote_status, created = VoteStatus.objects.get_or_create(
-#             owner=owner, content_type=validated_data['content_type'], object_id=validated_data['object_id'],
-#             defaults={'vote': validated_data['vote']})
-#         if not created:
-#             # Update with save
-#             if vote_status.vote != validated_data['vote']:
-#                 vote_status.vote = validated_data['vote']
-#
-#         content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
-#             .get_object_for_this_type(id=validated_data.pop('object_id'))
-#         follow_status = FollowStatus.objects.create(owner=owner, content_object=content_object, **validated_data)
-#         return follow_status
-#
-#
-# class VoteDetailsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = VoteStatus
-#         fields = ('id', 'owner', 'vote')
-#         read_only_fields = ('id', 'owner', 'vote')
+class VoteCreateDeleteSerializer(serializers.ModelSerializer):
+    content_type = serializers.CharField()
+
+    class Meta:
+        model = VoteStatus
+        fields = ('id', 'content_type', 'object_id', 'vote')
+
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        content_object = ContentType.objects.get(model=validated_data['content_type']) \
+            .get_object_for_this_type(id=validated_data['object_id'])
+        vote_status, created = VoteStatus.objects.get_or_create(
+            owner=owner, content_type=validated_data['content_type'], object_id=validated_data['object_id'],
+            defaults={'vote': validated_data['vote']})
+        if created:
+            content_object.update_vote_count(vote_status.vote_value, False)
+        else:
+            if vote_status.vote == validated_data['vote']:
+                serializers.ValidationError('Cannot vote for the item with same vote.')
+            else:
+                vote_status.vote = validated_data['vote']
+                vote_status.save()
+                content_object.update_vote_count(vote_status.vote_value, True)
+        return vote_status
+
+
+class VoteDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VoteStatus
+        fields = ('id', 'owner', 'vote')
 
 
 class EventSummarySerializer(serializers.ModelSerializer):
     own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
+    own_vote = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
         fields = ('id', 'owner', 'title', 'description', 'date', 'price',
                   'created', 'updated', 'own_attendance_status', 'follower_count',
-                  'own_follow_status')
+                  'own_follow_status', 'vote_count', 'own_vote')
 
     def get_own_attendance_status(self, obj):
-        # TODO Return the actual record
         user = self.context.get("request").user
         if user and user.is_authenticated:
-            own_attendance = obj.attendance_status.all().filter(user=user).first()
-            return '' if own_attendance is None else own_attendance.status
-        return ''
+            own_attendance = obj.attendance_status.all().filter(owner=user).first()
+            return AttendanceDetailsSerializer(own_attendance).data
+        return None
 
     def get_own_follow_status(self, obj):
-        # TODO Return the actual record
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_follow = obj.followers.all().filter(owner=user).first()
-            return 'N' if own_follow is None else 'Y'
-        return ''
+            return FollowDetailsSerializer(own_follow).data
+        return None
+
+    def get_own_vote(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_vote = obj.votes.all().filter(owner=user).first()
+            return VoteDetailsSerializer(own_vote).data
+        return None
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
@@ -193,29 +199,35 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     own_follow_status = serializers.SerializerMethodField()
     medias = MediaDetailsSerializer(many=True)
     tags = TagSerializer(many=True)
+    own_vote = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
         fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'organizer_url', 'created', 'updated',
                   'attendance_status', 'own_attendance_status', 'comments', 'followers', 'follower_count',
-                  'own_follow_status', 'medias', 'tags')
+                  'own_follow_status', 'medias', 'tags', 'vote_count', 'own_vote')
         read_only_fields = ('owner', 'created', 'updated')
 
     def get_own_attendance_status(self, obj):
-        # TODO Return the actual record
         user = self.context.get("request").user
         if user and user.is_authenticated:
-            own_attendance = obj.attendance_status.all().filter(user=user).first()
-            return '' if own_attendance is None else own_attendance.status
-        return ''
+            own_attendance = obj.attendance_status.all().filter(owner=user).first()
+            return AttendanceDetailsSerializer(own_attendance).data
+        return None
 
     def get_own_follow_status(self, obj):
-        # TODO Return the actual record
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_follow = obj.followers.all().filter(owner=user).first()
-            return 'N' if own_follow is None else 'Y'
-        return ''
+            return FollowDetailsSerializer(own_follow).data
+        return None
+
+    def get_own_vote(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_vote = obj.votes.all().filter(owner=user).first()
+            return VoteDetailsSerializer(own_vote).data
+        return None
 
     # TODO Fix problems
     # def update(self, instance, validated_data):

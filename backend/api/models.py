@@ -67,6 +67,12 @@ class VoteMixin(models.Model):
     class Meta:
         abstract = True
 
+    def update_vote_count(self, vote_value, voted_before):
+        if voted_before:
+            vote_value = vote_value * 2
+        self.vote_count = self.vote_count + vote_value
+        self.save()
+
 
 class GenericModelMixin(models.Model):
     """

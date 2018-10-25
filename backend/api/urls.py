@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^follow/$', views.FollowView.as_view()),
     url(r'^medias/(?P<pk>[0-9]+)/$', views.MediaView.as_view()),
     url(r'^tags/$', views.TagList.as_view()),
+    url(r'^vote/$', views.VoteView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
