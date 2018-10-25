@@ -5,7 +5,7 @@ from rest_framework.permissions import (IsAuthenticated,
 from api.models import (AttendanceStatus, Comment, Event, FollowStatus, Media,
                         Tag)
 from api.permissions import IsOwnerOrReadOnly
-from api.serializers import (AttendanceCreateSerializer,
+from api.serializers import (AttendanceCreateDestroySerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
                              EventCreateSerializer, EventDetailsSerializer,
                              EventSummarySerializer,
@@ -23,14 +23,18 @@ class MultiSerializerViewMixin(object):
             return super(MultiSerializerViewMixin, self).get_serializer_class()
 
 
-class AttendanceCreateView(mixins.CreateModelMixin,
-                           generics.GenericAPIView):
+class AttendanceCreateDestroyView(mixins.CreateModelMixin,
+                                  mixins.DestroyModelMixin,
+                                  generics.GenericAPIView):
     queryset = AttendanceStatus.objects.all()
-    serializer_class = AttendanceCreateSerializer
-    permission_classes = (IsAuthenticated,)
+    serializer_class = AttendanceCreateDestroySerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class CommentView(MultiSerializerViewMixin,
