@@ -9,7 +9,7 @@ from api.serializers import (AttendanceCreateDestroySerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
                              EventCreateSerializer, EventDetailsSerializer,
                              EventSummarySerializer,
-                             FollowCreateDeleteSerializer,
+                             FollowCreateDestroySerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
                              TagSerializer, VoteCreateDeleteSerializer)
 
@@ -102,7 +102,7 @@ class FollowView(mixins.CreateModelMixin,
                  mixins.DestroyModelMixin,
                  generics.GenericAPIView):
     queryset = FollowStatus.objects.all()
-    serializer_class = FollowCreateDeleteSerializer
+    serializer_class = FollowCreateDestroySerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
 
     def post(self, request, *args, **kwargs):

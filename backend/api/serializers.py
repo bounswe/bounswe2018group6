@@ -50,7 +50,7 @@ class CommentDetailsSerializer(serializers.ModelSerializer):
         return obj.content_type.model
 
 
-class FollowCreateDeleteSerializer(serializers.ModelSerializer):
+class FollowCreateDestroySerializer(serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
