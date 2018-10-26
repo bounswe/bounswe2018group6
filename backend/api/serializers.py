@@ -112,16 +112,16 @@ class VoteCreateDeleteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        content_object = ContentType.objects.get(model=validated_data['content_type']) \
-            .get_object_for_this_type(id=validated_data['object_id'])
+        content_type_object = ContentType.objects.get(model=validated_data['content_type'])
+        content_object = content_type_object.get_object_for_this_type(id=validated_data['object_id'])
         vote_status, created = VoteStatus.objects.get_or_create(
-            owner=owner, content_type=validated_data['content_type'], object_id=validated_data['object_id'],
+            owner=owner, content_type=content_type_object, object_id=validated_data['object_id'],
             defaults={'vote': validated_data['vote']})
         if created:
             content_object.update_vote_count(vote_status.vote_value, False)
         else:
             if vote_status.vote == validated_data['vote']:
-                serializers.ValidationError('Cannot vote for the item with same vote.')
+                raise serializers.ValidationError('Cannot vote for the item with the same vote value.')
             else:
                 vote_status.vote = validated_data['vote']
                 vote_status.save()
