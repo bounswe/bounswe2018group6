@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import cmpe.boun.culdidate.R
 import cmpe.boun.cultidate.activity.LoginActivity
+import cmpe.boun.cultidate.activity.ProfileActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,12 +15,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val redirectButton = findViewById<Button>(R.id.redirect_button)
+        val profileButton = findViewById<Button>(R.id.profile_button)
 
         redirectButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-
         }
 
+        profileButton.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
