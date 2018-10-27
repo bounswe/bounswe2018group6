@@ -5,13 +5,13 @@ from rest_framework.permissions import (IsAuthenticated,
 from api.models import (AttendanceStatus, Comment, Event, FollowStatus, Media,
                         Tag, VoteStatus)
 from api.permissions import IsOwnerOrReadOnly
-from api.serializers import (AttendanceCreateDestroySerializer,
+from api.serializers import (AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
-                             EventCreateSerializer, EventDetailsSerializer,
+                             EventCreateUpdateSerializer, EventDetailsSerializer,
                              EventSummarySerializer,
-                             FollowCreateDestroySerializer,
+                             FollowCreateSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
-                             TagSerializer, VoteCreateDeleteSerializer)
+                             TagSerializer, VoteCreateSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -27,7 +27,7 @@ class AttendanceCreateDestroyView(mixins.CreateModelMixin,
                                   mixins.DestroyModelMixin,
                                   generics.GenericAPIView):
     queryset = AttendanceStatus.objects.all()
-    serializer_class = AttendanceCreateDestroySerializer
+    serializer_class = AttendanceCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def post(self, request, *args, **kwargs):
@@ -82,7 +82,8 @@ class EventView(MultiSerializerViewMixin,
     queryset = Event.objects.all()
     serializer_class = EventDetailsSerializer
     method_serializer_classes = {
-        'POST': EventCreateSerializer,
+        'POST': EventCreateUpdateSerializer,
+        'PUT': EventCreateUpdateSerializer,
     }
 
     def get(self, request, *args, **kwargs):
@@ -102,7 +103,7 @@ class FollowView(mixins.CreateModelMixin,
                  mixins.DestroyModelMixin,
                  generics.GenericAPIView):
     queryset = FollowStatus.objects.all()
-    serializer_class = FollowCreateDestroySerializer
+    serializer_class = FollowCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
@@ -143,7 +144,7 @@ class VoteView(mixins.CreateModelMixin,
                mixins.DestroyModelMixin,
                generics.GenericAPIView):
     queryset = VoteStatus.objects.all()
-    serializer_class = VoteCreateDeleteSerializer
+    serializer_class = VoteCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
 
     def post(self, request, *args, **kwargs):

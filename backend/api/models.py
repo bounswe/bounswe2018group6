@@ -91,15 +91,16 @@ class Event(OwnerMixin, CommentMixin, FollowMixin, LocationMixin, MediaMixin, Vo
     # Related fields
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
-                                     related_name='performed_events')
-    tags = models.ManyToManyField('Tag', db_table='event_tags', related_name='events')
+                                     related_name='performed_events', blank=True)
+    tags = models.ManyToManyField('Tag', db_table='event_tags', related_name='events',
+                                  blank=True)
 
     # Own fields
     title = models.CharField(max_length=100)
     description = models.TextField()
     date = models.DateTimeField(default=timezone.now)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    organizer_url = models.URLField(null=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0.0)
+    organizer_url = models.URLField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
