@@ -31,6 +31,7 @@ urlpatterns = [
 
     url(r'^vote/(?P<pk>[0-9]+)/$', views.VoteView.as_view()),
     url(r'^vote/$', views.VoteView.as_view()),
+    url(r'^sign_media/$', views.SignMediaView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

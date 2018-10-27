@@ -1,3 +1,6 @@
+from datetime import datetime
+
+import boto3
 from rest_framework import generics, mixins, views, status
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -121,3 +124,32 @@ class VoteView(generics.CreateAPIView,
     queryset = VoteStatus.objects.all()
     serializer_class = VoteCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+
+class SignMediaView(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        file_name = '+'.join((str(datetime.now().timestamp()),
+                              request.user.username,
+                              request.query_params.get('file_name', '')))
+        file_type = request.query_params.get('file_type')
+
+        s3 = boto3.client('s3')
+        presigned_post = s3.generate_presigned_post(
+            Bucket='cultidate',
+            Key=file_name,
+            Fields={
+                "acl": "public-read",
+                "Content-Type": file_type
+            },
+            Conditions=[
+                {"acl": "public-read"},
+                {"Content-Type": file_type}
+            ],
+            ExpiresIn=3600
+        )
+        return Response({
+            'data': presigned_post,
+            'url': 'http://cultidate.s3.amazonaws.com/{}'.format(file_name)
+        })
