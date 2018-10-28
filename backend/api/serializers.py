@@ -1,8 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from api.models import (AttendanceStatus, Comment, Event, FollowStatus, Media,
-                        Tag, VoteStatus)
+from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, FollowStatus,
+                        Media, Tag, User, UserInterest, VoteStatus)
 
 
 class AttendanceCreateDestroySerializer(serializers.ModelSerializer):
@@ -133,6 +133,94 @@ class VoteDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = VoteStatus
         fields = ('id', 'owner', 'vote')
+
+
+class CorporateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CorporateUserProfile
+        fields = ('description', 'url', 'location')
+
+
+class UserInterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserInterest
+        fields = ('name',)
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    corporate_profile = CorporateUserSerializer()
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', 'first_name', 'last_name',
+                  'birth_date', 'is_corporate_user', 'corporate_profile')
+        extra_kwargs = {'password': {'write_only': True}}
+    
+    def create(self, validated_data):
+        print(validated_data)
+        is_corporate_user = validated_data.pop('is_corporate_user')
+        corporate_profile = validated_data.pop('corporate_profile')
+
+        username = validated_data.pop('username')
+        email = validated_data.pop('email')
+        password = validated_data.pop('password')
+        user = User.objects.create_user(username, email, password)
+        user.first_name, user.last_name = validated_data.pop('first_name'), validated_data.pop('last_name')
+        
+        user.birth_date = validated_data.pop('birth_date')
+        user.is_corporate_user = is_corporate_user
+
+        if is_corporate_user:
+            corp = CorporateUserProfile.objects.create(**corporate_profile)
+            user.corporate_profile = corp
+        else:
+            user.corporate_profile = None
+        return user
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    corporate_profile = CorporateUserSerializer()
+    interests = UserInterestSerializer(many=True)
+    medias = MediaDetailsSerializer(many=True)
+    comments = CommentDetailsSerializer(many=True, read_only=True)
+    votes = VoteDetailsSerializer(many=True, read_only=True)
+    followers_count = serializers.SerializerMethodField(read_only=True)
+    followings_count = serializers.SerializerMethodField(read_only=True)
+    blocked_users_count = serializers.SerializerMethodField(read_only=True)
+    owned_events_count = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'birth_date',
+                  'interests', 'medias', 'comments', 'votes',
+                  'followers_count', 'followings_count', 'owned_events_count',
+                  'blocked_users_count', 'is_corporate_user', 'corporate_profile')
+        read_only_fields = ('username', 'interests', 'medias', 'comments', 'votes',
+                            'followers_count', 'followings_count', 'owned_events_count',
+                            'blocked_users_count')
+    
+    def update(self, instance, validated_data):
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.birth_date = validated_data.get('birth_date', instance.birth_date)
+        corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
+        corp = CorporateUserProfile(description=corporate_profile.get('description'),
+                                    url=corporate_profile.get('url'),
+                                    location=corporate_profile.get('location'))
+        instance.corporate_profile = corp
+        return instance
+
+    def get_followers_count(self, obj):
+        return obj.follower_count
+    
+    def get_followings_count(self, obj):
+        return FollowStatus.objects.filter(owner=obj).count()
+    
+    def get_blocked_users_count(self, obj):
+        return obj.blocked_users.count()
+
+    def get_owned_events_count(self, obj):
+        return Event.objects.filter(owner=obj).count()
 
 
 class EventSummarySerializer(serializers.ModelSerializer):

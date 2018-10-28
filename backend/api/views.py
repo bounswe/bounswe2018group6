@@ -1,17 +1,19 @@
 from rest_framework import generics, mixins
-from rest_framework.permissions import (IsAuthenticated,
+from rest_framework.permissions import (AllowAny,
+                                        IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
-from api.models import (AttendanceStatus, Comment, Event, FollowStatus, Media,
-                        Tag, VoteStatus)
-from api.permissions import IsOwnerOrReadOnly
+from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, FollowStatus, Media,
+                        Tag, User, VoteStatus)
+from api.permissions import (IsOwnerOrReadOnly, IsUserOrReadOnly)
 from api.serializers import (AttendanceCreateDestroySerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
                              EventCreateSerializer, EventDetailsSerializer,
                              EventSummarySerializer,
                              FollowCreateDeleteSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
-                             TagSerializer, VoteCreateDeleteSerializer)
+                             TagSerializer, UserCreateSerializer, UserDetailsSerializer,
+                             VoteCreateDeleteSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -137,6 +139,23 @@ class TagList(mixins.ListModelMixin,
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class SignupView(generics.CreateAPIView):
+    serializer_class = UserCreateSerializer
+    permission_classes = (AllowAny,)
+    
+
+class UserView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.filter(visibility=True)
+    serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, IsUserOrReadOnly)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
 class VoteView(mixins.CreateModelMixin,
