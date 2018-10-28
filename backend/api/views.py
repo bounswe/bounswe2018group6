@@ -1,18 +1,17 @@
 from rest_framework import generics, mixins
-from rest_framework.permissions import (AllowAny,
-                                        IsAuthenticated,
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
-from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, FollowStatus, Media,
-                        Tag, User, VoteStatus)
-from api.permissions import (IsOwnerOrReadOnly, IsUserOrReadOnly)
+from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
+                        FollowStatus, Media, Tag, User, VoteStatus)
+from api.permissions import IsOwnerOrReadOnly, IsUserOrReadOnly
 from api.serializers import (AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
-                             EventCreateUpdateSerializer, EventDetailsSerializer,
-                             EventSummarySerializer,
-                             FollowCreateSerializer,
-                             MediaCreateSerializer, MediaDetailsSerializer,
-                             TagSerializer, UserCreateSerializer, UserDetailsSerializer,
+                             EventCreateUpdateSerializer,
+                             EventDetailsSerializer, EventSummarySerializer,
+                             FollowCreateSerializer, MediaCreateSerializer,
+                             MediaDetailsSerializer, TagSerializer,
+                             UserCreateSerializer, UserDetailsSerializer,
                              VoteCreateSerializer)
 
 
@@ -97,7 +96,7 @@ class SignUpView(generics.CreateAPIView):
 
 class UserView(generics.RetrieveAPIView,
                mixins.UpdateModelMixin):
-    queryset = User.objects.filter(visibility=True)
+    queryset = User.objects.filter(is_active=True)
     serializer_class = UserDetailsSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsUserOrReadOnly)
 

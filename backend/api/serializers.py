@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, FollowStatus,
-                        Media, Tag, User, VoteStatus)
+from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
+                        FollowStatus, Media, Tag, User, VoteStatus)
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
