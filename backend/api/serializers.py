@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
@@ -5,7 +6,7 @@ from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, 
                         Media, Tag, User, VoteStatus)
 
 
-class AttendanceCreateDestroySerializer(serializers.ModelSerializer):
+class AttendanceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceStatus
         fields = ('id', 'event', 'status')
@@ -20,7 +21,7 @@ class AttendanceCreateDestroySerializer(serializers.ModelSerializer):
 class AttendanceDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceStatus
-        fields = ('id', 'owner', 'event', 'status')
+        fields = ('id', 'owner', 'status')
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
@@ -50,7 +51,7 @@ class CommentDetailsSerializer(serializers.ModelSerializer):
         return obj.content_type.model
 
 
-class FollowCreateDeleteSerializer(serializers.ModelSerializer):
+class FollowCreateSerializer(serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
@@ -69,6 +70,13 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowStatus
         fields = ('id', 'owner')
+
+
+class MediaDependentCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Media
+        fields = ('id', 'url')
 
 
 class MediaCreateSerializer(serializers.ModelSerializer):
@@ -103,7 +111,7 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class VoteCreateDeleteSerializer(serializers.ModelSerializer):
+class VoteCreateSerializer(serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
@@ -227,45 +235,85 @@ class EventSummarySerializer(serializers.ModelSerializer):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_attendance = obj.attendance_status.all().filter(owner=user).first()
-            return AttendanceDetailsSerializer(own_attendance).data
+            return AttendanceDetailsSerializer(own_attendance).data if own_attendance else None
         return None
 
     def get_own_follow_status(self, obj):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_follow = obj.followers.all().filter(owner=user).first()
-            return FollowDetailsSerializer(own_follow).data
+            return FollowDetailsSerializer(own_follow).data if own_follow else None
         return None
 
     def get_own_vote(self, obj):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_vote = obj.votes.all().filter(owner=user).first()
-            return VoteDetailsSerializer(own_vote).data
+            return VoteDetailsSerializer(own_vote).data if own_vote else None
         return None
 
 
-class EventCreateSerializer(serializers.ModelSerializer):
-    medias = MediaCreateSerializer(many=True)
-    tags = TagSerializer(many=True)
+class EventCreateUpdateSerializer(serializers.ModelSerializer):
+    medias = MediaDependentCreateSerializer(many=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'title', 'description', 'date', 'price', 'organizer_url', 'medias', 'tags')
+        fields = ('id', 'title', 'description', 'date', 'price',
+                  'organizer_url', 'artists', 'medias', 'tags')
 
-    # TODO Fix problems
-    # def create(self, validated_data):
-    #     owner = self.context.get("request").user
-    #     medias_data = validated_data.pop('medias')
-    #     tags_data = validated_data.pop('tags')
-    #     event = Event.objects.create(owner=owner, **validated_data)
-    #     for media_data in medias_data:
-    #         Media.objects.create(content_object=event, url=media_data['url'])
-    #     for tag_data in tags_data:
-    #         tag_object = Tag.objects.get(id=tag_data['id'])
-    #         if tag_object is not None:
-    #             event.tags.add(tag_object)
-    #     return event
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        artists_data = validated_data.pop('artists', [])
+        medias_data = validated_data.pop('medias', [])
+        tags_data = validated_data.pop('tags', [])
+        event = Event.objects.create(owner=owner, **validated_data)
+        for artist in artists_data:
+            event.artists.add(artist)
+        for media_data in medias_data:
+            Media.objects.create(owner=owner, content_object=event, **media_data)
+        for tag in tags_data:
+            event.tags.add(tag)
+        return event
+
+    def update(self, instance, validated_data):
+        owner = self.context.get("request").user
+        # If 'artists' key is given in data, clear current artists
+        # and add new ones. Else, discard it.
+        artists_data = None
+        try:
+            artists_data = validated_data.pop('artists')
+            instance.artists.clear()
+            for artist in artists_data:
+                instance.artists.add(artist)
+        except KeyError:
+            pass
+
+        # If 'medias' key is given in data, delete current medias
+        # and add new ones. Else, discard it.
+        medias_data = None
+        try:
+            medias_data = validated_data.pop('medias')
+            instance.medias.all().delete()
+            for media_data in medias_data:
+                Media.objects.create(owner=owner, content_object=instance, **media_data)
+        except KeyError:
+            pass
+
+        # If 'tags' key is given in data, clear current tags
+        # and add new ones. Else, discard it.
+        tags_data = None
+        try:
+            tags_data = validated_data.pop('tags')
+            instance.tags.clear()
+            for tag in tags_data:
+                instance.tags.add(tag)
+        except KeyError:
+            pass
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save(update_fields=validated_data.keys())
+        return instance
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
@@ -280,46 +328,28 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'organizer_url', 'created', 'updated',
-                  'attendance_status', 'own_attendance_status', 'comments', 'followers', 'follower_count',
-                  'own_follow_status', 'medias', 'tags', 'vote_count', 'own_vote')
-        read_only_fields = ('owner', 'created', 'updated')
+        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'organizer_url',
+                  'created', 'updated', 'artists', 'attendance_status', 'own_attendance_status',
+                  'comments', 'followers', 'follower_count', 'own_follow_status', 'medias',
+                  'tags', 'vote_count', 'own_vote')
 
     def get_own_attendance_status(self, obj):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_attendance = obj.attendance_status.all().filter(owner=user).first()
-            return AttendanceDetailsSerializer(own_attendance).data
+            return AttendanceDetailsSerializer(own_attendance).data if own_attendance else None
         return None
 
     def get_own_follow_status(self, obj):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_follow = obj.followers.all().filter(owner=user).first()
-            return FollowDetailsSerializer(own_follow).data
+            return FollowDetailsSerializer(own_follow).data if own_follow else None
         return None
 
     def get_own_vote(self, obj):
         user = self.context.get("request").user
         if user and user.is_authenticated:
             own_vote = obj.votes.all().filter(owner=user).first()
-            return VoteDetailsSerializer(own_vote).data
+            return VoteDetailsSerializer(own_vote).data if own_vote else None
         return None
-
-    # TODO Fix problems
-    # def update(self, instance, validated_data):
-    #     medias_data = validated_data.pop('medias')
-    #     tags_data = validated_data.pop('tags')
-    #     Event.objects.filter(id=instance.id).update(**validated_data)
-    #     if (len(medias_data) != 0):
-    #         instance.medias.all().delete()
-    #         for media_data in medias_data:
-    #             media_object = Media.objects.create(content_object=event, url=media_data['url'])
-    #     if (len(tags_data) != 0):
-    #         instance.tags.clear()
-    #         for tag_data in tags_data:
-    #             print(tag_data)
-    #             tag_object = Tag.objects.get(id=tag_data['id'])
-    #             if tag_object is not None:
-    #                 instance.tags.add(tag_object)
-    #     return instance

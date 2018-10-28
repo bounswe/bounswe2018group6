@@ -6,14 +6,14 @@ from rest_framework.permissions import (AllowAny,
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, FollowStatus, Media,
                         Tag, User, VoteStatus)
 from api.permissions import (IsOwnerOrReadOnly, IsUserOrReadOnly)
-from api.serializers import (AttendanceCreateDestroySerializer,
+from api.serializers import (AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
-                             EventCreateSerializer, EventDetailsSerializer,
+                             EventCreateUpdateSerializer, EventDetailsSerializer,
                              EventSummarySerializer,
-                             FollowCreateDeleteSerializer,
+                             FollowCreateSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
                              TagSerializer, UserCreateSerializer, UserDetailsSerializer,
-                             VoteCreateDeleteSerializer)
+                             VoteCreateSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -25,148 +25,88 @@ class MultiSerializerViewMixin(object):
             return super(MultiSerializerViewMixin, self).get_serializer_class()
 
 
-class AttendanceCreateDestroyView(mixins.CreateModelMixin,
-                                  mixins.DestroyModelMixin,
-                                  generics.GenericAPIView):
+class AttendanceView(generics.CreateAPIView,
+                     generics.DestroyAPIView):
     queryset = AttendanceStatus.objects.all()
-    serializer_class = AttendanceCreateDestroySerializer
+    serializer_class = AttendanceCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
 
 
 class CommentView(MultiSerializerViewMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  generics.GenericAPIView):
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+                  generics.RetrieveAPIView,
+                  generics.CreateAPIView,
+                  generics.DestroyAPIView,
+                  mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
     queryset = Comment.objects.all()
     serializer_class = CommentDetailsSerializer
     method_serializer_classes = {
         'POST': CommentCreateSerializer,
     }
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
 
-
-class EventListView(mixins.ListModelMixin,
-                    generics.GenericAPIView):
+class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
 
 class EventView(MultiSerializerViewMixin,
-                mixins.RetrieveModelMixin,
-                mixins.CreateModelMixin,
-                mixins.UpdateModelMixin,
-                mixins.DestroyModelMixin,
-                generics.GenericAPIView):
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+                generics.RetrieveAPIView,
+                generics.CreateAPIView,
+                generics.DestroyAPIView,
+                mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
     queryset = Event.objects.all()
     serializer_class = EventDetailsSerializer
     method_serializer_classes = {
-        'POST': EventCreateSerializer,
+        'POST': EventCreateUpdateSerializer,
+        'PUT': EventCreateUpdateSerializer,
     }
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
 
-
-class FollowView(mixins.CreateModelMixin,
-                 mixins.DestroyModelMixin,
-                 generics.GenericAPIView):
+class FollowView(generics.CreateAPIView,
+                 generics.DestroyAPIView):
     queryset = FollowStatus.objects.all()
-    serializer_class = FollowCreateDeleteSerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    serializer_class = FollowCreateSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
 
-class MediaView(mixins.RetrieveModelMixin,
-                mixins.CreateModelMixin,
-                mixins.DestroyModelMixin,
-                generics.GenericAPIView):
+class MediaView(generics.RetrieveAPIView,
+                generics.CreateAPIView,
+                generics.DestroyAPIView):
     queryset = Media.objects.all()
     serializer_class = MediaCreateSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-
-class TagList(mixins.ListModelMixin,
-              generics.GenericAPIView):
+class TagList(generics.ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
 
 class SignUpView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
     permission_classes = (AllowAny,)
-    
 
-class UserView(generics.RetrieveUpdateAPIView):
+
+class UserView(generics.RetrieveAPIView,
+               mixins.UpdateModelMixin):
     queryset = User.objects.filter(visibility=True)
     serializer_class = UserDetailsSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsUserOrReadOnly)
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
 
-class VoteView(mixins.CreateModelMixin,
-               mixins.DestroyModelMixin,
-               generics.GenericAPIView):
+class VoteView(generics.CreateAPIView,
+               generics.DestroyAPIView):
     queryset = VoteStatus.objects.all()
-    serializer_class = VoteCreateDeleteSerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    serializer_class = VoteCreateSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
