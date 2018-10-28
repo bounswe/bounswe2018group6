@@ -23,8 +23,8 @@ class MultiSerializerViewMixin(object):
             return super(MultiSerializerViewMixin, self).get_serializer_class()
 
 
-class AttendanceCreateDestroyView(generics.CreateAPIView,
-                                  generics.DestroyAPIView):
+class AttendanceView(generics.CreateAPIView,
+                     generics.DestroyAPIView):
     queryset = AttendanceStatus.objects.all()
     serializer_class = AttendanceCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
