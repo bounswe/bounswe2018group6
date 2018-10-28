@@ -149,4 +149,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-django_heroku.settings(locals())
+if DJANGO_ENV == 'production':
+    django_heroku.settings(locals())
