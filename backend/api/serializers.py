@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event, FollowStatus,
-                        Media, Tag, User, UserInterest, VoteStatus)
+                        Media, Tag, User, VoteStatus)
 
 
 class AttendanceCreateDestroySerializer(serializers.ModelSerializer):
@@ -141,12 +141,6 @@ class CorporateUserSerializer(serializers.ModelSerializer):
         fields = ('description', 'url', 'location')
 
 
-class UserInterestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserInterest
-        fields = ('name',)
-
-
 class UserCreateSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer()
 
@@ -157,7 +151,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):
-        print(validated_data)
         is_corporate_user = validated_data.pop('is_corporate_user')
         corporate_profile = validated_data.pop('corporate_profile')
 
@@ -180,23 +173,22 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer()
-    interests = UserInterestSerializer(many=True)
+    tags = TagSerializer(many=True)
     medias = MediaDetailsSerializer(many=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
     votes = VoteDetailsSerializer(many=True, read_only=True)
-    followers_count = serializers.SerializerMethodField(read_only=True)
-    followings_count = serializers.SerializerMethodField(read_only=True)
-    blocked_users_count = serializers.SerializerMethodField(read_only=True)
-    owned_events_count = serializers.SerializerMethodField(read_only=True)
+    following_count = serializers.SerializerMethodField()
+    blocked_users_count = serializers.SerializerMethodField()
+    owned_events_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'birth_date',
-                  'interests', 'medias', 'comments', 'votes',
-                  'followers_count', 'followings_count', 'owned_events_count',
+                  'tags', 'medias', 'comments', 'votes',
+                  'follower_count', 'following_count', 'owned_events_count',
                   'blocked_users_count', 'is_corporate_user', 'corporate_profile')
-        read_only_fields = ('username', 'interests', 'medias', 'comments', 'votes',
-                            'followers_count', 'followings_count', 'owned_events_count',
+        read_only_fields = ('username', 'tags', 'medias', 'comments', 'votes',
+                            'follower_count', 'following_count', 'owned_events_count',
                             'blocked_users_count')
     
     def update(self, instance, validated_data):
@@ -210,9 +202,6 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         instance.corporate_profile = corp
         return instance
 
-    def get_followers_count(self, obj):
-        return obj.follower_count
-    
     def get_followings_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()
     
@@ -220,7 +209,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         return obj.blocked_users.count()
 
     def get_owned_events_count(self, obj):
-        return Event.objects.filter(owner=obj).count()
+        return obj.event_set.count()
 
 
 class EventSummarySerializer(serializers.ModelSerializer):

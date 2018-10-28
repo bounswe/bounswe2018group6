@@ -141,7 +141,7 @@ class TagList(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-class SignupView(generics.CreateAPIView):
+class SignUpView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
     permission_classes = (AllowAny,)
     

@@ -7,7 +7,7 @@ from api import views
 
 urlpatterns = [
     url(r'^auth/$', auth_views.obtain_auth_token),
-    url(r'^signup/$', views.SignupView.as_view()),
+    url(r'^signup/$', views.SignUpView.as_view()),
     url(r'^attendance/$', views.AttendanceCreateDestroyView.as_view()),
     url(r'^comments/(?P<pk>[0-9]+)/$', views.CommentView.as_view()),
     url(r'^events_list/$', views.EventListView.as_view()),

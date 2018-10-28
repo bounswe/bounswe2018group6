@@ -90,12 +90,11 @@ class GenericModelMixin(models.Model):
 
 class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, VoteMixin):
     # Related fields
-    interests = models.ManyToManyField('UserInterest', related_name='user_interests')
+    tags = models.ManyToManyField('Tag', related_name='user_tags')
     blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False, related_name='user_blocked_users')
 
     # Additional own fields
     birth_date = models.DateField(null=True, blank=True)
-    visibility = models.BooleanField(default=True)
 
     # Corporate users have their profiles having their corporate data.
     # Since it's not feasible to create different tables for both
@@ -113,11 +112,6 @@ class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, VoteMixin):
 class CorporateUserProfile(LocationMixin):
     description = models.CharField(max_length=200, null=True)
     url = models.URLField(max_length=200, null=True)
-    location = models.ForeignKey('Location', on_delete=models.SET_NULL, null=True)
-
-
-class UserInterest(models.Model):
-    name = models.CharField(max_length=50)
 
 
 class Event(OwnerMixin, CommentMixin, FollowMixin, LocationMixin, MediaMixin, VoteMixin):
