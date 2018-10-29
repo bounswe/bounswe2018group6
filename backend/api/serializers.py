@@ -206,6 +206,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             user.corporate_profile = corp
         else:
             user.corporate_profile = None
+        user.save()
         return user
 
 
