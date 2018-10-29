@@ -21,6 +21,10 @@ import CustomInput from "components/CustomInput/CustomInput.jsx";
 import Typography from '@material-ui/core/Typography';
 
 import loginPageStyle from "assets/jss/material-kit-react/views/loginPage.jsx";
+import { tryLogin, loginReset } from "redux/auth/Actions.js";
+import { connect } from "react-redux";
+
+import { setCookie, getCookie, LOGGEDIN_COOKIE, TOKEN_COOKIE } from "services/cookies.js";
 
 import image from "assets/img/login.jpg";
 
@@ -29,11 +33,23 @@ class LoginPage extends React.Component {
     super(props);
     // we use this to make the card to appear after the page has been rendered
     this.state = {
-      cardAnimaton: "cardHidden"
+      cardAnimaton: "cardHidden",
+      username: "",
+      password: "",
     };
   }
+
+  handleSubmit(event) {
+    const { username, password } = this.state;
+    this.props.tryLogin(username, password);
+    event.preventDefault();
+  }
+
   componentDidMount() {
-    // we add a hidden class to the card and after 700 ms we delete it and the transition appears
+    const { history } = this.props;
+    const loggedIn = getCookie(LOGGEDIN_COOKIE);
+    if (loggedIn) return history.push("/home");
+
     setTimeout(
       function () {
         this.setState({ cardAnimaton: "" });
@@ -41,6 +57,23 @@ class LoginPage extends React.Component {
       700
     );
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { history } = this.props;
+    const { loginInProgress, loginHasError, loginCompleted, api_token, loggedIn } = this.props.auth;
+
+    if (loginInProgress && !loginHasError && !loginCompleted) {
+    } else if (!loginInProgress && !loginHasError && loginCompleted) {
+      setCookie(TOKEN_COOKIE, api_token, { path: "/" });
+      setCookie(LOGGEDIN_COOKIE, loggedIn, { path: "/" });
+      this.props.loginReset();
+      history.push("/home");
+    } else if (!loginInProgress && loginHasError && loginCompleted) {
+      this.props.loginReset();
+    }
+  }
+
+
   render() {
     const { classes, ...rest } = this.props;
     return (
@@ -67,8 +100,8 @@ class LoginPage extends React.Component {
                   <form className={classes.form}>
                     <CardBody>
                       <CustomInput
-                        labelText="Email..."
-                        id="email"
+                        labelText="Username"
+                        id="username"
                         formControlProps={{
                           fullWidth: true
                         }}
@@ -78,7 +111,8 @@ class LoginPage extends React.Component {
                             <InputAdornment position="end">
                               <Email className={classes.inputIconsColor} />
                             </InputAdornment>
-                          )
+                          ),
+                          onChange: e => this.setState({ username: e.target.value })
                         }}
                       />
                       <CustomInput
@@ -95,17 +129,18 @@ class LoginPage extends React.Component {
                                 lock_outline
                               </Icon>
                             </InputAdornment>
-                          )
+                          ),
+                          onChange: e => this.setState({ password: e.target.value })
                         }}
                       />
                     </CardBody>
                     <CardFooter className={classes.cardFooter}>
-                      <Button color="primary" size="lg">
+                      <Button color="danger" size="lg" onClick={e => this.handleSubmit(e)}>
                         Login
                       </Button>
                     </CardFooter>
                   </form>
-                  <Button href="/sign-up" simple type="button" color="primary">Sign Up Instead?</Button>
+                  <Button href="/sign-up" simple type="button" color="danger">Sign Up Instead?</Button>
                 </Card>
               </GridItem>
             </GridContainer>
@@ -117,5 +152,18 @@ class LoginPage extends React.Component {
   }
 }
 
+function bindAction(dispatch) {
+  return {
+    tryLogin: (username, password) => dispatch(tryLogin(username, password)),
+    loginReset: () => dispatch(loginReset())
+  };
+}
 
-export default withStyles(loginPageStyle)(LoginPage);
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  bindAction
+)(withStyles(loginPageStyle)(LoginPage));

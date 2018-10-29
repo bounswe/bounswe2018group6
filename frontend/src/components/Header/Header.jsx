@@ -79,7 +79,7 @@ class Header extends React.Component {
       [classes.fixed]: fixed
     });
     const brandComponent = <Link to="" className={classes.link}>
-      <Button color="white" size="large" simple  >{brand}</Button>
+      <Button color="white" size="lg" simple  >{brand}</Button>
     </Link>
     return (
       <AppBar className={appBarClasses}>
