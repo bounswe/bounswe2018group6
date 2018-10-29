@@ -7,6 +7,12 @@ from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
                         FollowStatus, Media, Tag, User, VoteStatus)
 
 
+class UserSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name')
+
+
 class AttendanceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceStatus
@@ -15,11 +21,13 @@ class AttendanceCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context.get("request").user
         attendance_status, created = AttendanceStatus.objects.update_or_create(
-            owner=user, event=validated_data['event'], defaults={'status':validated_data['status']})
+            owner=user, event=validated_data.pop('event'), defaults={'status':validated_data.pop('status')})
         return attendance_status
 
 
 class AttendanceDetailsSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer()
+
     class Meta:
         model = AttendanceStatus
         fields = ('id', 'owner', 'status')
@@ -42,6 +50,7 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 
 class CommentDetailsSerializer(serializers.ModelSerializer):
     content_type = serializers.SerializerMethodField()
+    owner = UserSummarySerializer()
 
     class Meta:
         model = Comment
@@ -68,6 +77,8 @@ class FollowCreateSerializer(serializers.ModelSerializer):
 
 
 class FollowDetailsSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer()
+
     class Meta:
         model = FollowStatus
         fields = ('id', 'owner')
@@ -84,7 +95,7 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
 
         user = authenticate(username=username, password=password)
-  
+
         if not user:
             raise serializers.ValidationError('Incorrect credentials')
 
@@ -97,7 +108,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class MediaDependentCreateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Media
         fields = ('id', 'url')
@@ -120,6 +130,7 @@ class MediaCreateSerializer(serializers.ModelSerializer):
 
 class MediaDetailsSerializer(serializers.ModelSerializer):
     content_type = serializers.SerializerMethodField()
+    owner = UserSummarySerializer()
 
     class Meta:
         model = Media
@@ -162,6 +173,8 @@ class VoteCreateSerializer(serializers.ModelSerializer):
 
 
 class VoteDetailsSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer()
+
     class Meta:
         model = VoteStatus
         fields = ('id', 'owner', 'vote')
@@ -181,7 +194,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
                   'birth_date', 'is_corporate_user', 'corporate_profile')
         extra_kwargs = {'password': {'write_only': True}}
-    
+
     def create(self, validated_data):
         is_corporate_user = validated_data.pop('is_corporate_user', False)
         corporate_profile = validated_data.pop('corporate_profile', None)
@@ -191,13 +204,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         first_name = validated_data.pop('first_name', None)
         last_name = validated_data.pop('last_name', None)
-        
+
         if None in (username, email, password, first_name, last_name):
             raise serializers.ValidationError('User creation failed due to missing credentials.')
 
         user = User.objects.create_user(username, email, password)
         user.first_name, user.last_name = first_name, last_name
-        
+
         user.birth_date = validated_data.pop('birth_date', '')
         user.is_corporate_user = is_corporate_user
 
@@ -243,7 +256,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     def get_following_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()
-    
+
     def get_blocked_users_count(self, obj):
         return obj.blocked_users.count()
 
@@ -255,6 +268,7 @@ class EventSummarySerializer(serializers.ModelSerializer):
     own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
     own_vote = serializers.SerializerMethodField()
+    owner = UserSummarySerializer()
 
     class Meta:
         model = Event
@@ -308,38 +322,30 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         owner = self.context.get("request").user
+
         # If 'artists' key is given in data, clear current artists
         # and add new ones. Else, discard it.
-        artists_data = None
-        try:
+        if 'artists' in validated_data:
             artists_data = validated_data.pop('artists')
             instance.artists.clear()
             for artist in artists_data:
                 instance.artists.add(artist)
-        except KeyError:
-            pass
 
         # If 'medias' key is given in data, delete current medias
         # and add new ones. Else, discard it.
-        medias_data = None
-        try:
+        if 'medias' in validated_data:
             medias_data = validated_data.pop('medias')
             instance.medias.all().delete()
             for media_data in medias_data:
                 Media.objects.create(owner=owner, content_object=instance, **media_data)
-        except KeyError:
-            pass
 
         # If 'tags' key is given in data, clear current tags
         # and add new ones. Else, discard it.
-        tags_data = None
-        try:
+        if 'tags' in validated_data:
             tags_data = validated_data.pop('tags')
             instance.tags.clear()
             for tag in tags_data:
                 instance.tags.add(tag)
-        except KeyError:
-            pass
 
         for key, value in validated_data.items():
             setattr(instance, key, value)
@@ -348,14 +354,16 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
+    artists = UserSummarySerializer(many=True, read_only=True)
     attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
-    own_attendance_status = serializers.SerializerMethodField()
     comments = CommentDetailsSerializer(many=True, read_only=True)
     followers = FollowDetailsSerializer(many=True, read_only=True)
+    medias = MediaDetailsSerializer(many=True, read_only=True)
+    own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
-    medias = MediaDetailsSerializer(many=True)
-    tags = TagSerializer(many=True)
     own_vote = serializers.SerializerMethodField()
+    owner = UserSummarySerializer()
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Event
