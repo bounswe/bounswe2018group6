@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.Callback
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import retrofit2.Response
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 
 class AuthResponse {
@@ -34,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.register_button)
         val forgetButton = findViewById<Button>(R.id.forget_button)
         val password = findViewById<EditText>(R.id.text_password)
-        val username = findViewById<EditText>(R.id.text_username)
+        val username = findViewById<EditText>(R.id.text_mail)
         val loginButton = findViewById<Button>(R.id.login_button)
 
         val service = createService()
@@ -56,15 +57,21 @@ class LoginActivity : AppCompatActivity() {
             }*/
 
             val user = User(username.text.toString(), password.text.toString())
-            val userResponse = service.authenticate(user).execute()
 
-            if (userResponse.isSuccessful) {
-                val token = userResponse.body()!!.getToken()
-                Toast.makeText(applicationContext, "Call is successful", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                Toast.makeText(applicationContext, "Call is not successful", Toast.LENGTH_SHORT).show()
-            }
+            val userResponse = service.authenticate(user).enqueue(object : Callback<AuthResponse> {
+                override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+                    Toast.makeText(applicationContext, "Call is not successful", Toast.LENGTH_SHORT).show()
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                    val token = response.body()!!.getToken()
+                    Toast.makeText(applicationContext, "Call is successful", Toast.LENGTH_SHORT).show()
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+            })
+
 
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
@@ -88,5 +95,17 @@ class LoginActivity : AppCompatActivity() {
     fun isPassValid(password: CharSequence): Boolean {
         val regex = Regex(pattern = "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])")
         return password.length > 6 && password.contains(regex)
+    }
+}
+
+fun <T> callback2(success: ((Response<T>) -> Unit)?, failure: ((t: Throwable) -> Unit)? = null): Callback<T> {
+    return object : Callback<T> {
+        override fun onResponse(call: Call<T>, response: retrofit2.Response<T>) {
+            success?.invoke(response)
+        }
+
+        override fun onFailure(call: Call<T>, t: Throwable) {
+            failure?.invoke(t)
+        }
     }
 }
