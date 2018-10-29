@@ -1,6 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
                         FollowStatus, Media, Tag, User, VoteStatus)
@@ -70,6 +71,29 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowStatus
         fields = ('id', 'owner')
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, write_only=True)
+    password = serializers.CharField(max_length=20, write_only=True)
+    token = serializers.CharField(max_length=40, read_only=True)
+    user_id = serializers.IntegerField(read_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
+  
+        if not user:
+            raise serializers.ValidationError('Incorrect credentials')
+
+        token, __ = Token.objects.get_or_create(user=user)
+
+        return {
+            'token': token,
+            'user_id': user.pk,
+        }
 
 
 class MediaDependentCreateSerializer(serializers.ModelSerializer):
