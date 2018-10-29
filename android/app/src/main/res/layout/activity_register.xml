@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:padding="10dp"
+            android:layout_weight="0.2"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
+            <ImageView
+                android:id="@+id/AppLogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars[14]" />
         </LinearLayout>
 
         <LinearLayout
@@ -23,9 +35,9 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
 
             <Button
                 android:id="@+id/FacebookButton"
@@ -39,16 +51,17 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
 
             <EditText
+                android:id="@+id/FNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="First Name" />
+                android:hint="First Name"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
         <LinearLayout
@@ -56,16 +69,17 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
 
             <EditText
+                android:id="@+id/LNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Last Name" />
+                android:hint="Last Name"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,16 +87,17 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
 
             <EditText
+                android:id="@+id/UserNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="E-mail" />
+                android:hint="Username"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,15 +105,35 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
+
             <EditText
+                android:id="@+id/EmailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Password" />
+                android:hint="E-mail"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <EditText
+                android:id="@+id/PasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
 
@@ -107,15 +142,17 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
+
             <EditText
+                android:id="@+id/PasswordConfirmEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Password(again)" />
+                android:hint="Password(again)"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
 
@@ -124,9 +161,9 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:gravity="center"
-            android:paddingRight="10dp"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:orientation="vertical">
+            android:paddingRight="10dp">
 
             <Button
                 android:id="@+id/SignUpButton"
