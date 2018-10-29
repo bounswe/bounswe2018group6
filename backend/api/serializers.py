@@ -1,6 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
                         FollowStatus, Media, Tag, User, VoteStatus)
@@ -70,6 +71,29 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowStatus
         fields = ('id', 'owner')
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, write_only=True)
+    password = serializers.CharField(max_length=20, write_only=True)
+    token = serializers.CharField(max_length=40, read_only=True)
+    user_id = serializers.IntegerField(read_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
+  
+        if not user:
+            raise serializers.ValidationError('Incorrect credentials')
+
+        token, __ = Token.objects.get_or_create(user=user)
+
+        return {
+            'token': token,
+            'user_id': user.pk,
+        }
 
 
 class MediaDependentCreateSerializer(serializers.ModelSerializer):
@@ -146,36 +170,43 @@ class VoteDetailsSerializer(serializers.ModelSerializer):
 class CorporateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CorporateUserProfile
-        fields = ('description', 'url', 'location')
+        fields = ('description', 'url')
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    corporate_profile = CorporateUserSerializer()
+    corporate_profile = CorporateUserSerializer(required=False, allow_null=True)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'first_name', 'last_name',
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
                   'birth_date', 'is_corporate_user', 'corporate_profile')
         extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):
-        is_corporate_user = validated_data.pop('is_corporate_user')
-        corporate_profile = validated_data.pop('corporate_profile')
+        is_corporate_user = validated_data.pop('is_corporate_user', False)
+        corporate_profile = validated_data.pop('corporate_profile', None)
 
-        username = validated_data.pop('username')
-        email = validated_data.pop('email')
-        password = validated_data.pop('password')
-        user = User.objects.create_user(username, email, password)
-        user.first_name, user.last_name = validated_data.pop('first_name'), validated_data.pop('last_name')
+        username = validated_data.pop('username', None)
+        email = validated_data.pop('email', None)
+        password = validated_data.pop('password', None)
+        first_name = validated_data.pop('first_name', None)
+        last_name = validated_data.pop('last_name', None)
         
-        user.birth_date = validated_data.pop('birth_date')
+        if None in (username, email, password, first_name, last_name):
+            raise serializers.ValidationError('User creation failed due to missing credentials.')
+
+        user = User.objects.create_user(username, email, password)
+        user.first_name, user.last_name = first_name, last_name
+        
+        user.birth_date = validated_data.pop('birth_date', '')
         user.is_corporate_user = is_corporate_user
 
-        if is_corporate_user:
+        if is_corporate_user and corporate_profile is not None:
             corp = CorporateUserProfile.objects.create(**corporate_profile)
             user.corporate_profile = corp
         else:
             user.corporate_profile = None
+        user.save()
         return user
 
 
@@ -191,7 +222,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'birth_date',
+        fields = ('id', 'username', 'first_name', 'last_name', 'birth_date',
                   'tags', 'medias', 'comments', 'votes',
                   'follower_count', 'following_count', 'owned_events_count',
                   'blocked_users_count', 'is_corporate_user', 'corporate_profile')
@@ -210,7 +241,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         instance.corporate_profile = corp
         return instance
 
-    def get_followings_count(self, obj):
+    def get_following_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()
     
     def get_blocked_users_count(self, obj):

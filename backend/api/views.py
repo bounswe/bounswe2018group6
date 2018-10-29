@@ -1,6 +1,7 @@
-from rest_framework import generics, mixins
+from rest_framework import generics, mixins, views, status
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
 
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
                         FollowStatus, Media, Tag, User, VoteStatus)
@@ -9,7 +10,7 @@ from api.serializers import (AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
                              EventCreateUpdateSerializer,
                              EventDetailsSerializer, EventSummarySerializer,
-                             FollowCreateSerializer, MediaCreateSerializer,
+                             LoginSerializer, FollowCreateSerializer, MediaCreateSerializer,
                              MediaDetailsSerializer, TagSerializer,
                              UserCreateSerializer, UserDetailsSerializer,
                              VoteCreateSerializer)
@@ -76,6 +77,17 @@ class FollowView(generics.CreateAPIView,
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
 
+class LoginView(views.APIView):
+    serializer_class = LoginSerializer
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class MediaView(generics.RetrieveAPIView,
                 generics.CreateAPIView,
                 generics.DestroyAPIView):
@@ -84,14 +96,14 @@ class MediaView(generics.RetrieveAPIView,
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
 
-class TagList(generics.ListAPIView):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
-
-
 class SignUpView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
     permission_classes = (AllowAny,)
+
+
+class TagList(generics.ListAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
 
 
 class UserView(generics.RetrieveAPIView,

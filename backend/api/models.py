@@ -109,7 +109,8 @@ class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, VoteMixin):
         unique_together = ('id', 'email', 'username')
 
 
-class CorporateUserProfile(LocationMixin):
+class CorporateUserProfile(models.Model):
+    # TODO add LocationMixin allowing null=True
     description = models.CharField(max_length=200, null=True)
     url = models.URLField(max_length=200, null=True)
 
