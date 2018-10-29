@@ -111,6 +111,7 @@ android/.navigation/
 android/captures/
 
 # IntelliJ
+android/app/app.iml
 android/*.iml
 android/.idea/workspace.xml
 android/.idea/tasks.xml

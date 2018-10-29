@@ -2,29 +2,21 @@ package cmpe.boun.cultidate.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
-import cmpe.boun.culdidate.R
 import android.widget.Toast
+import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.api.ApiInterface
+import cmpe.boun.cultidate.model.AuthResponse
+import cmpe.boun.cultidate.model.User
 import retrofit2.Call
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Retrofit
 import retrofit2.Callback
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import retrofit2.Response
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-class AuthResponse {
-    @SerializedName("token")
-    @Expose
-    private var token: String = ""
-
-    fun getToken(): String {
-        return token
-    }
-}
 
 class LoginActivity : AppCompatActivity() {
 
@@ -58,16 +50,22 @@ class LoginActivity : AppCompatActivity() {
 
             val user = User(username.text.toString(), password.text.toString())
 
-            val userResponse = service.authenticate(user).enqueue(object : Callback<AuthResponse> {
+            service.authenticate(user).enqueue(object : Callback<AuthResponse> {
                 override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Call is not successful", Toast.LENGTH_SHORT).show()
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Toast.makeText(applicationContext, "Login is not successful", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                    val token = response.body()!!.getToken()
-                    Toast.makeText(applicationContext, "Call is successful", Toast.LENGTH_SHORT).show()
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+                    response.body()?.let { tokenResponse ->
+                        PreferenceManager.getDefaultSharedPreferences(baseContext).edit().let { editor ->
+                            editor.putString("token", tokenResponse.getToken())
+                            editor.apply()
+                        }
+                    }
+
+
+                    Toast.makeText(applicationContext, "Login is successful", Toast.LENGTH_SHORT).show()
                 }
 
             })
@@ -83,13 +81,10 @@ class LoginActivity : AppCompatActivity() {
         val BASE_URL = "http://cultidate.herokuapp.com/"
         val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        val service = retrofit.create(ApiInterface::class.java)
-
-        return service
+        return retrofit.create(ApiInterface::class.java)
     }
 
     fun isPassValid(password: CharSequence): Boolean {
@@ -98,14 +93,3 @@ class LoginActivity : AppCompatActivity() {
     }
 }
 
-fun <T> callback2(success: ((Response<T>) -> Unit)?, failure: ((t: Throwable) -> Unit)? = null): Callback<T> {
-    return object : Callback<T> {
-        override fun onResponse(call: Call<T>, response: retrofit2.Response<T>) {
-            success?.invoke(response)
-        }
-
-        override fun onFailure(call: Call<T>, t: Throwable) {
-            failure?.invoke(t)
-        }
-    }
-}
