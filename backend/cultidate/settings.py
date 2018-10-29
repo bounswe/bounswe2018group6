@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DJANGO_ENV == 'development'
 
 ALLOWED_HOSTS = []
 
@@ -87,6 +87,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'cultidate.wsgi.application'
 
 
+# REST Framework
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+   )
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -101,6 +110,7 @@ if DJANGO_ENV == 'production':
     DATABASES['default'].update(db_from_env)
 
 AUTH_USER_MODEL = "api.User" 
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
