@@ -4,17 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Button
 import cmpe.boun.culdidate.R
 import cmpe.boun.cultidate.activity.LoginActivity
 import cmpe.boun.cultidate.activity.ProfileActivity
 import cmpe.boun.cultidate.api.ApiInterface
 import cmpe.boun.cultidate.model.AuthResponse
-import cmpe.boun.cultidate.model.UserSignup
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -38,9 +33,13 @@ class MainActivity : AppCompatActivity() {
 
 
         // If token is not saved before then redirect to login page
-        if (token.token.isNullOrEmpty()) {
+        if (token.token.isNullOrEmpty().or(token.userId < 0)) {
             finish()
             val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }else{
+            finish()
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
