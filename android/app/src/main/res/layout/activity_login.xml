@@ -114,7 +114,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="4dp"
         android:ems="10"
-        android:hint="Mail"
+        android:hint="Username"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="false"
         android:singleLine="false"

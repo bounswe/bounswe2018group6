@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // submit login info on done after writing password
         password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loginButton.performClick()
@@ -65,7 +66,6 @@ class LoginActivity : AppCompatActivity() {
             service.authenticate(user).enqueue(object : Callback<AuthResponse> {
                 override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                     Toast.makeText(applicationContext, "Login is not successful", Toast.LENGTH_SHORT).show()
-
                 }
 
                 override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
