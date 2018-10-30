@@ -16,6 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.absoluteValue
 
 
 class LoginActivity : AppCompatActivity() {
@@ -59,7 +60,8 @@ class LoginActivity : AppCompatActivity() {
 
                     response.body()?.let { tokenResponse ->
                         PreferenceManager.getDefaultSharedPreferences(baseContext).edit().let { editor ->
-                            editor.putString("token", tokenResponse.getToken())
+                            editor.putString("token", tokenResponse.token)
+                            editor.putInt("token_user", tokenResponse.userId)
                             editor.apply()
                         }
                     }
