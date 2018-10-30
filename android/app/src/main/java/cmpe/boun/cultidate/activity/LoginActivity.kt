@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -16,7 +17,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.math.absoluteValue
 
 
 class LoginActivity : AppCompatActivity() {
@@ -30,6 +30,10 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.text_password)
         val username = findViewById<EditText>(R.id.text_mail)
         val loginButton = findViewById<Button>(R.id.login_button)
+        username.requestFocus()
+
+        // TODO disable login actions on request
+        //val progressBar: ProgressBar = this.loginProgress
 
         val service = createService()
 
@@ -43,6 +47,13 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        password.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loginButton.performClick()
+            }
+            false
+        }
+
         loginButton.setOnClickListener {
             /*if (!isPassValid(password.text)) {
                 Toast.makeText(applicationContext, "Password has at least 6 characters, at least one digit," +
@@ -54,27 +65,29 @@ class LoginActivity : AppCompatActivity() {
             service.authenticate(user).enqueue(object : Callback<AuthResponse> {
                 override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                     Toast.makeText(applicationContext, "Login is not successful", Toast.LENGTH_SHORT).show()
+
                 }
 
                 override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                    if (response.isSuccessful.and(response.code() == 200)) {
+                        response.body()?.let { tokenResponse ->
+                            PreferenceManager.getDefaultSharedPreferences(baseContext).edit().let { editor ->
+                                editor.putString("token", tokenResponse.token)
+                                editor.putInt("token_user", tokenResponse.userId)
+                                editor.apply()
+                            }
+                            Toast.makeText(this@LoginActivity, "Login is successful", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(applicationContext, ProfileActivity::class.java)
+                            startActivity(intent)
 
-                    response.body()?.let { tokenResponse ->
-                        PreferenceManager.getDefaultSharedPreferences(baseContext).edit().let { editor ->
-                            editor.putString("token", tokenResponse.token)
-                            editor.putInt("token_user", tokenResponse.userId)
-                            editor.apply()
                         }
+                    } else {
+                        Toast.makeText(this@LoginActivity, "Username or password invalid", Toast.LENGTH_SHORT).show()
                     }
-
-
-                    Toast.makeText(applicationContext, "Login is successful", Toast.LENGTH_SHORT).show()
                 }
 
             })
 
-
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
 
         }
     }
