@@ -211,7 +211,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(username, email, password)
         user.first_name, user.last_name = first_name, last_name
 
-        user.birth_date = validated_data.pop('birth_date', '')
+        user.birth_date = validated_data.pop('birth_date', None)
         user.is_corporate_user = is_corporate_user
 
         if is_corporate_user and corporate_profile is not None:
