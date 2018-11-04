@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
-                        FollowStatus, Media, Tag, User, VoteStatus)
+                        FollowStatus, Location, Media, Tag, User, VoteStatus)
 
 
 class UserSummarySerializer(serializers.ModelSerializer):
@@ -82,6 +82,12 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowStatus
         fields = ('id', 'owner')
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ('id', 'city', 'district')
 
 
 class LoginSerializer(serializers.Serializer):
@@ -183,7 +189,7 @@ class VoteDetailsSerializer(serializers.ModelSerializer):
 class CorporateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CorporateUserProfile
-        fields = ('description', 'url')
+        fields = ('url')
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -192,7 +198,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
-                  'birth_date', 'is_corporate_user', 'corporate_profile')
+                  'bio', 'city', 'is_corporate_user', 'corporate_profile')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -211,7 +217,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(username, email, password)
         user.first_name, user.last_name = first_name, last_name
 
-        user.birth_date = validated_data.pop('birth_date', None)
+        user.bio = validated_data.pop('bio', None)
+        user.city = validated_data.pop('city', None)
         user.is_corporate_user = is_corporate_user
 
         if is_corporate_user and corporate_profile is not None:
@@ -235,22 +242,21 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'birth_date',
-                  'tags', 'medias', 'comments', 'votes',
-                  'follower_count', 'following_count', 'owned_events_count',
-                  'blocked_users_count', 'is_corporate_user', 'corporate_profile')
+        fields = ('id', 'username', 'first_name', 'last_name', 'bio', 'city',
+                  'tags', 'medias', 'comments', 'votes', 'follower_count',
+                  'following_count', 'owned_events_count', 'blocked_users_count',
+                  'is_corporate_user', 'corporate_profile')
         read_only_fields = ('username', 'tags', 'medias', 'comments', 'votes',
                             'follower_count', 'following_count', 'owned_events_count',
                             'blocked_users_count')
-    
+
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.birth_date = validated_data.get('birth_date', instance.birth_date)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.city = validated_data.get('city', instance.city)
         corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
-        corp = CorporateUserProfile(description=corporate_profile.get('description'),
-                                    url=corporate_profile.get('url'),
-                                    location=corporate_profile.get('location'))
+        corp = CorporateUserProfile(url=corporate_profile.get('url'))
         instance.corporate_profile = corp
         return instance
 
@@ -265,6 +271,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
 
 class EventSummarySerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
     own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
     own_vote = serializers.SerializerMethodField()
@@ -272,7 +279,7 @@ class EventSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price',
+        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'location',
                   'created', 'updated', 'own_attendance_status', 'follower_count',
                   'own_follow_status', 'vote_count', 'own_vote')
 
@@ -299,6 +306,7 @@ class EventSummarySerializer(serializers.ModelSerializer):
 
 
 class EventCreateUpdateSerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
     medias = MediaDependentCreateSerializer(many=True)
 
     class Meta:
@@ -307,11 +315,16 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
                   'organizer_url', 'artists', 'medias', 'tags')
 
     def create(self, validated_data):
+        # Required fields
         owner = self.context.get("request").user
+        location_data = validated_data.pop('location')
+        location = Location.objects.create(**location_data)
+
+        # Optional fields
         artists_data = validated_data.pop('artists', [])
         medias_data = validated_data.pop('medias', [])
         tags_data = validated_data.pop('tags', [])
-        event = Event.objects.create(owner=owner, **validated_data)
+        event = Event.objects.create(owner=owner, location=location, **validated_data)
         for artist in artists_data:
             event.artists.add(artist)
         for media_data in medias_data:
@@ -331,6 +344,11 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
             for artist in artists_data:
                 instance.artists.add(artist)
 
+        if 'location' in validated_data:
+            location_data = validated_data.pop('location')
+            instance.location.delete()
+            instance.location = Location.objects.create(**location_data)
+
         # If 'medias' key is given in data, delete current medias
         # and add new ones. Else, discard it.
         if 'medias' in validated_data:
@@ -349,7 +367,7 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 
         for key, value in validated_data.items():
             setattr(instance, key, value)
-        instance.save(update_fields=validated_data.keys())
+        instance.save()
         return instance
 
 
@@ -358,6 +376,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
     followers = FollowDetailsSerializer(many=True, read_only=True)
+    location = LocationSerializer(read_only=True)
     medias = MediaDetailsSerializer(many=True, read_only=True)
     own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
@@ -367,7 +386,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'organizer_url',
+        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
                   'created', 'updated', 'artists', 'attendance_status', 'own_attendance_status',
                   'comments', 'followers', 'follower_count', 'own_follow_status', 'medias',
                   'tags', 'vote_count', 'own_vote')
