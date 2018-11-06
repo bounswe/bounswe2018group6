@@ -72,6 +72,15 @@ export default {
     theme: 'Theme',
     size: 'Global Size'
   },
+  signup: {
+    title: 'Sign up Form',
+    logIn: 'Sign Up',
+    username: 'Username',
+    password: 'Password',
+    any: 'any',
+    thirdparty: 'Or connect with',
+    thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
+  },
   login: {
     title: 'Login Form',
     logIn: 'Log in',
