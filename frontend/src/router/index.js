@@ -43,8 +43,18 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/',
+    component: () => import('@/views/landing-page/index'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/signup',
+    component: () => import('@/views/signup/index'),
     hidden: true
   },
   {
@@ -72,6 +82,24 @@ export const constantRouterMap = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/events',
+    component: Layout,
+    redirect: '/events/index',
+    name: 'events',
+    meta: {
+      title: 'Events',
+      icon: 'list'
+    },
+    children: [
+      {
+        path: 'index',
+        component: ()=>import('@/views/events/index'),
+        name: 'Events',
+        meta: { title: 'Events' }
       }
     ]
   },
