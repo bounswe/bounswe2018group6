@@ -1,19 +1,46 @@
 <template>
   <div class="login-container">
 
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="signupForm" :model="signupForm" :rules="signupRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">{{ $t('signup.title') }}</h3>
         <lang-select class="set-language"/>
       </div>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
+      <el-form-item prop="first_name">
         <el-input
-          v-model="loginForm.username"
+          v-model="signupForm.first_name"
+          :placeholder="$t('Firstname')"
+          name="first_name"
+          type="text"
+          auto-complete="on"
+        />
+      </el-form-item>
+
+      <el-form-item prop="last_name">
+        <el-input
+          v-model="signupForm.last_name"
+          :placeholder="$t('Lastname')"
+          name="last_name"
+          type="text"
+          auto-complete="on"
+        />
+      </el-form-item>
+
+      <el-form-item prop="email">
+        <el-input
+          v-model="signupForm.email"
+          :placeholder="$t('Mail')"
+          name="email"
+          type="text"
+          auto-complete="on"
+        />
+      </el-form-item>
+
+      <el-form-item prop="username">
+        <el-input
+          v-model="signupForm.username"
           :placeholder="$t('signup.username')"
           name="username"
           type="text"
@@ -22,33 +49,28 @@
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
         <el-input
           :type="passwordType"
-          v-model="loginForm.password"
+          v-model="signupForm.password"
           :placeholder="$t('signup.password')"
           name="password"
           auto-complete="on"
-          @keyup.enter.native="handleLogin" />
+          @keyup.enter.native="handleSignup" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('signup.logIn') }}</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleSignup">{{ $t('signup.logIn') }}</el-button>
 
       <div class="tips">
-        <span>{{ $t('signup.username') }} : admin</span>
-        <span>{{ $t('signup.password') }} : {{ $t('signup.any') }}</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:18px;">{{ $t('signup.username') }} : editor</span>
-        <span>{{ $t('signup.password') }} : {{ $t('signup.any') }}</span>
+        <div>
+          <span/>
+        </div>
+        <span/>
       </div>
 
-      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('signup.thirdparty') }}</el-button>
+      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
     </el-form>
 
     <el-dialog :title="$t('signup.thirdparty')" :visible.sync="showDialog" append-to-body>
@@ -63,12 +85,12 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+import { isvalidUsername, validateEmail } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
 
 export default {
-  name: 'Login',
+  name: 'Signup',
   components: { LangSelect, SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -85,14 +107,25 @@ export default {
         callback()
       }
     }
+    const validateMail = (rule, value, callback) => {
+      if (!validateEmail(value)) {
+        callback(new Error('Please enter valid email address'))
+      } else {
+        callback()
+      }
+    }
     return {
-      loginForm: {
-        username: 'mert',
-        password: '123456'
+      signupForm: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        username: '',
+        password: ''
       },
-      loginRules: {
+      signupRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        email: [{ required: true, trigger: 'blur', validator: validateMail }]
       },
       passwordType: 'password',
       loading: false,
@@ -123,11 +156,11 @@ export default {
         this.passwordType = 'password'
       }
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+    handleSignup() {
+      this.$refs.signupForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+          this.$store.dispatch('signupDate', this.signupForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
