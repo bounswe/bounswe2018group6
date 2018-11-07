@@ -1,4 +1,5 @@
 import { loginByUsername, getUserInfo } from '@/api/login'
+import { signupDate } from '@/api/signup'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { MessageBox } from 'element-ui'
 
@@ -60,6 +61,22 @@ const user = {
           resolve()
         }).catch(error => {
           MessageBox.alert('Sorry. Check your username or password!', {
+            type: 'warning'
+          })
+          reject(error)
+        })
+      })
+    },
+
+    signupDate({ commit }, user) {
+      const username = user.username.trim()
+      return new Promise((resolve, reject) => {
+        signupDate(user.first_name, user.last_name, user.email, username, user.password).then(response => {
+          const data = response.data
+          commit('SET_USER_ID', data.id)
+          resolve()
+        }).catch(error => {
+          MessageBox.alert('This username or email is used. Please, enter new one!', {
             type: 'warning'
           })
           reject(error)
