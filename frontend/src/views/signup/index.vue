@@ -60,16 +60,8 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleSignup">{{ $t('signup.logIn') }}</el-button>
-
-      <div class="tips">
-        <div>
-          <span/>
-        </div>
-        <span/>
-      </div>
-
+      <router-link to="/login?redirect=%2Fdashboard"><el-button class="login-button" type="primary">Login</el-button></router-link>
       <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
     </el-form>
 
@@ -305,7 +297,12 @@ $light_gray:#eee;
   .thirdparty-button {
     position: absolute;
     right: 35px;
-    bottom: 28px;
+    bottom: -5px;
+  }
+  .login-button {
+    position: absolute;
+    left: 35px;
+    bottom: -5px;
   }
 }
 </style>
