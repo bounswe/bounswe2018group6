@@ -1,5 +1,4 @@
-import { loginByUsername, getUserInfo } from '@/api/login'
-import { signupDate } from '@/api/signup'
+import { loginByUsername, getUserInfo, signupDate } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { MessageBox } from 'element-ui'
 

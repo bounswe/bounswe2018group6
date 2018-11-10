@@ -12,21 +12,25 @@ export function loginByUsername(username, password) {
   })
 }
 
-export function logout() {
-  // return request({
-  //   url: '/login/logout',
-  //   method: 'post'
-  // })
-  // Currently we don't use API for logout.
-  return
-}
-
-// export function getUserInfo(token) {
 export function getUserInfo(user_id) {
   return request({
     url: '/user/' + user_id,
     method: 'get'
-    // params: { token }
   })
 }
+
+export function signupDate(first_name, last_name, email, username, password) {
+    const data = {
+      first_name,
+      last_name,
+      email,
+      username,
+      password
+    }
+    return request({
+      url: '/signup/',
+      method: 'post',
+      data
+    })
+  }
 
