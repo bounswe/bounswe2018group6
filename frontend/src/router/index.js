@@ -97,9 +97,27 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        component: ()=>import('@/views/events/index'),
+        component: () => import('@/views/events/index'),
         name: 'Events',
         meta: { title: 'Events' }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    name: 'profile',
+    meta: {
+      title: 'Profile',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: 'Profile' }
       }
     ]
   },
