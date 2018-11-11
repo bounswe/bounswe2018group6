@@ -12,6 +12,9 @@
         <span>Date: {{date}}</span>
       </div>
       <div style="padding-top:20px;">
+        <span>Price: {{price}}</span>
+      </div>
+      <div style="padding-top:20px;">
         <span>Owner: {{owner}}</span>
       </div>
       <div style="padding-top:20px;">
@@ -41,6 +44,9 @@ export default {
     },
     date: {
       type: Date,
+    },
+    price: {
+      type: Number,
     },
     owner: {
       type: String,
@@ -118,12 +124,6 @@ export default {
     box-shadow: none!important;
     /deep/ .pan-info {
       box-shadow: none!important;
-    }
-  }
- 
-  @media only screen and (max-width: 1510px){
-    .mallki-text{
-      display: none;
     }
   }
 }
