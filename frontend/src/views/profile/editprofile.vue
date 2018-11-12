@@ -18,7 +18,7 @@
         <el-input v-model="formLabelAlign.name" :placeholder="name"/>
       </el-form-item>
       <el-form-item label="Birth date">
-        <el-date-picker :placeholder="birth_date" :v-model="formLabelAlign.birth_date" type="date" style="width: 100%;"/>
+        <el-date-picker :placeholder="birth_date" v-model="formLabelAlign.birth_date" type="date" style="width: 100%;"/>
       </el-form-item>
       <el-form-item v-if="is_corporate_user" label="Description">
         <el-input v-model="formLabelAlign.corporate_profile.description" :placeholder="corporate_profile.description"/>
