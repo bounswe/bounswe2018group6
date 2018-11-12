@@ -13,7 +13,7 @@
     <el-popover v-if="is_corporate_user" :title="corporate_profile.description" :content="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
-    <el-button type="primary" icon="el-icon-edit" class="edit" circle/>
+    <router-link to="/editprofile"><el-button type="primary" icon="el-icon-edit" class="edit" circle/></router-link>
     <div class="features">
       <el-button round>{{ follower_count }} followers</el-button>
       <el-button round style="margin-left: 10px;">{{ following_count }} followings</el-button>
