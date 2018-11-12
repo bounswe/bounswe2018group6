@@ -7,14 +7,15 @@
     tools:context="cmpe.boun.cultidate.MainActivity">
 
     <Button
-        android:id="@+id/redirect_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/redirect_button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/profile_button"
+        android:layout_width="51dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

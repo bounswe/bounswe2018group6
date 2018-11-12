@@ -28,10 +28,10 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/FacebookButton"
+                android:id="@+id/facebookButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="SıgnUp wıth Facebook" />
+                android:text="Login with Facebook" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,6 +44,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/nameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -61,6 +62,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/lastNameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -78,11 +80,30 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/usernameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="E-mail" />
+                android:hint="Username" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/mailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:hint="Email" />
         </LinearLayout>
 
         <LinearLayout
@@ -94,10 +115,11 @@
             android:paddingLeft="10dp"
             android:orientation="vertical">
             <EditText
+                android:id="@+id/passwordText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="textPassword"
                 android:hint="Password" />
         </LinearLayout>
 
@@ -111,11 +133,12 @@
             android:paddingLeft="10dp"
             android:orientation="vertical">
             <EditText
+                android:id="@+id/repeatPasswordText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Password(again)" />
+                android:inputType="textPassword"
+                android:hint="Repeat Password" />
         </LinearLayout>
 
 
@@ -129,10 +152,10 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/SignUpButton"
+                android:id="@+id/signUpButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="SıgnUp" />
+                android:text="SignUp" />
         </LinearLayout>
 
 

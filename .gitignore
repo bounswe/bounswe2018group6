@@ -46,7 +46,7 @@ android/local.properties
 
 # Gradle generated files
 android/.gradle/
-
+android/app/app.iml*
 # Signing files
 android/.signing/
 
@@ -111,6 +111,7 @@ android/.navigation/
 android/captures/
 
 # IntelliJ
+android/app/app.iml
 android/*.iml
 android/.idea/workspace.xml
 android/.idea/tasks.xml
