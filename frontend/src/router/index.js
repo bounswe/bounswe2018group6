@@ -122,6 +122,11 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/editprofile',
+    component: () => import('@/views/profile/editprofile'),
+    hidden: true
+  },
+  {
     path: '/documentation',
     component: Layout,
     redirect: '/documentation/index',
