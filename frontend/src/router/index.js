@@ -97,7 +97,7 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        component: ()=>import('@/views/events/index'),
+        component: () => import('@/views/events/index'),
         name: 'Events',
         meta: { title: 'Recommended' }
       },
@@ -108,6 +108,29 @@ export const constantRouterMap = [
         meta: { title: 'Create Event' }
       }
     ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    name: 'profile',
+    meta: {
+      title: 'Profile',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: 'Profile' }
+      }
+    ]
+  },
+  {
+    path: '/editprofile',
+    component: () => import('@/views/profile/editprofile'),
+    hidden: true
   },
   {
     path: '/documentation',

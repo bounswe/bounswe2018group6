@@ -9,6 +9,9 @@ const user = {
     code: '',
     token: getToken(),
     user_id: -1,
+    follower_count: 0,
+    following_count: 0,
+    owner_events_count: 0,
     name: '',
     avatar: '',
     introduction: '',
@@ -37,11 +40,26 @@ const user = {
     SET_STATUS: (state, status) => {
       state.status = status
     },
-    SET_NAME: (state, name) => {
-      state.name = name
+    SET_FIRSTNAME: (state, first_name) => {
+      state.first_name = first_name
+    },
+    SET_LASTNAME: (state, last_name) => {
+      state.last_name = last_name
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_FOLLOWER: (state, follower_count) => {
+      state.follower_count = follower_count
+    },
+    SET_FOLLOWING: (state, following_count) => {
+      state.following_count = following_count
+    },
+    SET_OWNER_EVENT: (state, owner_events_count) => {
+      state.owner_events_count = owner_events_count
+    },
+    SET_TAGS: (state, tags) => {
+      state.tags = tags
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -97,11 +115,12 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-          commit('SET_CODE', data.code)
-          commit('SET_NAME', data.name)
+          commit('SET_FIRSTNAME', data.first_name)
+          commit('SET_LASTNAME', data.last_name)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          commit('SET_USER_ID', data.user_id)
+          commit('SET_FOLLOWER', data.follower_count)
+          commit('SET_FOLLOWING', data.following_count)
+          commit('SET_TAGS', data.tags)
           resolve(response)
         }).catch(error => {
           reject(error)

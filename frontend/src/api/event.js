@@ -20,5 +20,5 @@ export function createEvent(data) {
         method: 'post',
         data
     })
-  }
-  
+}
+ 
