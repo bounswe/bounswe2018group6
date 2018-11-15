@@ -119,37 +119,25 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
-class MediaDependentCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Media
-        fields = ('id', 'url')
-
-
 class MediaCreateSerializer(serializers.ModelSerializer):
-    content_type = serializers.CharField()
+    owner = UserSummarySerializer(read_only=True)
 
     class Meta:
         model = Media
-        fields = ('id', 'url', 'content_type', 'object_id')
+        fields = ('id', 'owner', 'event', 'file', 'created', 'updated')
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
-            .get_object_for_this_type(id=validated_data.pop('object_id'))
-        media = Media.objects.create(owner=owner, content_object=content_object, **validated_data)
+        media = Media.objects.create(owner=owner, **validated_data)
         return media
 
 
 class MediaDetailsSerializer(serializers.ModelSerializer):
-    content_type = serializers.SerializerMethodField()
-    owner = UserSummarySerializer()
+    owner = UserSummarySerializer(read_only=True)
 
     class Meta:
         model = Media
-        fields = ('id', 'owner', 'content_type', 'object_id', 'url', 'created', 'updated')
-
-    def get_content_type(self, obj):
-        return obj.content_type.model
+        fields = ('id', 'owner', 'event', 'file', 'created', 'updated')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -240,7 +228,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserDetailsSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer()
     tags = TagSerializer(many=True)
-    medias = MediaDetailsSerializer(many=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
     votes = VoteDetailsSerializer(many=True, read_only=True)
     following_count = serializers.SerializerMethodField()
@@ -250,10 +237,10 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'bio', 'city',
-                  'tags', 'medias', 'comments', 'votes', 'follower_count',
+                  'tags', 'comments', 'votes', 'follower_count',
                   'following_count', 'owned_events_count', 'blocked_users_count',
                   'is_corporate_user', 'corporate_profile')
-        read_only_fields = ('username', 'tags', 'medias', 'comments', 'votes',
+        read_only_fields = ('username', 'tags', 'comments', 'votes',
                             'follower_count', 'following_count', 'owned_events_count',
                             'blocked_users_count')
 
@@ -286,8 +273,8 @@ class EventSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'location',
-                  'created', 'updated', 'own_attendance_status', 'follower_count',
+        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
+                  'location', 'created', 'updated', 'own_attendance_status', 'follower_count',
                   'own_follow_status', 'vote_count', 'own_vote')
 
     def get_own_attendance_status(self, obj):
@@ -314,13 +301,12 @@ class EventSummarySerializer(serializers.ModelSerializer):
 
 class EventCreateUpdateSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
-    medias = MediaDependentCreateSerializer(many=True)
     owner = UserSummarySerializer(read_only=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'created', 'updated',
-                  'organizer_url', 'artists', 'location', 'medias', 'tags')
+        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
+                  'created', 'updated', 'organizer_url', 'artists', 'location', 'tags')
 
     def create(self, validated_data):
         # Required fields
@@ -330,13 +316,10 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 
         # Optional fields
         artists_data = validated_data.pop('artists', [])
-        medias_data = validated_data.pop('medias', [])
         tags_data = validated_data.pop('tags', [])
         event = Event.objects.create(owner=owner, location=location, **validated_data)
         for artist in artists_data:
             event.artists.add(artist)
-        for media_data in medias_data:
-            Media.objects.create(owner=owner, content_object=event, **media_data)
         for tag in tags_data:
             event.tags.add(tag)
         return event
@@ -352,18 +335,12 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
             for artist in artists_data:
                 instance.artists.add(artist)
 
+        # If 'location' key is given in data, delete current location
+        # and create a new one. Else, discard it.
         if 'location' in validated_data:
             location_data = validated_data.pop('location')
             instance.location.delete()
             instance.location = Location.objects.create(**location_data)
-
-        # If 'medias' key is given in data, delete current medias
-        # and add new ones. Else, discard it.
-        if 'medias' in validated_data:
-            medias_data = validated_data.pop('medias')
-            instance.medias.all().delete()
-            for media_data in medias_data:
-                Media.objects.create(owner=owner, content_object=instance, **media_data)
 
         # If 'tags' key is given in data, clear current tags
         # and add new ones. Else, discard it.
@@ -394,7 +371,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'owner', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
+        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
                   'created', 'updated', 'artists', 'attendance_status', 'own_attendance_status',
                   'comments', 'followers', 'follower_count', 'own_follow_status', 'medias',
                   'tags', 'vote_count', 'own_vote')

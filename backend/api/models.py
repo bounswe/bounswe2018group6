@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import (GenericForeignKey,
@@ -5,6 +7,10 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
+
+
+def file_upload_path(instance, filename):
+    return 'file_{}_{}'.format(str(datetime.now().timestamp()), filename)
 
 
 ### Mixins ###
@@ -25,16 +31,6 @@ class FollowMixin(models.Model):
     """
     followers = GenericRelation('FollowStatus')
     follower_count = models.IntegerField(default=0)
-
-    class Meta:
-        abstract = True
-
-
-class MediaMixin(models.Model):
-    """
-    Each model that contains `Media`s must use this mixin.
-    """
-    medias = GenericRelation('Media')
 
     class Meta:
         abstract = True
@@ -94,7 +90,7 @@ class GenericModelMixin(models.Model):
 
 ## User & Related Models
 
-class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, TagMixin, VoteMixin):
+class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
     # Related fields
     blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False,
                                            related_name='user_blocked_users')
@@ -118,7 +114,7 @@ class CorporateUserProfile(models.Model):
 
 ## Event & Related Models
 
-class Event(CommentMixin, FollowMixin, MediaMixin, OwnerMixin, TagMixin, VoteMixin):
+class Event(CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
     # Related fields
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
@@ -126,6 +122,7 @@ class Event(CommentMixin, FollowMixin, MediaMixin, OwnerMixin, TagMixin, VoteMix
     location = models.OneToOneField('Location', on_delete=models.CASCADE, default=None)
 
     # Own fields
+    featured_image = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
     date = models.DateTimeField(default=timezone.now)
@@ -169,8 +166,9 @@ class Location(models.Model):
     district = models.CharField(max_length=20)
 
 
-class Media(GenericModelMixin, OwnerMixin):
-    url = models.URLField()
+class Media(OwnerMixin):
+    file = models.FileField(upload_to=file_upload_path)
+    event = models.ForeignKey(Event, related_name='medias', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
