@@ -50,6 +50,16 @@ class OwnerMixin(models.Model):
         abstract = True
 
 
+class TagMixin(models.Model):
+    """
+    Each model that contains `Tag`s must use this mixin.
+    """
+    tags = models.ManyToManyField('Tag', related_name='%(class)s_set', blank=True)
+
+    class Meta:
+        abstract = True
+
+
 class VoteMixin(models.Model):
     """
     Each model that can be voted by a user must use this mixin.
@@ -84,9 +94,8 @@ class GenericModelMixin(models.Model):
 
 ## User & Related Models
 
-class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, VoteMixin):
+class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, TagMixin, VoteMixin):
     # Related fields
-    tags = models.ManyToManyField('Tag', related_name='user_tags')
     blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False,
                                            related_name='user_blocked_users')
 
@@ -109,14 +118,12 @@ class CorporateUserProfile(models.Model):
 
 ## Event & Related Models
 
-class Event(CommentMixin, FollowMixin, MediaMixin, OwnerMixin, VoteMixin):
+class Event(CommentMixin, FollowMixin, MediaMixin, OwnerMixin, TagMixin, VoteMixin):
     # Related fields
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
                                      related_name='performed_events', blank=True)
     location = models.OneToOneField('Location', on_delete=models.CASCADE, default=None)
-    tags = models.ManyToManyField('Tag', db_table='event_tags', related_name='events',
-                                  blank=True)
 
     # Own fields
     title = models.CharField(max_length=100)
