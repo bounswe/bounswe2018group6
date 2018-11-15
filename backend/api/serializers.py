@@ -270,12 +270,13 @@ class EventSummarySerializer(serializers.ModelSerializer):
     own_follow_status = serializers.SerializerMethodField()
     own_vote = serializers.SerializerMethodField()
     owner = UserSummarySerializer()
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Event
         fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
                   'location', 'created', 'updated', 'own_attendance_status', 'follower_count',
-                  'own_follow_status', 'vote_count', 'own_vote')
+                  'own_follow_status', 'vote_count', 'own_vote', 'tags')
 
     def get_own_attendance_status(self, obj):
         user = self.context.get("request").user
