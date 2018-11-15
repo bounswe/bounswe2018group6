@@ -18,7 +18,6 @@
   </el-form-item>
   <el-form-item label="Website">
     <el-input v-model="form.organizer_url">
-      <template slot="prepend">http://</template>
     </el-input>
   </el-form-item>
   <el-form-item label="Artists - NOT AVAILABLE">
