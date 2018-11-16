@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import (GenericForeignKey,
@@ -7,15 +9,11 @@ from django.db import models
 from django.utils import timezone
 
 
-class OwnerMixin(models.Model):
-    """
-    Each model that belongs to a `User` must use this mixin.
-    """
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_set', on_delete=models.CASCADE)
+def file_upload_path(instance, filename):
+    return 'file_{}_{}'.format(str(datetime.now().timestamp()), filename)
 
-    class Meta:
-        abstract = True
 
+### Mixins ###
 
 class CommentMixin(models.Model):
     """
@@ -38,21 +36,21 @@ class FollowMixin(models.Model):
         abstract = True
 
 
-class LocationMixin(models.Model):
+class OwnerMixin(models.Model):
     """
-    Each model that contains a `Location` must use this mixin.
+    Each model that belongs to a `User` must use this mixin.
     """
-    location = GenericRelation('Location')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_set', on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
 
 
-class MediaMixin(models.Model):
+class TagMixin(models.Model):
     """
-    Each model that contains `Media`s must use this mixin.
+    Each model that contains `Tag`s must use this mixin.
     """
-    medias = GenericRelation('Media')
+    tags = models.ManyToManyField('Tag', related_name='%(class)s_set', blank=True)
 
     class Meta:
         abstract = True
@@ -88,47 +86,48 @@ class GenericModelMixin(models.Model):
         abstract = True
 
 
-class User(AbstractUser, CommentMixin, FollowMixin, MediaMixin, VoteMixin):
-    # Related fields
-    tags = models.ManyToManyField('Tag', related_name='user_tags')
-    blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False, related_name='user_blocked_users')
+### Models ###
 
-    # Additional own fields
-    birth_date = models.DateField(null=True, blank=True)
+## User & Related Models
+
+class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
+    # Related fields
+    blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False,
+                                           related_name='user_blocked_users')
+
+    # Own fields
+    bio = models.TextField(null=True, blank=True)
+    city = models.CharField(max_length=20, null=True, blank=True)
 
     # Corporate users have their profiles having their corporate data.
     # Since it's not feasible to create different tables for both
-    #   or to use abstract tables
-    #   and user groups doesn't meet the requirements due to extra fields in the db
-    #   creating another profile is prefered.
+    # or to use abstract tables and user groups doesn't meet the requirements
+    # due to extra fields in the db, creating another profile is preferred.
     is_corporate_user = models.BooleanField(default=False)
-    corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.CASCADE, null=True, default=None)
-
-    class Meta:
-        # Email must be unique.
-        unique_together = ('id', 'email', 'username')
+    corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.CASCADE,
+                                             null=True, default=None)
 
 
 class CorporateUserProfile(models.Model):
-    # TODO add LocationMixin allowing null=True
-    description = models.CharField(max_length=200, null=True)
-    url = models.URLField(max_length=200, null=True)
+    url = models.URLField(max_length=200, null=True, blank=True)
 
 
-class Event(OwnerMixin, CommentMixin, FollowMixin, LocationMixin, MediaMixin, VoteMixin):
+## Event & Related Models
+
+class Event(CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
     # Related fields
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
                                      related_name='performed_events', blank=True)
-    tags = models.ManyToManyField('Tag', db_table='event_tags', related_name='events',
-                                  blank=True)
+    location = models.OneToOneField('Location', on_delete=models.CASCADE, default=None)
 
     # Own fields
+    featured_image = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
     date = models.DateTimeField(default=timezone.now)
     price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0.0)
-    organizer_url = models.URLField(blank=True, null=True)
+    organizer_url = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -161,18 +160,15 @@ class FollowStatus(GenericModelMixin, OwnerMixin):
         unique_together = ('owner', 'content_type', 'object_id')
 
 
-class Location(GenericModelMixin, OwnerMixin):
-    # TODO Add required fields after doing research about Google Maps / Places API
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        # A model (User, Event etc.) cannot have more than one Location.
-        unique_together = ('content_type', 'object_id')
+class Location(models.Model):
+    # TODO Add required fields according to preferred Google API
+    city = models.CharField(max_length=20)
+    district = models.CharField(max_length=20)
 
 
-class Media(GenericModelMixin, OwnerMixin):
-    url = models.URLField()
+class Media(OwnerMixin):
+    file = models.FileField(upload_to=file_upload_path)
+    event = models.ForeignKey(Event, related_name='medias', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
