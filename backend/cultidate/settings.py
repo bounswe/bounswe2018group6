@@ -45,12 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'api',
+    'annotator_store',
 ]
 
 MIDDLEWARE = [
@@ -111,7 +113,7 @@ if DJANGO_ENV == 'production':
     db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=True)
     DATABASES['default'].update(db_from_env)
 
-AUTH_USER_MODEL = "api.User" 
+AUTH_USER_MODEL = "api.User"
 
 
 # Password validation

@@ -1,8 +1,11 @@
 from django.urls import path
 from django.conf.urls import url
+from django.conf.urls import include
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from api import views
+
+from annotator_store import views as annotator_views
 
 urlpatterns = [
     url(r'^attendance/(?P<pk>[0-9]+)/$', views.AttendanceView.as_view()),
@@ -31,6 +34,11 @@ urlpatterns = [
 
     url(r'^vote/(?P<pk>[0-9]+)/$', views.VoteView.as_view()),
     url(r'^vote/$', views.VoteView.as_view()),
+
+    # annotations
+    url(r'^annotations/api/', include('annotator_store.urls', namespace='annotation-api')),
+    # annotatorjs doesn't handle trailing slash in api prefix url
+    url(r'^annotations/api', annotator_views.AnnotationIndex.as_view(), name='annotation-api-prefix'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
