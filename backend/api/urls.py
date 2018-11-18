@@ -1,6 +1,7 @@
 from django.urls import path
 from django.conf.urls import url
 from django.conf.urls import include
+#from django.contrib.flatpages import views as flatviews
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from api import views
@@ -36,9 +37,11 @@ urlpatterns = [
     url(r'^vote/$', views.VoteView.as_view()),
 
     # annotations
-    url(r'^annotations/api/', include('annotator_store.urls', namespace='annotation-api')),
+    url(r'^annotations/', include('annotator_store.urls', namespace='annotation-api')),
     # annotatorjs doesn't handle trailing slash in api prefix url
-    url(r'^annotations/api', annotator_views.AnnotationIndex.as_view(), name='annotation-api-prefix'),
+    url(r'^annotations/', annotator_views.AnnotationIndex.as_view(), name='annotation-api-prefix'),
+
+    #path('annotation-test/', flatviews.flatpage, {'url': '/annotation-test.html/'}, name='annotation-test'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
