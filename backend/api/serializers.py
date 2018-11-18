@@ -6,6 +6,8 @@ from rest_framework.authtoken.models import Token
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
                         FollowStatus, Location, Media, Tag, User, VoteStatus)
 
+from emailer.views import send_activation_email
+
 
 class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
@@ -210,6 +212,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('User creation failed due to missing credentials.')
 
         user = User.objects.create_user(username, email, password)
+        user.is_active = False
         user.first_name, user.last_name = first_name, last_name
 
         user.bio = validated_data.pop('bio', None)
@@ -222,6 +225,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         else:
             user.corporate_profile = None
         user.save()
+        
+        # send activation email
+        send_activation_email(user)
+
         return user
 
 
