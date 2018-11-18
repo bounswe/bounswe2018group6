@@ -107,6 +107,9 @@ class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
     corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.CASCADE,
                                              null=True, default=None)
 
+    class Meta:
+        unique_together = (('email',), ('username',))
+
 
 class CorporateUserProfile(models.Model):
     url = models.URLField(max_length=200, null=True, blank=True)
