@@ -35,3 +35,23 @@ class CustomUserAdmin(UserAdmin):
                     'is_corporate_user', 'follower_count', 'vote_count')
     list_editable = ('first_name', 'last_name')
     list_filter = ('is_active', 'is_superuser', 'is_staff', 'is_corporate_user', 'city')
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    fields = ('id', 'featured_image',
+              'title', 'description', 'date', 'price', 
+              'owner', 'organizer_url', 'location', 
+              'follower_count', 'vote_count',
+              'created', 'updated')
+    readonly_fields = ('id', 'follower_count', 'vote_count', 'created', 'updated')
+    date_hierarchy = 'date'
+
+    ordering = ('-id')
+    list_display = ('id', 'title', 'date', 'price', 
+                    'owner', 'organizer_url', 'location', 
+                    'follower_count', 'vote_count')
+    list_editable = ('title', 'date', 'price')
+    list_filter = ('date', 'owner', 'location')
+    
+    save_on_top = True
