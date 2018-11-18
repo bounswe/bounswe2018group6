@@ -4,7 +4,6 @@ from django.contrib.auth.admin import UserAdmin
 from .models import (User as CustomUser, CorporateUserProfile, Event, AttendanceStatus,
                      Comment, FollowStatus, Location, Media, Tag, VoteStatus)
 
-
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     '''
@@ -47,7 +46,7 @@ class EventAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'follower_count', 'vote_count', 'created', 'updated')
     date_hierarchy = 'date'
 
-    ordering = ('-id')
+    ordering = ('-id',)
     list_display = ('id', 'title', 'date', 'price', 
                     'owner', 'organizer_url', 'location', 
                     'follower_count', 'vote_count')
@@ -55,3 +54,57 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ('date', 'owner', 'location')
     
     save_on_top = True
+
+
+@admin.register(CorporateUserProfile)
+class CorporateUserProfileAdmin(admin.ModelAdmin):
+    fields = ('id', 'url')
+    readonly_fields = ('id',)
+
+    ordering = ('-id',)
+    list_display = ('id', 'url')
+    list_editable = ('url',)
+
+
+@admin.register(AttendanceStatus)
+class AttendanceStatusAdmin(admin.ModelAdmin):
+    fields = ('id', 'event', 'owner', 'status')
+    readonly_fields = ('id', 'owner', 'event')
+
+    ordering = ('event', 'owner')
+    list_display = ('event', 'owner', 'status')
+    list_editable = ('status',)
+
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    # TODO Add required fields after completing the model
+    fields = ('id', 'city', 'district')
+    readonly_fields = ('id',)
+
+    ordering = ('city', 'district')
+    list_display = ('id', 'city', 'district')
+    list_editable = ('city', 'district')
+
+
+@admin.register(Media)
+class MediaAdmin(admin.ModelAdmin):
+    fields = ('id', 'owner', 'event', 'file', 'created', 'updated')
+    readonly_fields = ('id', 'created', 'updated')
+
+    ordering = ('-id',)
+    list_display = ('id', 'owner', 'event', 'file', 'created', 'updated')
+    list_editable = ('owner', 'event')
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    fields = ('id', 'name')
+    readonly_fields = ('id',)
+
+    ordering = ('name',)
+    list_display = ('id', 'name')
+    list_editable = ('name',)
+
+
+# TODO add Comment, FollowStatus, VoteStatus
