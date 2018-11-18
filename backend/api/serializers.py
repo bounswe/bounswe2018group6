@@ -184,7 +184,7 @@ class VoteDetailsSerializer(serializers.ModelSerializer):
 class CorporateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CorporateUserProfile
-        fields = ('url')
+        fields = ('url',)
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -250,8 +250,12 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         instance.bio = validated_data.get('bio', instance.bio)
         instance.city = validated_data.get('city', instance.city)
         corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
-        corp = CorporateUserProfile(url=corporate_profile.get('url'))
-        instance.corporate_profile = corp
+        if corporate_profile is not None:
+            corp = CorporateUserProfile(url=corporate_profile.get('url'))
+            instance.corporate_profile = corp
+        else:
+            instance.corporate_profile = None
+        instance.save()
         return instance
 
     def get_following_count(self, obj):
