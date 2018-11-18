@@ -3,7 +3,7 @@ from django.db import models
 
 
 class EmailLog(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     sender = models.EmailField()
     recipient = models.EmailField()
     success = models.BooleanField()
