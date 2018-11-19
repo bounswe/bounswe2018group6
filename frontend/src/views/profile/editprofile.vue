@@ -1,5 +1,5 @@
 <template>
-  <div class="components-container">
+  <div class="tab-container">
     <pan-thumb :image="image" class="center-item"/>
     <image-cropper
       v-show="imagecropperShow"
@@ -9,10 +9,10 @@
       lang-type="en"
       @close="close"
       @crop-upload-success="cropSuccess"/>
-    <div class="block">
-      <el-button type="primary" class="change-avatar" @click="imagecropperShow=true">Change Avatar</el-button>
+    <div style="margin-left: 42%; margin-top: 5%;">
+      <el-button type="primary" @click="imagecropperShow=true">Change Avatar</el-button>
     </div>
-    <div class="block" style="margin: 95px;"/>
+    <div style="margin-bottom: 25px; left: 50%;"/>
     <el-form :label-position="labelPosition" :model="formLabelAlign" label-width="100px">
       <el-form-item label="Name">
         <el-input v-model="formLabelAlign.name" :placeholder="name"/>
@@ -71,6 +71,14 @@ export default {
     this.getUser()
   },
   methods: {
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      this.image = resData.files.avatar
+    },
+    close() {
+      this.imagecropperShow = false
+    },
     handleClose(tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
     },
@@ -87,24 +95,13 @@ export default {
 </script>
 
 <style scoped>
-.block {
-  padding: 15px 20px;
-  top: 30%;
-}
-
-.tag-item {
-  margin-right: 15px;
-}
-
-.avatar{
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
+.tab-container{
+    margin: 380px;
 }
 
 .change-avatar {
   position: absolute;
-  top: 45%;
+  top: 35%;
   left: 50%;
 
   -moz-transform: translateX(-50%) translateY(-50%);
@@ -113,11 +110,8 @@ export default {
 }
 .center-item{
   position: absolute;
-    top: 20%;
-    left: 50%;
-
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-0%);
 }
 </style>
