@@ -99,7 +99,13 @@ export const constantRouterMap = [
         path: 'index',
         component: () => import('@/views/events/index'),
         name: 'Events',
-        meta: { title: 'Events' }
+        meta: { title: 'Recommended' }
+      },
+      {
+        path: 'createEvent',
+        component: ()=>import('@/views/events/createEvent'),
+        name: 'Create Event',
+        meta: { title: 'Create Event' }
       }
     ]
   },
