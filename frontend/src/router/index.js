@@ -103,9 +103,15 @@ export const constantRouterMap = [
       },
       {
         path: 'create-event',
-        component: ()=>import('@/views/events/createEvent'),
+        component: () => import('@/views/events/createEvent'),
         name: 'Create Event',
         meta: { title: 'Create Event' }
+      },
+      {
+        path: 'show-event',
+        component: () => import('@/views/events/showEvent'),
+        name: 'Show Event',
+        meta: { title: 'Show Event' }
       }
     ]
   },
