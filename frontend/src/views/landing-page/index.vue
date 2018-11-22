@@ -1,5 +1,6 @@
 <template>
     <video-bg :sources="['src/assets/video/timelapse.mp4']" img="src/assets/video/bg.jpg">
+    <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
     <div class=center-item>
         <h1 align="center">Cultidate</h1>
         <h3>Cultidate is a social platform for cultural activities. You can create events,
@@ -21,10 +22,13 @@
 
 <script>
 import VideoBg from 'vue-videobg'
+import GithubCorner from '@/components/GithubCorner'
+
 
 export default {
   name: 'LandingPage',
   components: {
+    GithubCorner,
     VideoBg
   },
 }

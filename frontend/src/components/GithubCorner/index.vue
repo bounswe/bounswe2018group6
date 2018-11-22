@@ -1,10 +1,10 @@
 <template>
-  <a href="https://github.com/PanJiaChen/vue-element-admin" target="_blank" class="github-corner" aria-label="View source on Github">
+  <a href="https://github.com/bounswe/bounswe2018group6" target="_blank" class="github-corner" aria-label="View source on Github">
     <svg
       width="80"
       height="80"
       viewBox="0 0 250 250"
-      style="fill:#40c9c6; color:#fff;"
+      style="fill:#fff; color:#000;"
       aria-hidden="true">
       <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/>
       <path
