@@ -1,12 +1,6 @@
 <template>
   <div class="components-container">
     <el-row>
-      <!-- <img height="340" width="480"  position=relative; src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQcQqPq3suSxF5X_e9OpVQxp-Y8x3eiHmldlcKFHw2SxRfSRmj"> -->
-      <el-carousel trigger="click" height="350px">
-        <el-carousel-item v-for="media in eventDetails.medias" v-bind:key="media">
-          <img style="object-fit: contain;" :src="media.url">
-        </el-carousel-item>
-      </el-carousel>
       <el-col :span="14"><div class="grid-content bg-purple-light">
         <center style="font-size: 25px; font-weight:bold"> {{ eventDetails.title }} </center>
         <p style="font-size: 20px; margin-left: 20px;">by {{ eventDetails.owner.username}} </p>
@@ -22,6 +16,14 @@
         </div>
       </div>
       </el-col>
+      <el-carousel trigger="click" height="350px">
+        <el-carousel-item>
+          <img style="object-fit: contain;" :src="eventDetails.featured_image">
+        </el-carousel-item>
+        <el-carousel-item v-for="media in eventDetails.medias" v-bind:key="media.id">
+          <img style="object-fit: contain;" :src="media.file">
+        </el-carousel-item>
+      </el-carousel>
     </el-row>
     <div style="margin-top: 30 px" >
       <p/>
@@ -33,9 +35,7 @@
     <div style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">{{ eventDetails.description }}</span>
       <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" style="float: right;"/>
-      
     </div>
-
   </div>
 </template>
 
