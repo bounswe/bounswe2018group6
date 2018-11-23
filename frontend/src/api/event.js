@@ -9,6 +9,14 @@ export function fetchEvents() {
   })
 }
 
+export function getEventDetail(event_id) {
+    return request({
+      url: '/events/' + event_id + '/',
+      method: 'get'
+    })
+  }
+
+
 export function createEvent(data) {
     const headers = {
         //ContentType: 'application/json',

@@ -1,5 +1,5 @@
 <template>
-  <a :class="className" class="link--mallki" href="#">
+  <a :class="className" class="link--mallki">
     {{ text }}
     <span :data-letters="text"/>
     <span :data-letters="text"/>
@@ -15,8 +15,8 @@ export default {
     },
     text: {
       type: String,
-      default: 'vue-element-admin'
-    }
+      default: 'Event'
+    },
   }
 }
 </script>

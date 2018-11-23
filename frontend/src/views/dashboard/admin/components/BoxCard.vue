@@ -1,10 +1,14 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
+    <router-link  :to="'/' + eventLink">
       <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
+    </router-link>
     </div>
     <div style="position:relative;">
-      <mallki class-name="mallki-text" :text="eventName"/>
+      <router-link  :to="'/' + eventLink">
+        <mallki class-name="mallki-text" :text="eventName" />
+      </router-link>
       <div style="padding-top:35px;">
         <span>{{description}}</span>
       </div>
@@ -37,6 +41,9 @@ export default {
   components: { PanThumb, Mallki },
   props: {
     eventName: {
+      type: String,
+    },
+    eventLink: {
       type: String,
     },
     description: {

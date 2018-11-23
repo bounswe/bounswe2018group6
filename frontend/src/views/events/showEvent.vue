@@ -1,13 +1,18 @@
 <template>
   <div class="components-container">
     <el-row>
-      <img height="340" width="480" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQcQqPq3suSxF5X_e9OpVQxp-Y8x3eiHmldlcKFHw2SxRfSRmj">
+      <!-- <img height="340" width="480"  position=relative; src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQcQqPq3suSxF5X_e9OpVQxp-Y8x3eiHmldlcKFHw2SxRfSRmj"> -->
+      <el-carousel trigger="click" height="350px">
+        <el-carousel-item v-for="media in eventDetails.medias" v-bind:key="media">
+          <img style="object-fit: contain;" :src="media.url">
+        </el-carousel-item>
+      </el-carousel>
       <el-col :span="14"><div class="grid-content bg-purple-light">
-        <center style="font-size: 25px; font-weight:bold"> Turkish Cuisine - Meetup İstanbul </center>
-        <p style="font-size: 20px; margin-left: 20px;">by Atif Emre Yuksel</p>
+        <center style="font-size: 25px; font-weight:bold"> {{ eventDetails.title }} </center>
+        <p style="font-size: 20px; margin-left: 20px;">by {{ eventDetails.owner.username}} </p>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold;">Date and Time</p>
-        <p style="font-size: 20px; margin-left: 20px;">27/12/2018 - 18.00</p>
-        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: 19.99 TL</span>
+        <p style="font-size: 20px; margin-left: 20px;">{{ eventDetails.date }}</p>
+        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} </span>
           <el-radio-group v-model="radio4" size="small" style="margin-left: 190px; margin-right: 20px;">
             <el-radio-button label="Attend" />
             <el-radio-button label="Maybe"/>
@@ -26,38 +31,39 @@
       <el-button style="float: right;" type="primary" plain size="medium">Follow</el-button>
     </div>
     <div style="margin-top: 20px">
-      <span style="font-size: 20px; font-weight:bold;">Description</span>
+      <span style="font-size: 20px; font-weight:bold;">{{ eventDetails.description }}</span>
       <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" style="float: right;"/>
-      <p>
-        Join The Telegraph for a Champions Tennis VIP Experience
-
-        Watch the greats of tennis go to battle in the stunning setting of the Royal Albert Hall and enjoy an exclusive Q&A with our very own Simon Briggs as he interviews one of the legends.
-
-        The VIP Experience will be taking place on three days:
-
-        Thursday, December 6, 2018 at 12.15pm
-
-        Friday, December 7, 2018 at 12.15pm
-
-        Sunday, December 9, 2018 at 4pm (Final)
-      </p>
+      
     </div>
 
   </div>
 </template>
 
 <script>
+import { getEventDetail } from '@/api/event'
+
 export default {
-  name: 'SplitpaneDemo',
+  name: 'ShowEvent',
   components: {},
   data() {
     return {
       radio4: 'Attend',
       rate: null,
-      tags: ['food', 'culture', 'kebap']
+      tags: ['food', 'culture', 'kebap'],
+      eventDetails: null,
     }
   },
+  created() {
+    const event_id = this.$route.params.id
+    this.fetchData(event_id)
+  },
   methods: {
+    fetchData(event_id) {
+      getEventDetail(event_id).then(response => {
+        this.eventDetails = response.data
+        console.log(this.eventDetails)
+      })
+    }
   }
 }
 </script>
@@ -91,5 +97,15 @@ export default {
   }
   .el-tag + .el-tag {
     margin-left: 10px;
+  }
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+  .el-carousel{
+    max-width: 50%;
   }
 </style>
