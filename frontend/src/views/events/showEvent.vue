@@ -36,17 +36,34 @@
       <span style="font-size: 20px; font-weight:bold;">{{ eventDetails.description }}</span>
       <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" style="float: right;"/>
     </div>
+  
+<googlemaps-map
+            style="height: 350px; max-width: %100;"
+            ref="map"
+            class="map"
+            :center.sync="mapCenter"
+            :zoom.sync="zoom">
+    <googlemaps-marker
+        title="Baran Et Mangal"
+        label="Baran Et Mangal"
+				:position="{ lat: 41.017822, lng: 28.954770 }" />
+ </googlemaps-map>
+
   </div>
 </template>
 
 <script>
 import { getEventDetail } from '@/api/event'
 
+
+
 export default {
   name: 'ShowEvent',
   components: {},
   data() {
     return {
+      mapCenter: {lat: 41.017822, lng: 28.954770},
+      zoom: 11,
       radio4: 'Attend',
       rate: null,
       tags: ['food', 'culture', 'kebap'],
