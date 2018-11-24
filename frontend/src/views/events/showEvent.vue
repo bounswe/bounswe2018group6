@@ -73,7 +73,7 @@ export default {
       }
       ],
       attend: '',
-      mapCenter: { lat: 41.017822, lng: 28.954770 },
+      mapCenter: {lat: 41.017822, lng: 28.954770},
       zoom: 11,
       radio4: 'Attend',
       rate: null,
