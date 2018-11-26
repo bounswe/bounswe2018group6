@@ -200,7 +200,7 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password', 'current_password', 'new_password',
                   'first_name', 'last_name', 'profile_photo', 'bio', 'city', 
                   'is_corporate_user', 'corporate_profile', 'tags')
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 8, 'max_length': 20}}
 
     def create(self, validated_data):
         is_corporate_user = validated_data.pop('is_corporate_user', False)
