@@ -21,11 +21,6 @@ class Migration(migrations.Migration):
             name='profile_photo',
             field=models.FileField(blank=True, null=True, upload_to=api.models.file_upload_path),
         ),
-        migrations.AlterField(
-            model_name='event',
-            name='location',
-            field=models.OneToOneField(default=None, on_delete=django.db.models.deletion.CASCADE, to='api.Location'),
-        ),
         migrations.AlterUniqueTogether(
             name='user',
             unique_together={('username',), ('email',)},
