@@ -236,7 +236,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'bio', 'city',
+        fields = ('username', 'first_name', 'last_name', 'bio', 'city',
                   'tags', 'comments', 'votes', 'follower_count',
                   'following_count', 'owned_events_count', 'blocked_users_count',
                   'is_corporate_user', 'corporate_profile')
@@ -258,11 +258,11 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             if instance.corporate_profile:
                 # case: corporate user profile is updated
                 instance.corporate_profile.url = corporate_profile.get('url', None)
+                instance.corporate_profile.save()
             else:
                 # case: corporate user profile is enabled with provided data
                 corp = CorporateUserProfile.objects.create(url=corporate_profile.get('url', None))
                 instance.corporate_profile = corp
-            instance.corporate_profile.save()
         instance.save()
         return instance
 
