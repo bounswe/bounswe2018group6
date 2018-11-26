@@ -4,24 +4,14 @@ from django.contrib.auth.admin import UserAdmin
 from .models import (User as CustomUser, CorporateUserProfile, Event, AttendanceStatus,
                      Comment, FollowStatus, Location, Media, Tag, VoteStatus)
 
+
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    '''
-    # manual model display
-    fields = ('id', 
-              ('is_active', 'is_superuser'),
-              ('is_staff', 'is_corporate_user'), 
-              ('last_login', 'date_joined'),
-              'username', 'email', ('first_name', 'last_name'), 
-              'bio', 'city', 'corporate_profile', 
-              'follower_count', 'vote_count')
-    fieldsets = None
-    '''
-    # imported from django.contrib.admin.models
+    # partially imported from django.contrib.admin.models
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('email', 'first_name', 'last_name',
-                                      'bio', 'city', 'follower_count', 'vote_count')}),
+        ('Personal info', {'fields': ('profile_photo', 'email', 'first_name', 'last_name',
+                                      'bio', 'city', 'tags', 'follower_count', 'vote_count')}),
         ('Corporate User', {'fields': ('is_corporate_user', 'corporate_profile')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
@@ -107,4 +97,33 @@ class TagAdmin(admin.ModelAdmin):
     list_editable = ('name',)
 
 
-# TODO add Comment, FollowStatus, VoteStatus
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    fields = ('id', 'object_id', 'content_type_id', 'owner_id',
+              'content', 'created', 'updated')
+    readonly_fields = ('id', 'object_id', 'content_type_id', 'owner_id',
+                       'created', 'updated')
+
+    ordering = ('-created', '-id')
+    list_display = ('id', 'object_id', 'content_type_id', 'owner_id',
+                    'content', 'created', 'updated')
+    list_editable = ('content',)
+
+
+@admin.register(FollowStatus)
+class FollowStatusAdmin(admin.ModelAdmin):
+    fields = ('id', 'object_id', 'content_type_id', 'owner_id')
+    readonly_fields = ('id', 'object_id', 'content_type_id', 'owner_id')
+
+    ordering = ('id',)
+    list_display = ('id', 'object_id', 'content_type_id', 'owner_id')
+
+
+@admin.register(VoteStatus)
+class VoteStatusAdmin(admin.ModelAdmin):
+    fields = ('id', 'object_id', 'content_type_id', 'owner_id', 'vote')
+    readonly_fields = ('id', 'object_id', 'content_type_id', 'owner_id')
+
+    ordering = ('id',)
+    list_display = ('id', 'object_id', 'content_type_id', 'owner_id', 'vote')
+    list_editable = ('vote',)
