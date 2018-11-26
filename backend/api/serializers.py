@@ -187,13 +187,14 @@ class CorporateUserSerializer(serializers.ModelSerializer):
         fields = ('url',)
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class UserCreateUpdateSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer(required=False, allow_null=True)
+    
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
-                  'profile_photo', 'bio', 'city', 'is_corporate_user', 'corporate_profile')
+                  'profile_photo', 'bio', 'city', 'is_corporate_user', 'corporate_profile', 'tags')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -224,31 +225,21 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
-class UserDetailsSerializer(serializers.ModelSerializer):
-    corporate_profile = CorporateUserSerializer()
-    tags = TagSerializer(many=True)
-    comments = CommentDetailsSerializer(many=True, read_only=True)
-    votes = VoteDetailsSerializer(many=True, read_only=True)
-    following_count = serializers.SerializerMethodField()
-    blocked_users_count = serializers.SerializerMethodField()
-    owned_events_count = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
-                  'tags', 'comments', 'votes', 'follower_count',
-                  'following_count', 'owned_events_count', 'blocked_users_count',
-                  'is_corporate_user', 'corporate_profile')
-        read_only_fields = ('id', 'username', 'tags', 'comments', 'votes',
-                            'follower_count', 'following_count', 'owned_events_count',
-                            'blocked_users_count')
-
     def update(self, instance, validated_data):
+        user = self.context.get('request').user
+
+        # username can't be changed
+        username = validated_data.get('username', None)
+        if username is not None and username != user.username:
+            raise serializers.ValidationError('Username can\'t be changed.')
+
+        # yet email can be changed
+        instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.bio = validated_data.get('bio', instance.bio)
-        instance.city = validated_data.get('city', instance.city)
+        instance.city = validated_data.get('city', instance.city)        
+
         instance.is_corporate_user = validated_data.get('is_corporate_user', instance.is_corporate_user)
         corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
         if not instance.is_corporate_user:
@@ -263,8 +254,35 @@ class UserDetailsSerializer(serializers.ModelSerializer):
                 # case: corporate user profile is enabled with provided data
                 corp = CorporateUserProfile.objects.create(url=corporate_profile.get('url', None))
                 instance.corporate_profile = corp
+        
+        # If 'tags' key is given in data, clear current tags and add new ones.
+        tags_data = validated_data.pop('tags', [])
+        print(tags_data)
+        if 'tags' in validated_data:
+            tags_data = validated_data.pop('tags')
+            instance.tags.clear()
+            for tag in tags_data:
+                instance.tags.add(tag)
+
         instance.save()
         return instance
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    corporate_profile = CorporateUserSerializer()
+    tags = TagSerializer(many=True, read_only=True)
+    comments = CommentDetailsSerializer(many=True, read_only=True)
+    votes = VoteDetailsSerializer(many=True, read_only=True)
+    following_count = serializers.SerializerMethodField()
+    blocked_users_count = serializers.SerializerMethodField()
+    owned_events_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
+                  'tags', 'comments', 'votes', 'follower_count',
+                  'following_count', 'owned_events_count', 'blocked_users_count',
+                  'is_corporate_user', 'corporate_profile')
 
     def get_following_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()

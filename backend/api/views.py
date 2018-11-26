@@ -12,7 +12,7 @@ from api.serializers import (AttendanceCreateSerializer,
                              EventDetailsSerializer, EventSummarySerializer,
                              LoginSerializer, FollowCreateSerializer, MediaCreateSerializer,
                              MediaDetailsSerializer, TagSerializer,
-                             UserCreateSerializer, UserDetailsSerializer,
+                             UserCreateUpdateSerializer, UserDetailsSerializer,
                              VoteCreateSerializer)
 
 
@@ -97,7 +97,7 @@ class MediaView(generics.RetrieveAPIView,
 
 
 class SignUpView(generics.CreateAPIView):
-    serializer_class = UserCreateSerializer
+    serializer_class = UserCreateUpdateSerializer
     permission_classes = (AllowAny,)
 
 
@@ -106,11 +106,16 @@ class TagList(generics.ListAPIView):
     serializer_class = TagSerializer
 
 
-class UserView(generics.RetrieveAPIView,
+class UserView(MultiSerializerViewMixin,
+               generics.RetrieveAPIView,
                mixins.UpdateModelMixin):
     queryset = User.objects.filter(is_active=True)
-    serializer_class = UserDetailsSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsUserOrReadOnly)
+    serializer_class = UserDetailsSerializer
+    method_serializer_classes = {
+        'POST': UserCreateUpdateSerializer,
+        'PUT': UserCreateUpdateSerializer,
+    }
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
