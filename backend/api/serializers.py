@@ -240,7 +240,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
                   'tags', 'comments', 'votes', 'follower_count',
                   'following_count', 'owned_events_count', 'blocked_users_count',
                   'is_corporate_user', 'corporate_profile')
-        read_only_fields = ('username', 'tags', 'comments', 'votes',
+        read_only_fields = ('id', 'username', 'tags', 'comments', 'votes',
                             'follower_count', 'following_count', 'owned_events_count',
                             'blocked_users_count')
 
@@ -249,12 +249,20 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.bio = validated_data.get('bio', instance.bio)
         instance.city = validated_data.get('city', instance.city)
+        instance.is_corporate_user = validated_data.get('is_corporate_user', instance.is_corporate_user)
         corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
-        if corporate_profile is not None:
-            corp = CorporateUserProfile(url=corporate_profile.get('url'))
-            instance.corporate_profile = corp
-        else:
+        if not instance.is_corporate_user:
+            # case: corporate user is disabled
             instance.corporate_profile = None
+        else:
+            if instance.corporate_profile:
+                # case: corporate user profile is updated
+                instance.corporate_profile.url = corporate_profile.get('url', None)
+            else:
+                # case: corporate user profile is enabled with provided data
+                corp = CorporateUserProfile.objects.create(url=corporate_profile.get('url', None))
+                instance.corporate_profile = corp
+            instance.corporate_profile.save()
         instance.save()
         return instance
 
