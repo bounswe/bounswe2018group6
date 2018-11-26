@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -10,7 +11,7 @@ from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
 class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name')
+        fields = ('username', 'first_name', 'last_name', 'profile_photo')
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
@@ -184,50 +185,96 @@ class VoteDetailsSerializer(serializers.ModelSerializer):
 class CorporateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CorporateUserProfile
-        fields = ('url')
+        fields = ('url',)
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class UserCreateUpdateSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer(required=False, allow_null=True)
+    current_password = serializers.CharField(min_length=8, max_length=20, trim_whitespace=False, 
+                                                write_only=True, required=False)
+    new_password = serializers.CharField(min_length=8, max_length=20, trim_whitespace=False, 
+                                                write_only=True, required=False)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
-                  'bio', 'city', 'is_corporate_user', 'corporate_profile')
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ('id', 'username', 'email', 'password', 'current_password', 'new_password',
+                  'first_name', 'last_name', 'profile_photo', 'bio', 'city', 
+                  'is_corporate_user', 'corporate_profile', 'tags')
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 8, 'max_length': 20}}
 
     def create(self, validated_data):
-        is_corporate_user = validated_data.pop('is_corporate_user', False)
-        corporate_profile = validated_data.pop('corporate_profile', None)
-
         username = validated_data.pop('username', None)
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
-        first_name = validated_data.pop('first_name', None)
-        last_name = validated_data.pop('last_name', None)
-
-        if None in (username, email, password, first_name, last_name):
-            raise serializers.ValidationError('User creation failed due to missing credentials.')
 
         user = User.objects.create_user(username, email, password)
-        user.first_name, user.last_name = first_name, last_name
 
-        user.bio = validated_data.pop('bio', None)
-        user.city = validated_data.pop('city', None)
+        is_corporate_user = validated_data.pop('is_corporate_user', False)
+        corporate_profile = validated_data.pop('corporate_profile', None)
+        
         user.is_corporate_user = is_corporate_user
-
         if is_corporate_user and corporate_profile is not None:
             corp = CorporateUserProfile.objects.create(**corporate_profile)
             user.corporate_profile = corp
         else:
             user.corporate_profile = None
+        
+        for key, value in validated_data.items():
+            setattr(user, key, value)
+
         user.save()
         return user
+
+    def update(self, instance, validated_data):
+        # username can't be changed, yet email can be
+        username = validated_data.pop('username', None)
+        if username is not None and username != instance.username:
+            raise serializers.ValidationError('Username can\'t be changed.')
+
+        # password change
+        new_password = validated_data.pop('new_password', None)
+        if new_password:
+            current_password = validated_data.pop('current_password', None)
+            if check_password(current_password, instance.password):
+                instance.set_password(new_password)
+            else:
+                serializers.ValidationError('Current password is wrong.')
+
+        # corporate user profile handling
+        instance.is_corporate_user = validated_data.pop('is_corporate_user', instance.is_corporate_user)
+        corporate_profile = validated_data.pop('corporate_profile', instance.corporate_profile)
+        if not instance.is_corporate_user:
+            # case: corporate user is disabled
+            instance.corporate_profile = None
+        else:
+            if instance.corporate_profile:
+                # case: corporate user profile is updated
+                for key, value in corporate_profile.items():
+                    setattr(instance.corporate_profile, key, value)
+                instance.corporate_profile.save()
+            else:
+                # case: corporate user profile is enabled with provided data
+                corp = CorporateUserProfile.objects.create(**corporate_profile)
+                instance.corporate_profile = corp
+        
+        # tags handling
+        # If 'tags' key is given in data, clear current tags and add new ones.
+        if 'tags' in validated_data:
+            tags_data = validated_data.pop('tags')
+            instance.tags.clear()
+            for tag in tags_data:
+                instance.tags.add(tag)
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+        return instance
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer()
-    tags = TagSerializer(many=True)
+    tags = TagSerializer(many=True, read_only=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
     votes = VoteDetailsSerializer(many=True, read_only=True)
     following_count = serializers.SerializerMethodField()
@@ -236,23 +283,10 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'bio', 'city',
+        fields = ('username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
                   'tags', 'comments', 'votes', 'follower_count',
                   'following_count', 'owned_events_count', 'blocked_users_count',
                   'is_corporate_user', 'corporate_profile')
-        read_only_fields = ('username', 'tags', 'comments', 'votes',
-                            'follower_count', 'following_count', 'owned_events_count',
-                            'blocked_users_count')
-
-    def update(self, instance, validated_data):
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.bio = validated_data.get('bio', instance.bio)
-        instance.city = validated_data.get('city', instance.city)
-        corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
-        corp = CorporateUserProfile(url=corporate_profile.get('url'))
-        instance.corporate_profile = corp
-        return instance
 
     def get_following_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()
