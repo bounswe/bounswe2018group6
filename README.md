@@ -10,7 +10,7 @@
 <a href="https://github.com/bounswe/bounswe2018group6/wiki/Requirements-Analysis">
     <img src="https://img.shields.io/badge/REQUIREMENTS-UP--TO--DATE-yellow.svg?style=flat-square" alt="Requirements Analysis">
 </a>
-<a href="https://github.com/bounswe/bounswe2018group6/raw/master/wiki_assets/Cultidate_ProjectPlan.pdf">
+<a href="https://docs.google.com/spreadsheets/d/15k7ExFb8lbgDHh2jT8DMPbpknZ6fry9lny5vZhckcQs/edit?usp=sharing">
     <img src="https://img.shields.io/badge/PROJECT%20PLAN-UP--TO--DATE-green.svg?style=flat-square" alt="Project Plan">
 </a>
 <a href="https://github.com/bounswe/bounswe2018group6/blob/master/LICENSE">
