@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -189,12 +190,16 @@ class CorporateUserSerializer(serializers.ModelSerializer):
 
 class UserCreateUpdateSerializer(serializers.ModelSerializer):
     corporate_profile = CorporateUserSerializer(required=False, allow_null=True)
-    
+    current_password = serializers.CharField(min_length=8, max_length=20, trim_whitespace=False, 
+                                                write_only=True, required=False)
+    new_password = serializers.CharField(min_length=8, max_length=20, trim_whitespace=False, 
+                                                write_only=True, required=False)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
-                  'profile_photo', 'bio', 'city', 'is_corporate_user', 'corporate_profile', 'tags')
+        fields = ('id', 'username', 'email', 'password', 'current_password', 'new_password',
+                  'first_name', 'last_name', 'profile_photo', 'bio', 'city', 
+                  'is_corporate_user', 'corporate_profile', 'tags')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -226,12 +231,19 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        user = self.context.get('request').user
-
         # username can't be changed
         username = validated_data.get('username', None)
-        if username is not None and username != user.username:
+        if username is not None and username != instance.username:
             raise serializers.ValidationError('Username can\'t be changed.')
+
+        # password change
+        new_password = validated_data.get('new_password', None)
+        if new_password:
+            current_password = validated_data.get('current_password', None)
+            if check_password(current_password, instance.password):
+                instance.set_password(new_password)
+            else:
+                serializers.ValidationError('Current password is wrong.')
 
         # yet email can be changed
         instance.email = validated_data.get('email', instance.email)
@@ -256,8 +268,6 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
                 instance.corporate_profile = corp
         
         # If 'tags' key is given in data, clear current tags and add new ones.
-        tags_data = validated_data.pop('tags', [])
-        print(tags_data)
         if 'tags' in validated_data:
             tags_data = validated_data.pop('tags')
             instance.tags.clear()
