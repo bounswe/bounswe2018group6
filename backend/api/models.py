@@ -96,6 +96,7 @@ class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
                                            related_name='user_blocked_users')
 
     # Own fields
+    profile_photo = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
 
@@ -106,6 +107,9 @@ class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
     is_corporate_user = models.BooleanField(default=False)
     corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.CASCADE,
                                              null=True, default=None)
+
+    class Meta:
+        unique_together = (('email',), ('username',))
 
 
 class CorporateUserProfile(models.Model):
