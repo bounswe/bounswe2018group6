@@ -82,10 +82,33 @@ export default {
       }
       getEventDetail(event_id).then(response => {
         this.eventDetails = response.data
+        if (response.data.own_follow_status != null) {
+          this.follow_event_id = response.data.own_follow_status.id
+        }
         if (response.data.own_attendance_status != null) {
           this.attend = attends[response.data.own_attendance_status.status]
         }
+        if (response.data.own_follow_status == null) {
+          this.following = "follow"
+        } else {
+          this.following = "unfollow"
+        }
       })
+    },
+    followEvent() {
+      if (this.following == "follow") {
+        follow(parseInt(this.event_id)).then(response => {
+          this.following = "unfollow"
+          this.follow_event_id = response.data.id
+          console.log(this.follow_event_id)
+        })
+      } 
+      else {
+        unfollow(this.follow_event_id).then(response => {
+          this.following = "follow"
+          this.follow_event_id = null
+        }) 
+      }
     },
     attendanceEvent() {
       let attends;

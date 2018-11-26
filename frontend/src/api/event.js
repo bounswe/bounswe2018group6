@@ -21,6 +21,36 @@ export function getEventDetail(event_id) {
   })
   }
 
+export function follow(event_id) {
+  const content_type = "event";
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  const data = {
+    "content_type": content_type,
+    "object_id": event_id
+  }
+  return request({
+    headers,
+    url: '/follow/',
+    method: 'post',
+    data
+  })
+}
+
+export function unfollow(follow_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/follow/' + follow_id + '/',
+    method: 'delete'
+  })
+}
+
 export function attendance(event, status) {
   const headers = {
     //ContentType: 'application/json',
