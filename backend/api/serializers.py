@@ -10,7 +10,7 @@ from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
 class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name')
+        fields = ('username', 'first_name', 'last_name', 'profile_photo')
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
@@ -193,7 +193,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
-                  'bio', 'city', 'is_corporate_user', 'corporate_profile')
+                  'profile_photo', 'bio', 'city', 'is_corporate_user', 'corporate_profile')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -236,7 +236,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'bio', 'city',
+        fields = ('username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
                   'tags', 'comments', 'votes', 'follower_count',
                   'following_count', 'owned_events_count', 'blocked_users_count',
                   'is_corporate_user', 'corporate_profile')

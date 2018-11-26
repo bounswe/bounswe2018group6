@@ -96,6 +96,7 @@ class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
                                            related_name='user_blocked_users')
 
     # Own fields
+    profile_photo = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
 
