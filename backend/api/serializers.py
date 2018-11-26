@@ -203,76 +203,70 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8, 'max_length': 20}}
 
     def create(self, validated_data):
-        is_corporate_user = validated_data.pop('is_corporate_user', False)
-        corporate_profile = validated_data.pop('corporate_profile', None)
-
         username = validated_data.pop('username', None)
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
-        first_name = validated_data.pop('first_name', None)
-        last_name = validated_data.pop('last_name', None)
-
-        if None in (username, email, password, first_name, last_name):
-            raise serializers.ValidationError('User creation failed due to missing credentials.')
 
         user = User.objects.create_user(username, email, password)
-        user.first_name, user.last_name = first_name, last_name
 
-        user.bio = validated_data.pop('bio', None)
-        user.city = validated_data.pop('city', None)
+        is_corporate_user = validated_data.pop('is_corporate_user', False)
+        corporate_profile = validated_data.pop('corporate_profile', None)
+        
         user.is_corporate_user = is_corporate_user
-
         if is_corporate_user and corporate_profile is not None:
             corp = CorporateUserProfile.objects.create(**corporate_profile)
             user.corporate_profile = corp
         else:
             user.corporate_profile = None
+        
+        for key, value in validated_data.items():
+            setattr(user, key, value)
+
         user.save()
         return user
 
     def update(self, instance, validated_data):
-        # username can't be changed
-        username = validated_data.get('username', None)
+        # username can't be changed, yet email can be
+        username = validated_data.pop('username', None)
         if username is not None and username != instance.username:
             raise serializers.ValidationError('Username can\'t be changed.')
 
         # password change
-        new_password = validated_data.get('new_password', None)
+        new_password = validated_data.pop('new_password', None)
         if new_password:
-            current_password = validated_data.get('current_password', None)
+            current_password = validated_data.pop('current_password', None)
             if check_password(current_password, instance.password):
                 instance.set_password(new_password)
             else:
                 serializers.ValidationError('Current password is wrong.')
 
-        # yet email can be changed
-        instance.email = validated_data.get('email', instance.email)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.bio = validated_data.get('bio', instance.bio)
-        instance.city = validated_data.get('city', instance.city)        
-
-        instance.is_corporate_user = validated_data.get('is_corporate_user', instance.is_corporate_user)
-        corporate_profile = validated_data.get('corporate_profile', instance.corporate_profile)
+        # corporate user profile handling
+        instance.is_corporate_user = validated_data.pop('is_corporate_user', instance.is_corporate_user)
+        corporate_profile = validated_data.pop('corporate_profile', instance.corporate_profile)
         if not instance.is_corporate_user:
             # case: corporate user is disabled
             instance.corporate_profile = None
         else:
             if instance.corporate_profile:
                 # case: corporate user profile is updated
-                instance.corporate_profile.url = corporate_profile.get('url', None)
+                for key, value in corporate_profile.items():
+                    setattr(instance.corporate_profile, key, value)
                 instance.corporate_profile.save()
             else:
                 # case: corporate user profile is enabled with provided data
-                corp = CorporateUserProfile.objects.create(url=corporate_profile.get('url', None))
+                corp = CorporateUserProfile.objects.create(**corporate_profile)
                 instance.corporate_profile = corp
         
+        # tags handling
         # If 'tags' key is given in data, clear current tags and add new ones.
         if 'tags' in validated_data:
             tags_data = validated_data.pop('tags')
             instance.tags.clear()
             for tag in tags_data:
                 instance.tags.add(tag)
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
 
         instance.save()
         return instance
