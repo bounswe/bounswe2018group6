@@ -10,12 +10,6 @@
             <router-link to="/signup"><el-button round class="button-margin">Sign up</el-button></router-link>
             <router-link to="/login?redirect=%2Fdashboard"><el-button round class="button-margin">Login</el-button></router-link>
         </el-row>
-        <el-steps :space="200" :active="4" finish-status="success" align-center>
-            <el-step title="Find Cultidate" ></el-step>
-            <el-step title="Sign Up"></el-step>
-            <el-step title="Login"></el-step>
-            <el-step title="Join Events!"></el-step>
-        </el-steps>
         </div>
     </video-bg>
 </template>
