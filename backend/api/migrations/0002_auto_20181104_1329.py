@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='location',
-            field=models.OneToOneField(default=None, on_delete=django.db.models.deletion.CASCADE, to='api.Location'),
+            field=models.OneToOneField(default=None, on_delete=django.db.models.deletion.CASCADE, to='api.Location', null=True),
         ),
         migrations.AddField(
             model_name='location',

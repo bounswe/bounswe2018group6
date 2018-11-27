@@ -5,6 +5,9 @@
 # for /hw_twitterapi/
 # Created by https://www.gitignore.io/api/django
 
+# Cloud services
+.nosync
+
 ### Django ###
 *.log
 *.pot
