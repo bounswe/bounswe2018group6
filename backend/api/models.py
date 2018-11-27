@@ -123,7 +123,7 @@ class Event(CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
                                      related_name='performed_events', blank=True)
-    location = models.OneToOneField('Location', on_delete=models.CASCADE, default=None)
+    location = models.OneToOneField('Location', on_delete=models.CASCADE, default=None, null=True)
 
     # Own fields
     featured_image = models.FileField(upload_to=file_upload_path, null=True, blank=True)
