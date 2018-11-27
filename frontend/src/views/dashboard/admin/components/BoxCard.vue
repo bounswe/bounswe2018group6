@@ -1,33 +1,33 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
     <div slot="header" class="box-card-header">
-    <router-link  :to="'/' + eventLink">
-      <img :src="image">
-    </router-link>
+      <router-link :to="'/' + eventLink">
+        <img :src="image">
+      </router-link>
     </div>
     <div style="position:relative;">
-      <router-link  :to="'/' + eventLink">
-        <mallki class-name="mallki-text" :text="eventName" />
+      <router-link :to="'/' + eventLink">
+        <mallki :text="eventName" class-name="mallki-text" />
       </router-link>
       <div style="padding-top:35px;">
-        <span>{{description}}</span>
+        <span>{{ description }}</span>
       </div>
       <div style="padding-top:20px;">
-        <span>Date: {{date}}</span>
+        <span>Date: {{ date }}</span>
       </div>
       <div style="padding-top:20px;">
-        <span>Price: {{price}}</span>
+        <span>Price: {{ price }}</span>
       </div>
       <div style="padding-top:20px;">
-        <span>Owner: {{owner}}</span>
+        <span>Owner: {{ owner }}</span>
       </div>
       <div style="padding-top:20px;">
-        <span>Followers: {{followers}}</span>
+        <span>Followers: {{ followers }}</span>
       </div>
       <div style="padding-top:20px;">
-        <span>Votes: {{votes}}</span>
+        <span>Votes: {{ votes }}</span>
       </div>
-      
+
     </div>
   </el-card>
 </template>
@@ -39,35 +39,6 @@ import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
   components: { PanThumb, Mallki },
-  props: {
-    eventName: {
-      type: String,
-    },
-    eventLink: {
-      type: String,
-    },
-    description: {
-      type: String,
-    },
-    date: {
-      type: Date,
-    },
-    price: {
-      type: Number,
-    },
-    owner: {
-      type: String,
-    },
-    followers: {
-      type: Number,
-    },
-    votes: {
-      type: Number,
-    },
-    image: {
-      type: String,
-    },
-  },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -75,6 +46,35 @@ export default {
         pending: 'danger'
       }
       return statusMap[status]
+    }
+  },
+  props: {
+    eventName: {
+      type: String
+    },
+    eventLink: {
+      type: String
+    },
+    description: {
+      type: String
+    },
+    date: {
+      type: Date
+    },
+    price: {
+      type: Number
+    },
+    owner: {
+      type: String
+    },
+    followers: {
+      type: Number
+    },
+    votes: {
+      type: Number
+    },
+    image: {
+      type: String
     }
   },
   data() {

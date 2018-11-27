@@ -15,10 +15,10 @@
       </el-col>
       <el-carousel trigger="click" height="350px">
         <el-carousel-item>
-          <img style="object-fit: contain;" :src="eventDetails.featured_image">
+          <img :src="eventDetails.featured_image" style="object-fit: contain;">
         </el-carousel-item>
-        <el-carousel-item v-for="media in eventDetails.medias" v-bind:key="media.id">
-          <img style="object-fit: contain;" :src="media.file">
+        <el-carousel-item v-for="media in eventDetails.medias" :key="media.id">
+          <img :src="media.file" style="object-fit: contain;">
         </el-carousel-item>
       </el-carousel>
     </el-row>
