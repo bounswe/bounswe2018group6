@@ -3,26 +3,22 @@
     <el-row>
       <el-col :span="14"><div class="grid-content bg-purple-light">
         <center style="font-size: 25px; font-weight:bold"> {{ eventDetails.title }} </center>
-        <p style="font-size: 20px; margin-left: 20px;">by {{ eventDetails.owner.username}} </p>
+        <p style="font-size: 20px; margin-left: 20px;">by {{ eventDetails.owner.username }} </p>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold;">Date and Time</p>
         <p style="font-size: 20px; margin-left: 20px;">{{ eventDetails.date }}</p>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} </span>
-          <el-select v-model="attend" placeholder="Attendance" style="margin-right: 20px; float: right;" v-on:change="attendanceEvent">
-            <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"></el-option>
+          <el-select v-model="attend" placeholder="Attendance" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+            <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
         </div>
       </div>
       </el-col>
       <el-carousel trigger="click" height="350px">
-        <el-carousel-item v-for="media in eventDetails.medias" v-bind:key="media">
-          <img style="object-fit: contain;" :src="media.url">
-        </el-carousel-item>
-      </el-carousel>  
         <el-carousel-item>
-          <img style="object-fit: contain;" :src="eventDetails.featured_image">
+          <img :src="eventDetails.featured_image" style="object-fit: contain;">
         </el-carousel-item>
-        <el-carousel-item v-for="media in eventDetails.medias" v-bind:key="media.id">
-          <img style="object-fit: contain;" :src="media.file">
+        <el-carousel-item v-for="media in eventDetails.medias" :key="media.id">
+          <img :src="media.file" style="object-fit: contain;">
         </el-carousel-item>
       </el-carousel>
     </el-row>
@@ -31,27 +27,26 @@
       <el-tag v-for="tag in tags" :key="tag" size="medium">
         {{ tag }}
       </el-tag>
-      <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{following}}</el-button>
+      <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
     </div>
     <div style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">Description</span>
       <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" style="float: right;"/>
       <p>{{ eventDetails.description }} </p>
-      
-      
+
     </div>
-  
-<googlemaps-map
-            style="height: 350px; max-width: %100;"
-            ref="map"
-            class="map"
-            :center.sync="mapCenter"
-            :zoom.sync="zoom">
-    <googlemaps-marker
+
+    <googlemaps-map
+      ref="map"
+      :center.sync="mapCenter"
+      :zoom.sync="zoom"
+      style="height: 350px; max-width: %100;"
+      class="map">
+      <googlemaps-marker
+        :position="{ lat: 41.017822, lng: 28.954770 }"
         title="Baran Et Mangal"
-        label="Baran Et Mangal"
-				:position="{ lat: 41.017822, lng: 28.954770 }" />
- </googlemaps-map>
+        label="Baran Et Mangal" />
+    </googlemaps-map>
 
   </div>
 </template>
@@ -64,21 +59,21 @@ export default {
   data() {
     return {
       options: [{
-          attend: 'Attend',
-          label: 'Attend'
-        }, {
-          attend: 'Won\'t attend',
-          label: 'Won\'t attend'
-        }, {
-          attend: 'Maybe',
-          label: 'Maybe'
-        }, {
-          attend: 'Block',
-          label: 'Block'
-        }
+        attend: 'Attend',
+        label: 'Attend'
+      }, {
+        attend: 'Won\'t attend',
+        label: 'Won\'t attend'
+      }, {
+        attend: 'Maybe',
+        label: 'Maybe'
+      }, {
+        attend: 'Block',
+        label: 'Block'
+      }
       ],
       attend: '',
-      mapCenter: {lat: 41.017822, lng: 28.954770},
+      mapCenter: { lat: 41.017822, lng: 28.954770 },
       zoom: 11,
       radio4: 'Attend',
       rate: null,
@@ -95,12 +90,12 @@ export default {
   },
   methods: {
     fetchData(event_id) {
-      let attends;
+      let attends
       attends = {
-        "Y": "Attend",
-        "N": "Won't attend",
-        "M": "Maybe",
-        "B": "Block"
+        'Y': 'Attend',
+        'N': "Won't attend",
+        'M': 'Maybe',
+        'B': 'Block'
       }
       getEventDetail(event_id).then(response => {
         this.eventDetails = response.data
@@ -111,37 +106,36 @@ export default {
           this.attend = attends[response.data.own_attendance_status.status]
         }
         if (response.data.own_follow_status == null) {
-          this.following = "follow"
+          this.following = 'follow'
         } else {
-          this.following = "unfollow"
+          this.following = 'unfollow'
         }
       })
     },
     followEvent() {
-      if (this.following == "follow") {
+      if (this.following == 'follow') {
         follow(parseInt(this.event_id)).then(response => {
-          this.following = "unfollow"
+          this.following = 'unfollow'
           this.follow_event_id = response.data.id
           console.log(this.follow_event_id)
         })
-      } 
-      else {
+      } else {
         unfollow(this.follow_event_id).then(response => {
-          this.following = "follow"
+          this.following = 'follow'
           this.follow_event_id = null
-        }) 
+        })
       }
     },
     attendanceEvent() {
-      let attends;
+      let attends
       attends = {
-        "Y": "Attend",
-        "N": "Won't attend",
-        "M": "Maybe",
-        "B": "Block"
+        'Y': 'Attend',
+        'N': "Won't attend",
+        'M': 'Maybe',
+        'B': 'Block'
       }
       attendance(this.event_id, this.attend).then(response => {
-          this.attend = attends[response.data.status]   
+        this.attend = attends[response.data.status]
       })
     }
   }
