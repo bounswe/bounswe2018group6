@@ -63,11 +63,6 @@ export const constantRouterMap = [
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/errorPage/404'),
-    hidden: true
-  },
-  {
     path: '/401',
     component: () => import('@/views/errorPage/401'),
     hidden: true
@@ -103,9 +98,15 @@ export const constantRouterMap = [
       },
       {
         path: 'create-event',
-        component: ()=>import('@/views/events/createEvent'),
+        component: () => import('@/views/events/createEvent'),
         name: 'Create Event',
         meta: { title: 'Create Event' }
+      },
+      {
+        path: 'show-event/:id',
+        component: () => import('@/views/events/showEvent'),
+        name: 'Show Event',
+        meta: { title: 'Show Event' }
       }
     ]
   },
@@ -157,7 +158,12 @@ export const constantRouterMap = [
         meta: { title: 'guide', icon: 'guide', noCache: true }
       }
     ]
-  }
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
 ]
 
 export default new Router({

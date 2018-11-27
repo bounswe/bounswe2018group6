@@ -7,6 +7,12 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+
+import VueGoogleMaps from 'vue-googlemaps'
+import 'vue-googlemaps/dist/vue-googlemaps.css'
+
+
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -20,6 +26,15 @@ import './permission' // permission control
 // import './mock' // simulation data
 
 import * as filters from './filters' // global filters
+
+Vue.use(VueGoogleMaps, {
+  load: {
+      // put your google API key either in the ./config/local.env.js file or just hardcode in the string below
+      apiKey: process.env.VUE_APP_GOOGLE_API_KEY || '',
+      libraries: ['places'],
+      useBetaRenderer: false
+  }
+})
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
