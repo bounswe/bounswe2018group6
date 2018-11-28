@@ -1,4 +1,4 @@
-from rest_framework import generics, mixins, views, status
+from rest_framework import generics, mixins, views, status, filters
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -13,7 +13,7 @@ from api.serializers import (AttendanceCreateSerializer,
                              LoginSerializer, FollowCreateSerializer, MediaCreateSerializer,
                              MediaDetailsSerializer, TagSerializer,
                              UserCreateUpdateSerializer, UserDetailsSerializer,
-                             VoteCreateSerializer)
+                             UserSummarySerializer, VoteCreateSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -51,6 +51,14 @@ class CommentView(MultiSerializerViewMixin,
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('title','description')
+    method_serializer_classes = {
+        'GET': EventSummarySerializer,
+    }
+    def search(self, request, *args, **kwargs):
+        keyword = self.request.keyword
+        return self.objects.filter()
 
 
 class EventView(MultiSerializerViewMixin,
@@ -120,6 +128,17 @@ class UserView(MultiSerializerViewMixin,
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSummarySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('username','first_name','last_name')
+    method_serializer_classes = {
+        'GET': UserSummarySerializer,
+    }
+    def search(self, request, *args, **kwargs):
+        keyword = self.request.keyword
+        return self.objects.filter()
 
 class VoteView(generics.CreateAPIView,
                generics.DestroyAPIView):

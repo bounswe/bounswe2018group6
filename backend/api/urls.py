@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^events_list/$', views.EventListView.as_view()),
     url(r'^events/(?P<pk>[0-9]+)/$', views.EventView.as_view()),
     url(r'^events/$', views.EventView.as_view()),
+    
 
     url(r'^follow/(?P<pk>[0-9]+)/$', views.FollowView.as_view()),
     url(r'^follow/$', views.FollowView.as_view()),
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^tags/$', views.TagList.as_view()),
 
     url(r'^user/(?P<pk>[0-9]+)/$', views.UserView.as_view()),
+    url(r'^users_list/$', views.UserListView.as_view()),
 
     url(r'^vote/(?P<pk>[0-9]+)/$', views.VoteView.as_view()),
     url(r'^vote/$', views.VoteView.as_view()),
