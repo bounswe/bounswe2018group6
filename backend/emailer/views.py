@@ -4,8 +4,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.utils.encoding import force_text, force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_text
 from django.views import View
 
 from api.models import User
@@ -17,9 +16,7 @@ def send_activation_email(user):
     recipient = user.email
     token = account_activation_token.make_token(user)
     activate_url = urljoin(settings.HOST_ROOT_URL, 
-                            'e/activate/{uidb64}/{token}/'.format(
-                                uidb64=urlsafe_base64_encode(force_bytes(user.pk)),
-                                token=token))
+                            'e/activate/{uid}/{token}/'.format(uid=user.pk, token=token))
     
     message = 'Welcome to Cultidate!\n\nTo activate your account please click here: {url}\n\nBest regards,\nCultidate Team'.format(url=activate_url)
     
@@ -45,9 +42,9 @@ def send_activation_email(user):
 
 class ActivateAccountView(View):
     # This class is partially gathered from here: https://bit.ly/2Ah5rWW Thanks to him.
-    def get(self, request, uidb64, token):
+    def get(self, request, uid, token):
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            uid = force_text(uid)
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
@@ -59,4 +56,5 @@ class ActivateAccountView(View):
             return redirect(settings.FRONTEND_LOGIN_URL, permanent=True)
         else:
             # invalid link
-            return HttpResponse('Activation unsuccessful.')
+            # return HTTP_406_NOT_ACCEPTABLE
+            return HttpResponse('Activation unsuccessful.', status=406)
