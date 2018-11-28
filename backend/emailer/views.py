@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.utils.encoding import force_text
+from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 
@@ -18,7 +18,7 @@ def send_activation_email(user):
     token = account_activation_token.make_token(user)
     activate_url = urljoin(settings.HOST_ROOT_URL, 
                             'e/activate/{uidb64}/{token}/'.format(
-                                uidb64=urlsafe_base64_encode(user.pk),
+                                uidb64=urlsafe_base64_encode(force_bytes(user.pk)),
                                 token=token))
     
     message = 'Welcome to Cultidate!\n\nTo activate your account please click here: {url}\n\nBest regards,\nCultidate Team'.format(url=activate_url)
@@ -39,6 +39,8 @@ def send_activation_email(user):
                             sender=settings.EMAIL_HOST_USER,
                             recipient=recipient,
                             success=sent)
+
+    return sent
 
 
 class ActivateAccountView(View):
