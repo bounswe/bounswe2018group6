@@ -6,10 +6,11 @@
         <p style="font-size: 20px; margin-left: 20px;">by {{ eventDetails.owner.username }} </p>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold;">Date and Time</p>
         <p style="font-size: 20px; margin-left: 20px;">{{ eventDetails.date }}</p>
-        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} </span>
-          <el-select v-model="attend" placeholder="Attendance" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} ₺ </span>
+          <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
+          <span style="margin-right: 20px; float: right;"> Attendance Status </span>
         </div>
       </div>
       </el-col>
@@ -22,42 +23,93 @@
         </el-carousel-item>
       </el-carousel>
     </el-row>
+<el-row :gutter="32">
+  <el-col :xs="24" :sm="24" :md="16" :lg="16">
+    <div class="grid-content" style="margin-top: 20px">
+      <span style="font-size: 20px; font-weight:bold;">Description</span>
+      <el-card class="box-card">
+        <div class="text item">
+          {{ eventDetails.description }}
+        </div>
+      </el-card>
+    </div>
+  </el-col>
+
+  <el-col :xs="24" :sm="24" :md="8" :lg="8">
     <div style="margin-top: 30 px" >
       <p/>
       <el-tag v-for="tag in tags" :key="tag" size="medium">
         {{ tag }}
       </el-tag>
       <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
+    <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"/>
     </div>
-    <div style="margin-top: 20px">
-      <span style="font-size: 20px; font-weight:bold;">Description</span>
-      <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" style="float: right;"/>
-      <p>{{ eventDetails.description }} </p>
+  </el-col>
+</el-row>
 
-    </div>
-
-    <googlemaps-map
-      ref="map"
-      :center.sync="mapCenter"
-      :zoom.sync="zoom"
-      style="height: 350px; max-width: %100;"
-      class="map">
-      <googlemaps-marker
-        :position="{ lat: 41.017822, lng: 28.954770 }"
-        title="Baran Et Mangal"
-        label="Baran Et Mangal" />
-    </googlemaps-map>
+<el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :md="8" :lg="8">
+        <div>
+          <ul> 
+            <li>Upload up to 5 images</li>
+            <li>Green tick denotes that upload is succesful</li>
+            <li>You can also drag and drop your image</li>
+          </ul>
+          <h3>Upload additional photos</h3>
+          <el-upload
+        class="upload-demo"
+        drag
+        :limit="mediaLimit"
+        :action="apiAddress"
+        :headers="headers"
+        :data="additionalBody"
+        :name="keyName"
+        list-type="picture-card">
+        <el-button size="small" type="primary">Click to upload</el-button>
+        </el-upload>
+      </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="16" :lg="16">
+        <div>
+          <googlemaps-map
+            ref="map"
+            :center.sync="mapCenter"
+            :zoom.sync="zoom"
+            style="height: 350px; max-width: %50;"
+            class="map">
+            <googlemaps-marker
+              :position="{ lat: 41.017822, lng: 28.954770 }"
+              title="Baran Et Mangal"
+              label="Baran Et Mangal" />
+          </googlemaps-map>
+        </div>
+      </el-col>
+</el-row>
 
   </div>
 </template>
 
 <script>
 import { getEventDetail, follow, unfollow, attendance } from '@/api/event'
+import { getToken } from '@/utils/auth' // getToken from cookie
+
+
+
 export default {
   name: 'ShowEvent',
   components: {},
   data() {
     return {
+      apiAddress: 'http://cultidate.herokuapp.com/api/medias/',
+      headers : {
+        // 'Content-Type': 'multipart/form-data',
+        'Authorization': 'Token ' + getToken(),
+      },
+      additionalBody: {
+        event: null
+      },
+      keyName: 'file',
+      mediaLimit : 5,
       options: [{
         attend: 'Attend',
         label: 'Attend'
@@ -86,6 +138,7 @@ export default {
   },
   created() {
     this.event_id = this.$route.params.id
+    this.additionalBody.event = this.event_id
     this.fetchData(this.event_id)
   },
   methods: {
