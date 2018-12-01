@@ -10,10 +10,12 @@
       @close="close"
       @crop-upload-success="cropSuccess"/>
     <el-span class="name"> {{ name }} </el-span>
-    <el-popover v-if="is_corporate_user" :title="corporate_profile.description" :content="corporate_profile.url" placement="left" width="300" trigger="hover">
+    <el-popover v-if="is_corporate_user" :title="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
     <router-link to="/editprofile"><el-button type="primary" icon="el-icon-edit" class="edit" circle/></router-link>
+    <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right: 5px;"></i>{{city}}</el-span>
+    <div></div>
     <div class="features">
       <el-button round>{{ follower_count }} followers</el-button>
       <el-button round style="margin-left: 10px;">{{ following_count }} followings</el-button>
@@ -21,20 +23,12 @@
     </div>
     <div class="block">
       <el-button type="primary" @click="imagecropperShow=true">Change Avatar</el-button>
+      <el-span class="bio"><i class="el-icon-info" style="margin-right: 5px;"></i>{{bio}}</el-span>
     </div>
     <div class="block">
-      <el-tag v-for="tag in dynamicTags" :key="tag" :disable-transitions="false" closable @close="handleClose(tag)">
-        {{ tag }}
+      <el-tag v-for="tag in tags" :label="tag.name" :key="tag.id" size="medium">
+        {{ tag.name }}
       </el-tag>
-      <el-input
-        v-if="inputVisible"
-        ref="saveTagInput"
-        v-model="inputValue"
-        class="input-new-tag"
-        size="small"
-        @keyup.enter.native="handleInputConfirm"
-        @blur="handleInputConfirm"/>
-      <el-button v-else class="button-new-tag" size="small" @click="showInput">+ Add Interest</el-button>
     </div>
   </div>
 </template>
@@ -53,13 +47,14 @@ export default {
       follower_count: 0,
       following_count: 0,
       owned_events_count: 0,
-      tags: null,
+      tags: [],
+      city: null,
+      bio: null,
       is_corporate_user: null,
       corporate_profile: null,
       imagecropperShow: false,
       imagecropperKey: 0,
       image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191',
-      dynamicTags: null,
       inputVisible: false,
       inputValue: ''
     }
@@ -68,9 +63,6 @@ export default {
     this.getUser()
   },
   methods: {
-    handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-    },
     getUser() {
       getUserInfo(this.$store.state.user.user_id).then(response => {
         this.name = response.data.first_name + ' ' + response.data.last_name
@@ -78,25 +70,13 @@ export default {
         this.following_count = response.data.following_count
         this.owned_events_count = response.data.owned_events_count
         this.tags = response.data.tags
+        this.city = response.data.city
+        this.bio = response.data.bio
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
+        
       })
     },
-    showInput() {
-      this.inputVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
-    },
-
-    handleInputConfirm() {
-      const inputValue = this.inputValue
-      if (inputValue) {
-        this.dynamicTags.push(inputValue)
-      }
-      this.inputVisible = false
-      this.inputValue = ''
-    }
   }
 }
 </script>
@@ -122,6 +102,14 @@ export default {
   margin-left: 40px;
   font-weight: bold;
   font-size: 25px;
+  text-transform: uppercase;
+}
+
+.bio{
+  position: absolute;
+  top: 120px;
+  margin-left: 60px;
+  font-size: 16px;
   text-transform: uppercase;
 }
 
