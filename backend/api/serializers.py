@@ -11,7 +11,7 @@ from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
 class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'profile_photo')
+        fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo')
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
