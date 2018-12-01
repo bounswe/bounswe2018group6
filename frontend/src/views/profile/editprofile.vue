@@ -1,33 +1,51 @@
 <template>
-  <div class="components-container">
-    <pan-thumb :image="image" class="center-item"/>
-    <image-cropper
-      v-show="imagecropperShow"
-      :width="300"
-      :height="300"
-      :key="imagecropperKey"
-      lang-type="en"
-      @close="close"
-      @crop-upload-success="cropSuccess"/>
-    <div class="block">
-      <el-button type="primary" class="change-avatar" @click="imagecropperShow=true">Change Avatar</el-button>
+  <div class="tab-container">
+    <div style="margin-left: 44.5%; margin-top: 10px;">
+      <el-upload
+        :action="apiAddress"
+        :headers="headers"
+				:data="additionalBody"
+				:name="keyName">
+        <pan-thumb :image="profile_photo" class="center-item"/>
+        <el-button style="margin-top: 10px;" slot="trigger" size="small" type="primary">Change Avatar</el-button>
+      </el-upload>
     </div>
-    <div class="block" style="margin: 95px;"/>
-    <el-form :label-position="labelPosition" :model="formLabelAlign" label-width="100px">
-      <el-form-item label="Name">
-        <el-input v-model="formLabelAlign.name" :placeholder="name"/>
+    <div style="margin-bottom: 35px; left: 50%;"/>
+    <el-form :label-position="labelPosition"  :model="form" label-width="120px">
+      <el-form-item label="First Name">
+        <el-input v-model="form.first_name" :placeholder="form.first_name"/>
       </el-form-item>
-      <el-form-item label="Birth date">
-        <el-date-picker :placeholder="birth_date" v-model="formLabelAlign.birth_date" type="date" style="width: 100%;"/>
+      <el-form-item label="Last Name">
+        <el-input v-model="form.last_name" :placeholder="form.last_name"/>
       </el-form-item>
-      <el-form-item v-if="is_corporate_user" label="Description">
-        <el-input v-model="formLabelAlign.corporate_profile.description" :placeholder="corporate_profile.description"/>
+      <el-form-item label="Bio">
+        <el-input v-model="form.bio" :placeholder="form.bio"/>
       </el-form-item>
-      <el-form-item v-if="is_corporate_user" label="Link">
-        <el-input v-model="formLabelAlign.corporate_profile.url" :placeholder="corporate_profile.url"/>
+      <el-form-item label="City">
+        <el-input v-model="form.city" :placeholder="form.city"/>
+      </el-form-item>
+      <el-form-item label="Old Password" prop="password">
+        <el-input :type="passwordType"  v-model="form.current_password" auto-complete="off"/>
+      </el-form-item>
+      <el-form-item label="New Password" prop="password">
+        <el-input :type="passwordType" v-model="form.new_password" auto-complete="off"/>
+      </el-form-item>
+      <el-form-item label="Tags">
+        <el-checkbox-group v-model="form.tags">
+          <el-checkbox-button v-for="tag in tag_list" :label="tag.id" :key="tag.name">{{tag.name}}</el-checkbox-button>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item label="User type">
+        <el-radio-group v-model="form.is_corporate_user">
+          <el-radio :label="true">Corporate</el-radio>
+          <el-radio :label="false">Not Corporate</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item v-if="form.is_corporate_user" label="Link">
+        <el-input v-model="form.corporate_profile.url" :placeholder="form.corporate_profile.url"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">Update</el-button> <!-- @click="submitForm('ruleForm')" Add handler function for submit-->
+        <el-button type="primary" @click="onSubmit">Update</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -36,75 +54,116 @@
 <script>
 import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, editUser } from '@/api/user'
+import { getTags } from '@/api/event'
+import { getToken } from '@/utils/auth' // getToken from cookie
+import Vue from 'vue'
 
 export default {
   name: 'Editprofile',
   components: { ImageCropper, PanThumb },
   data() {
     return {
-      name: '',
-      birth_date: null,
-      is_corporate_user: null,
-      corporate_profile: null,
-      labelPosition: 'right',
-      formLabelAlign: {
-        name: '',
-        birth_date: '',
+      apiAddress: 'http://cultidate.herokuapp.com/api/user/',
+      keyName: 'file',
+      headers : {
+        // 'Content-Type': 'multipart/form-data',
+        'Authorization': 'Token ' + getToken()
+      },
+      additionalBody: {
+        profile_photo: null
+      },
+      labelPosition: 'left',
+      passwordType: 'password',
+      form: {
+        first_name: '',
+        last_name: '',
+        city: null,
+        bio: null,
+        tags: [],
+        current_password: null,
+        new_password: null,
+        is_corporate_user: null,
         corporate_profile: {
-          description: null,
-          url: null
+          url: ''
         }
       },
-      rules: {
-        birth_date: [
-          { type: 'date', trigger: 'blur' }
-        ]
-      },
-      imagecropperShow: false,
-      imagecropperKey: 0,
-      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191',
-      inputValue: ''
+      tag_list: null,
     }
   },
   created() {
     this.getUser()
+    this.getTagList()
+    this.apiAddress = this.apiAddress + this.$store.state.user.user_id + '/'
+    this.additionalBody.profile_photo = this.$store.state.avatar
   },
   methods: {
-    handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-    },
     getUser() {
       getUserInfo(this.$store.state.user.user_id).then(response => {
-        this.name = response.data.first_name + ' ' + response.data.last_name
-        this.birth_date = response.data.birth_date
-        this.is_corporate_user = response.data.is_corporate_user
-        this.corporate_profile = response.data.corporate_profile
+        this.form.first_name = response.data.first_name
+        this.form.last_name = response.data.last_name
+        this.form.city = response.data.city
+        this.form.bio = response.data.bio
+        this.form.is_corporate_user = response.data.is_corporate_user
+        this.form.corporate_profile.url = response.data.corporate_profile.url
+      })
+    },
+    /*
+    changeImage(profile_photo) {
+      editUser(this.$store.state.user.user_id, profile_photo).then(response => {
+        if(response){
+          this.$message({
+            message: 'Avatar changed',
+            type: 'success'
+          })
+        }
+        else {
+          this.$message({
+            message: 'Try again!',
+            type: 'error'
+          })
+        }
+      })
+    },*/
+    getTagList() {
+      getTags().then(response => {
+        this.tag_list = response.data
+      })
+    },
+    onSubmit() {
+      if (this.form.current_password == null || this.form.new_password == null) {
+        Vue.delete(this.form, 'current_password')
+        Vue.delete(this.form, 'new_password')
+      }
+      console.log(this.form.tags)
+      editUser(this.$store.state.user.user_id, this.form).then(response => {
+        if(response){
+          this.$message({
+            message: 'Changes saved',
+            type: 'success'
+          })
+          this.$router.push({ path: this.redirect || '/profile/index/' })
+          }
+          else {
+            this.$message({
+              message: 'Please write your correct password!',
+              type: 'error'
+            })
+          }
       })
     }
-  }
+   }
 }
 </script>
 
 <style scoped>
-.block {
-  padding: 15px 20px;
-  top: 30%;
-}
-
-.tag-item {
-  margin-right: 15px;
-}
-
-.avatar{
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
+.tab-container{
+    margin: 200px;
 }
 
 .change-avatar {
   position: absolute;
-  top: 45%;
+  top: 35%;
   left: 50%;
 
   -moz-transform: translateX(-50%) translateY(-50%);
@@ -113,11 +172,8 @@ export default {
 }
 .center-item{
   position: absolute;
-    top: 20%;
-    left: 50%;
-
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-0%);
 }
 </style>
