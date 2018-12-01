@@ -206,19 +206,24 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
         username = validated_data.pop('username', None)
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
-
         user = User.objects.create_user(username, email, password)
 
+        # corporate profile
         is_corporate_user = validated_data.pop('is_corporate_user', False)
-        corporate_profile = validated_data.pop('corporate_profile', None)
-        
         user.is_corporate_user = is_corporate_user
+        corporate_profile = validated_data.pop('corporate_profile', None)
         if is_corporate_user and corporate_profile is not None:
             corp = CorporateUserProfile.objects.create(**corporate_profile)
             user.corporate_profile = corp
         else:
             user.corporate_profile = None
-        
+
+        # tags
+        if 'tags' in validated_data:
+            tags_data = validated_data.pop('tags')
+            for tag in tags_data:
+                user.tags.add(tag)
+
         for key, value in validated_data.items():
             setattr(user, key, value)
 
