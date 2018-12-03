@@ -168,5 +168,17 @@ export function delComment(comment_id) {
     headers,
     url: '/comments/' + comment_id + '/',
     method: 'delete'
+
+export function editEvent(data, event_id) {
+  console.log(data)
+  const headers = {
+      //ContentType: 'application/json',
+      Authorization: 'Token ' + getToken(),
+  }
+  return request({
+      headers,
+      url: '/events/' + event_id + '/',
+      method: 'put',
+      data
   })
 }

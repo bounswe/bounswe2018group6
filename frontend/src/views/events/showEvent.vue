@@ -10,10 +10,14 @@
         <span style="font-size: 20px; float: right; margin-right: 34px;">{{ eventDetails.vote_count }}</span>
         <div></div>
         <el-button size="large" style="float: right; margin-right: 20px;" type="danger" @click.native.prevent="rateDownEvent" icon="el-icon-arrow-down" circle></el-button>
-        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} </span>
-          <el-select v-model="attend" placeholder="Attendance" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} ₺ </span>
+        <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+        <p style="font-size: 20px; margin-left: 20px;">{{ eventDetails.date }}</p>
+        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} ₺ </span>
+          <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
+          <span style="margin-right: 20px; float: right;"> Attendance Status </span>
         </div>
       </div>
       </el-col>
@@ -26,19 +30,34 @@
         </el-carousel-item>
       </el-carousel>
     </el-row>
+<el-row :gutter="32">
+  <el-col :xs="24" :sm="24" :md="16" :lg="16">
+    <div style="margin-top: 20px">
+      <span style="font-size: 20px; font-weight:bold;">Description</span>
+      <el-card class="box-card">
+        <div class="text item">
+          {{ eventDetails.description }}
+        </div>
+      </el-card>
+    </div>
+  </el-col>
+
+  <el-col :xs="24" :sm="24" :md="8" :lg="8">
     <div style="margin-top: 30 px" >
       <p/>
       <el-tag v-for="tag in eventDetails.tags" :key="tag" size="medium">
         {{ tag.name }}
       </el-tag>
       <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
+      <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
+        <el-button >Edit Event</el-button>
+      </router-link>
     </div>
     <div style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">Description</span>
       <el-button v-if="is_owner" size="medium" style="float: right;" type="danger" @click="deleteEvent">Delete Event</el-button>
       <p>{{ eventDetails.description }} </p>
     </div>
-
     <googlemaps-geocoder
     :request="{
       location: { lat: 41.017822, lng: 28.954770 },
@@ -80,17 +99,31 @@
         </googlemaps-map>
       </el-col>
     </el-row>
+
   </div>
 </template>
 
 <script>
+
 import { getEventDetail, follow, unfollow, attendance, rate, delEvent, createComment, delComment } from '@/api/event'
 import { getUserInfo } from '@/api/user'
+import { getToken } from '@/utils/auth' // getToken from cookie
+
 export default {
   name: 'ShowEvent',
   components: {},
   data() {
     return {
+      apiAddress: 'https://cultidate.herokuapp.com/api/medias/',
+      headers : {
+        // 'Content-Type': 'multipart/form-data',
+        'Authorization': 'Token ' + getToken(),
+      },
+      additionalBody: {
+        event: null
+      },
+      keyName: 'file',
+      mediaLimit : 5,
       options: [{
         attend: 'Attend',
         label: 'Attend'
@@ -116,13 +149,13 @@ export default {
       event_id: null,
       follow_event_id: null,
       is_owner: false,
-      owner_username: null,
       comment: null
     }
   },
   created() {
     this.getUser()
     this.event_id = this.$route.params.id
+    this.additionalBody.event = this.event_id
     this.fetchData(this.event_id)
   },
   methods: {
@@ -147,13 +180,8 @@ export default {
         } else {
           this.following = 'unfollow'
         }
-        console.log(this.owner_username)
-        console.log(response.data.owner.username)
-        if (this.owner_username == response.data.owner.username) {
-          this.is_owner = true
-        } else {
-          this.is_owner = false
-        }
+
+        this.is_owner = (this.eventDetails.owner.id === this.$store.state.user.user_id) ? true : false
       })
     },
     followEvent() {
@@ -161,7 +189,6 @@ export default {
         follow(parseInt(this.event_id)).then(response => {
           this.following = 'unfollow'
           this.follow_event_id = response.data.id
-          console.log(this.follow_event_id)
         })
       } else {
         unfollow(this.follow_event_id).then(response => {
@@ -182,6 +209,7 @@ export default {
         this.attend = attends[response.data.status]
       })
     },
+
     rateUpEvent() {
       rate(this.event_id, 'U').then(response => {
         if(response) {
@@ -258,11 +286,6 @@ export default {
         }
       })
     },
-    getUser() {
-      getUserInfo(this.$store.state.user.user_id).then(response => {
-        this.owner_username = response.data.username
-      })
-    },
     beautifyDate(date) {
       var d = new Date(date)
       date = (d.getDate()<10?'0':'') + d.getDate() + "/" + (d.getMonth()<10?'0':'') + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
@@ -285,6 +308,11 @@ export default {
         }
       })
     }
+    showSuccess(response, file, fileList){
+      this.$alert('Picture is added to the event', 'Congrats!', {
+          confirmButtonText: 'I love Cultidate',
+        });
+    },
   }
 }
 </script>

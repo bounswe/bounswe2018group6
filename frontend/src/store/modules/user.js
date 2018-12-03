@@ -13,6 +13,7 @@ const user = {
     corporate_profile: '',
     follower_count: 0,
     following_count: 0,
+    profile_photo: '',
     owner_events_count: 0,
     name: '',
     avatar: '',
@@ -53,6 +54,9 @@ const user = {
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_PROFILE_PHOTO: (state, profile_photo) => {
+      state.profile_photo = profile_photo
     },
     SET_FOLLOWER: (state, follower_count) => {
       state.follower_count = follower_count
@@ -123,7 +127,7 @@ const user = {
           }
           commit('SET_FIRSTNAME', data.first_name)
           commit('SET_LASTNAME', data.last_name)
-          commit('SET_AVATAR', data.avatar)
+          commit('SET_PROFILE_PHOTO', data.profile_photo)
           commit('SET_FOLLOWER', data.follower_count)
           commit('SET_FOLLOWING', data.following_count)
           commit('SET_TAGS', data.tags)
