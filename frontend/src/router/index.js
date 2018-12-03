@@ -114,7 +114,7 @@ export const constantRouterMap = [
         component: () => import('@/views/events/editEvent'),
         name: 'Edit Event',
         meta: { title: 'Edit Event' },
-        hidden: false,
+        hidden: true,
       },
     ]
   },
