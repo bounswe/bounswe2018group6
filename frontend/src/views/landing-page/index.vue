@@ -1,5 +1,5 @@
 <template>
-    <video-bg :sources="['src/assets/video/timelapse.mp4']" img="src/assets/video/bg.jpg">
+    <video-bg :sources="['src/assets/video/istanbul.mp4']" img="src/assets/video/istanbul.png">
     <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
     <div class=center-item>
         <h1 align="center">Cultidate</h1>
@@ -62,17 +62,17 @@ img {
 h1 {
   margin: 40px 0;
   font-family: 'Dosis', 'Source Sans Pro', 'Helvetica Neue', sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 4em;
   color: #ebebeb;
-  text-shadow: 1px 1px rgb(184, 183, 180);
+  //text-shadow: 1px 1px rgb(184, 183, 180);
 
 }
 
 h3, a {
   font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
-  font-weight: 400;
-  text-shadow: 1px 1px rgb(184, 183, 180);
+  font-weight: 600;
+  //text-shadow: 1px 1px rgb(184, 183, 180);
 
 //   font-size: 15px;
   color: #ebebeb;

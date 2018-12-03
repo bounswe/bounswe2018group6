@@ -11,10 +11,9 @@
         <div></div>
         <el-button size="large" style="float: right; margin-right: 20px;" type="danger" @click.native.prevent="rateDownEvent" icon="el-icon-arrow-down" circle></el-button>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} ₺ </span>
-        <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+          <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
-          <span style="margin-right: 20px; float: right;"> Attendance Status </span>
         </div>
       </div>
       </el-col>
@@ -27,43 +26,46 @@
         </el-carousel-item>
       </el-carousel>
     </el-row>
+
 <el-row :gutter="32">
-  
-<div style="margin-top: 30 px" >
-  <el-tag v-for="tag in eventDetails.tags" :key="tag" size="medium">
-    {{ tag.name }}
-  </el-tag>
-  <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
-  <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
-    <el-button >Edit Event</el-button>
-  </router-link>
-</div>
+  <div style="margin-top: 15px;">
+    <el-tag style="margin-left: 15px;" v-for="tag in eventDetails.tags" :key="tag" size="medium">
+      {{ tag.name }}
+    </el-tag>
+    <el-button style="float: right; margin-right: 15px" type="primary" plain size="small" @click.native.prevent="followEvent">{{ following }}</el-button>
+    <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
+      <el-button type="primary" plain size="small" style="float: right; margin-right: 5px">Edit Event</el-button>
+    </router-link>
+    <el-button v-if="is_owner" size="small" style="float: right; margin-right: 5px;" type="danger" @click="deleteEvent">Delete Event</el-button>
+  </div>
+</el-row>
 
-<el-col :xs="24" :sm="24" :md="16" :lg="16">
-    <div style="margin-top: 20px">
-      <span style="font-size: 20px; font-weight:bold;">Description</span>
-      <el-card class="box-card">
-        <div class="text item">
-          {{ eventDetails.description }}
-        </div>
-        <googlemaps-geocoder
-        :request="{
-          location: { lat: 41.017822, lng: 28.954770 },
-        }">
-          <template slot-scope="props">
-            <div class="name">{{ props.results[1].address_components[4].long_name }}</div>
-            <div class="name">{{ props.results[1].address_components[5].long_name }}</div>
-            <div class="address">{{ props.results[0].address_components.administrative_area_level_1 }}</div>
-          </template>
-        </googlemaps-geocoder>
-      </el-card>
-    </div>
-
-    
-  
+<el-row :gutter="10" style="margin-top: 25px;">     
+  <el-col :span="14">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>Comments</span>
+        <span style="font-weight:bold;">Description</span>
+      </div>
+      <div class="text item">
+        {{ eventDetails.description }}
+      </div>
+    </el-card>
+    <!--<googlemaps-geocoder
+    :request="{
+      location: { lat: 41.017822, lng: 28.954770 },
+    }">
+      <template slot-scope="props">
+        <div class="name">{{ props.results[1].address_components[4].long_name }}</div>
+        <div class="name">{{ props.results[1].address_components[5].long_name }}</div>
+        <div class="address">{{ props.results[0].address_components.administrative_area_level_1 }}</div>
+      </template>
+    </googlemaps-geocoder>-->
+  </el-col>  
+   
+  <el-col :span="10">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span style="font-weight:bold;">Comments</span>
         <el-popover placement="left" width="400" trigger="click">
           <el-input type="textarea" autosize placeholder="Please comment..." v-model="comment"></el-input>
           <el-button style="float: left; margin-top: 5px;" type="primary" @click.native.prevent="addComment">Submit</el-button>
@@ -71,28 +73,33 @@
         </el-popover>
       </div>
       <div v-for="com in eventDetails.comments" :key="com.content" class="text item">
-         <span> {{ com.content }} </span>
-         <span style="font-weight: bold; margin-left: 5px"> {{ 'by ' + com.owner.username }} </span>
-         <el-button v-if="com.owner.username === $store.state.user.username" size="mini" style="float: right;" type="danger" @click.native.prevent="deleteComment(com.id)">Delete</el-button>
+        <span> {{ com.content }} </span>
+        <span style="font-weight: bold; margin-left: 5px"> {{ 'by ' + com.owner.username }} </span>
+        <el-button v-if="com.owner.username === $store.state.user.username" size="mini" style="float: right;" type="danger" @click.native.prevent="deleteComment(com.id)">Delete</el-button>
       </div>
     </el-card>
-    </el-col>
-    
-      <el-col :xs="24" :sm="24" :md="24" :lg="24">
-        <googlemaps-map
-          ref="map"
-          :center.sync="mapCenter"
-          :zoom.sync="zoom"
-          style="height: 350px; max-width: 50%; margin-left: 50%;"
-          class="map">
-          <googlemaps-marker
-            :position="{ lat: 41.017822, lng: 28.954770 }"
-            title="Baran Et Mangal"
-            label="Baran Et Mangal" />
-        </googlemaps-map>
-      </el-col>
+  </el-col>
 </el-row>
-  </div>
+
+<el-row :gutter="32" style="margin-top: 25px;">
+  <el-col :xs="24" :sm="24" :md="24" :lg="24">
+    <div>
+      <googlemaps-map
+        ref="map"
+        :center.sync="mapCenter"
+        :zoom.sync="zoom"
+        style="height: 350px; max-width: %50;"
+        class="map">
+        <googlemaps-marker
+          :position="{ lat: 41.017822, lng: 28.954770 }"
+          title="Baran Et Mangal"
+          label="Baran Et Mangal" />
+      </googlemaps-map>
+    </div>
+  </el-col>
+</el-row>
+
+</div>
 </template>
 
 <script>
@@ -308,7 +315,7 @@ export default {
 }
 </script>
 
-<style  scoped>
+<style scoped>
   .components-container {
     position: relative;
     height: 100vh;
@@ -372,8 +379,6 @@ export default {
   }
 
   .box-card {
-    width: 580px;
-    max-height: 450px;
+    min-height: 250px;
   }
-
 </style>

@@ -32,7 +32,9 @@
       </el-input>
     </el-form-item>
     <el-form-item label="Tags">
-      <el-input v-model="form.tags"></el-input>
+      <el-checkbox-group v-model="form.tags">
+        <el-checkbox-button v-for="tag in tag_list" :label="tag.id" :key="tag.name">{{tag.name}}</el-checkbox-button>
+      </el-checkbox-group>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Create</el-button>
@@ -43,7 +45,7 @@
 
 
 <script>
-import { createEvent } from '@/api/event'
+import { createEvent, getTags } from '@/api/event'
 
   export default {
     data() {
@@ -59,8 +61,12 @@ import { createEvent } from '@/api/event'
             district: '',
           },
           tags: []
-        }
+        },
+        tag_list: []
       }
+    },
+    created() {
+      this.getTagList()
     },
     methods: {
       onSubmit() {
@@ -84,6 +90,11 @@ import { createEvent } from '@/api/event'
               type: 'error'
             })
           }
+        })
+      },
+      getTagList() {
+        getTags().then(response => {
+          this.tag_list = response.data
         })
       }
     }
