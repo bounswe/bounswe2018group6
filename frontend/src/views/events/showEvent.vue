@@ -25,7 +25,7 @@
     </el-row>
 <el-row :gutter="32">
   <el-col :xs="24" :sm="24" :md="16" :lg="16">
-    <div class="grid-content" style="margin-top: 20px">
+    <div style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">Description</span>
       <el-card class="box-card">
         <div class="text item">
@@ -42,50 +42,30 @@
         {{ tag }}
       </el-tag>
       <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
+      <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
+        <el-button >Edit Event</el-button>
+      </router-link>
     <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"/>
     </div>
   </el-col>
 </el-row>
-
-<el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :md="8" :lg="8">
-        <div>
-          <ul> 
-            <li>Upload up to 5 images</li>
-            <li>Green tick denotes that upload is succesful</li>
-            <li>You can also drag and drop your image</li>
-          </ul>
-          <h3>Upload additional photos</h3>
-          <el-upload
-        class="upload-demo"
-        drag
-        :limit="mediaLimit"
-        :action="apiAddress"
-        :headers="headers"
-        :data="additionalBody"
-        :name="keyName"
-        list-type="picture-card">
-        <el-button size="small" type="primary">Click to upload</el-button>
-        </el-upload>
-      </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="16" :lg="16">
-        <div>
-          <googlemaps-map
-            ref="map"
-            :center.sync="mapCenter"
-            :zoom.sync="zoom"
-            style="height: 350px; max-width: %50;"
-            class="map">
-            <googlemaps-marker
-              :position="{ lat: 41.017822, lng: 28.954770 }"
-              title="Baran Et Mangal"
-              label="Baran Et Mangal" />
-          </googlemaps-map>
-        </div>
-      </el-col>
-</el-row>
-
+  <el-row :gutter="32">
+    <el-col :xs="24" :sm="24" :md="24" :lg="24">
+    <div>
+      <googlemaps-map
+        ref="map"
+        :center.sync="mapCenter"
+        :zoom.sync="zoom"
+        style="height: 350px; max-width: %50;"
+        class="map">
+        <googlemaps-marker
+          :position="{ lat: 41.017822, lng: 28.954770 }"
+          title="Baran Et Mangal"
+          label="Baran Et Mangal" />
+      </googlemaps-map>
+    </div>
+    </el-col>
+  </el-row>
   </div>
 </template>
 
@@ -100,7 +80,7 @@ export default {
   components: {},
   data() {
     return {
-      apiAddress: 'http://cultidate.herokuapp.com/api/medias/',
+      apiAddress: 'https://cultidate.herokuapp.com/api/medias/',
       headers : {
         // 'Content-Type': 'multipart/form-data',
         'Authorization': 'Token ' + getToken(),
@@ -133,7 +113,8 @@ export default {
       eventDetails: null,
       following: null,
       event_id: null,
-      follow_event_id: null
+      follow_event_id: null,
+      is_owner: false,
     }
   },
   created() {
@@ -163,6 +144,7 @@ export default {
         } else {
           this.following = 'unfollow'
         }
+        this.is_owner = (this.eventDetails.owner.id === this.$store.state.user.user_id) ? true : false
       })
     },
     followEvent() {
@@ -170,7 +152,6 @@ export default {
         follow(parseInt(this.event_id)).then(response => {
           this.following = 'unfollow'
           this.follow_event_id = response.data.id
-          console.log(this.follow_event_id)
         })
       } else {
         unfollow(this.follow_event_id).then(response => {
@@ -190,7 +171,12 @@ export default {
       attendance(this.event_id, this.attend).then(response => {
         this.attend = attends[response.data.status]
       })
-    }
+    },
+    showSuccess(response, file, fileList){
+      this.$alert('Picture is added to the event', 'Congrats!', {
+          confirmButtonText: 'I love Cultidate',
+        });
+    },
   }
 }
 </script>
