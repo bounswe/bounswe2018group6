@@ -133,14 +133,15 @@ export const constantRouterMap = [
         component: () => import('@/views/profile/index'),
         name: 'Profile',
         meta: { title: 'Profile' }
-      }
+      },
+      {
+        path: '/editprofile',
+        component: () => import('@/views/profile/editprofile'),
+        hidden: true
+      },
     ]
   },
-  {
-    path: '/editprofile',
-    component: () => import('@/views/profile/editprofile'),
-    hidden: true
-  },
+  
   // {
   //   path: '/documentation',
   //   component: Layout,

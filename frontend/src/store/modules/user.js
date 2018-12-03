@@ -9,6 +9,8 @@ const user = {
     code: '',
     token: getToken(),
     user_id: -1,
+    is_corporate_user: null,
+    corporate_profile: '',
     follower_count: 0,
     following_count: 0,
     profile_photo: '',
@@ -28,6 +30,9 @@ const user = {
     },
     SET_USER_ID: (state, user_id) => {
       state.user_id = user_id
+    },
+    SET_USERNAME: (state, username) => {
+      state.username = username
     },
     SET_TOKEN: (state, token) => {
       state.token = token
@@ -79,6 +84,7 @@ const user = {
           commit('SET_TOKEN', data.token)
           setToken(response.data.token)
           commit('SET_USER_ID', data.user_id)
+          commit('SET_USERNAME', username)
           resolve()
         }).catch(error => {
           MessageBox.alert('Sorry. Check your username or password!', {
@@ -92,7 +98,7 @@ const user = {
     signupDate({ commit }, user) {
       const username = user.username.trim()
       return new Promise((resolve, reject) => {
-        signupDate(user.first_name, user.last_name, user.email, username, user.password).then(response => {
+        signupDate(user.first_name, user.last_name, user.email, username, user.password, user.is_corporate_user, user.corporate_profile).then(response => {
           const data = response.data
           commit('SET_USER_ID', data.id)
           resolve()
