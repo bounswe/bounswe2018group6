@@ -15,44 +15,73 @@
       </el-col>
       <el-carousel trigger="click" height="350px">
         <el-carousel-item>
-          <img :src="eventDetails.featured_image" style="object-fit: contain;">
+          <img :src="eventDetails.featured_image" class="imgs">
         </el-carousel-item>
         <el-carousel-item v-for="media in eventDetails.medias" :key="media.id">
-          <img :src="media.file" style="object-fit: contain;">
+          <img :src="media.file" class="imgs">
         </el-carousel-item>
       </el-carousel>
     </el-row>
     <div style="margin-top: 30 px" >
       <p/>
-      <el-tag v-for="tag in tags" :key="tag" size="medium">
-        {{ tag }}
+      <el-tag v-for="tag in eventDetails.tags" :key="tag" size="medium">
+        {{ tag.name }}
       </el-tag>
       <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
     </div>
     <div style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">Description</span>
-      <el-rate v-model="rate" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" style="float: right;"/>
+      <el-button v-if="is_owner" size="medium" style="float: right;" type="danger" @click="deleteEvent">Delete Event</el-button>
       <p>{{ eventDetails.description }} </p>
-
     </div>
 
-    <googlemaps-map
-      ref="map"
-      :center.sync="mapCenter"
-      :zoom.sync="zoom"
-      style="height: 350px; max-width: %100;"
-      class="map">
-      <googlemaps-marker
-        :position="{ lat: 41.017822, lng: 28.954770 }"
-        title="Baran Et Mangal"
-        label="Baran Et Mangal" />
-    </googlemaps-map>
-
+    <googlemaps-geocoder
+    :request="{
+      location: { lat: 41.017822, lng: 28.954770 },
+    }">
+      <template slot-scope="props">
+        <div class="name">{{ props.results[1].address_components[4].long_name }}</div>
+        <div class="name">{{ props.results[1].address_components[5].long_name }}</div>
+        <div class="address">{{ props.results[0].address_components.administrative_area_level_1 }}</div>
+      </template>
+    </googlemaps-geocoder>
+  
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>Comments</span>
+        <el-popover placement="left" width="400" trigger="click">
+          <el-input type="textarea" autosize placeholder="Please comment..." v-model="comment"></el-input>
+          <el-button style="float: left; margin-top: 5px;" type="primary" @click.native.prevent="addComment">Submit</el-button>
+          <el-button style="float: right; padding: 3px 0" type="text" slot="reference">Add Comment</el-button>
+        </el-popover>
+      </div>
+      <div v-for="com in eventDetails.comments" :key="com.content" class="text item">
+         <span> {{ com.content }} </span>
+         <span style="font-weight: bold; margin-left: 5px"> {{ 'by ' + com.owner.username }} </span>
+         <el-button v-if="com.owner.username === owner_username" size="mini" style="float: right;" type="danger" @click.native.prevent="deleteComment(com.id)">Delete</el-button>
+      </div>
+    </el-card>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :md="24" :lg="24">
+        <googlemaps-map
+          ref="map"
+          :center.sync="mapCenter"
+          :zoom.sync="zoom"
+          style="height: 350px; max-width: 50%; margin-left: 50%;"
+          class="map">
+          <googlemaps-marker
+            :position="{ lat: 41.017822, lng: 28.954770 }"
+            title="Baran Et Mangal"
+            label="Baran Et Mangal" />
+        </googlemaps-map>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import { getEventDetail, follow, unfollow, attendance } from '@/api/event'
+import { getEventDetail, follow, unfollow, attendance, rate, delEvent, createComment, delComment } from '@/api/event'
+import { getUserInfo } from '@/api/user'
 export default {
   name: 'ShowEvent',
   components: {},
