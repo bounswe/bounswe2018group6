@@ -90,3 +90,83 @@ export function createEvent(data) {
     })
 }
  
+export function rate(event_id, rate) {
+  const content_type = "event";
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  const data = {
+    "content_type": content_type,
+    "object_id": event_id,
+    "vote": rate
+  }
+  return request({
+    headers,
+    url: '/vote/',
+    method: 'post',
+    data
+  })
+}
+
+export function delrate(rate_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/vote/' + rate_id + '/',
+    method: 'delete'
+  })
+}
+
+export function delEvent(event_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events/' + event_id + '/',
+    method: 'delete'
+  })
+}
+
+export function getTags() {
+  return request({
+    url: '/tags/',
+    method: 'get'
+  })
+}
+
+export function createComment(event_id, comment) {
+  const content_type = "event";
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  const data = {
+    "content_type": content_type,
+    "object_id": event_id,
+    "content": comment
+  }
+  return request({
+    headers,
+    url: '/comments/',
+    method: 'post',
+    data
+  })
+}
+
+export function delComment(comment_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/comments/' + comment_id + '/',
+    method: 'delete'
+  })
+}
