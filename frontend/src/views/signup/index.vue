@@ -60,6 +60,18 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
+
+      <el-form-item prop="corporate">
+        <el-radio-group v-model="signupForm.is_corporate_user" name="is_corporate_user" style="margin-left: 8px;">
+          <el-radio :label="true">Corporate</el-radio>
+          <el-radio :label="false">Not Corporate</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item v-if="signupForm.is_corporate_user" prop="Link">
+        <el-input v-model="signupForm.corporate_profile.url" name="corporate_profile" :placeholder="$t('Corporate URL')"/>
+      </el-form-item>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleSignup">{{ $t('signup.logIn') }}</el-button>
       <router-link to="/login?redirect=%2Fdashboard"><el-button class="login-button" type="primary">Login</el-button></router-link>
       <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
