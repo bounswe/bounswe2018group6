@@ -124,7 +124,11 @@ export default {
         last_name: '',
         email: '',
         username: '',
-        password: ''
+        password: '',
+        is_corporate_user: false,
+        corporate_profile:  {
+          url: ''
+        }
       },
       signupRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
