@@ -110,14 +110,18 @@ export default {
       zoom: 11,
       radio4: 'Attend',
       rate: null,
-      tags: ['food', 'culture', 'kebap'],
       eventDetails: null,
+      date: null,
       following: null,
       event_id: null,
-      follow_event_id: null
+      follow_event_id: null,
+      is_owner: false,
+      owner_username: null,
+      comment: null
     }
   },
   created() {
+    this.getUser()
     this.event_id = this.$route.params.id
     this.fetchData(this.event_id)
   },
@@ -142,6 +146,13 @@ export default {
           this.following = 'follow'
         } else {
           this.following = 'unfollow'
+        }
+        console.log(this.owner_username)
+        console.log(response.data.owner.username)
+        if (this.owner_username == response.data.owner.username) {
+          this.is_owner = true
+        } else {
+          this.is_owner = false
         }
       })
     },
@@ -169,6 +180,109 @@ export default {
       }
       attendance(this.event_id, this.attend).then(response => {
         this.attend = attends[response.data.status]
+      })
+    },
+    rateUpEvent() {
+      rate(this.event_id, 'U').then(response => {
+        if(response) {
+          this.$message({
+            message: 'You upvoted event succesfully.',
+            type: 'success'
+          })
+          getEventDetail(this.event_id).then(response => {
+            this.eventDetails.vote_count = response.data.vote_count
+          })
+        }
+        else {
+          this.$message({
+            message: 'Please vote again!',
+            type: 'error'
+          })
+        }
+      })
+    },
+    rateDownEvent() {
+      rate(this.event_id, 'D').then(response => {
+        if(response) {
+          this.$message({
+            message: 'You downvoted event succesfully.',
+            type: 'success'
+          })
+          getEventDetail(this.event_id).then(response => {
+            this.eventDetails.vote_count = response.data.vote_count
+          })
+        }
+        else {
+          this.$message({
+            message: 'Please vote again!',
+            type: 'error'
+          })
+        }
+      })
+    },
+    addComment() {
+      createComment(this.event_id, this.comment).then(response => {
+        if(response) {
+          this.$message({
+            message: 'You created comment succesfully.',
+            type: 'success'
+          })
+          getEventDetail(this.event_id).then(response => {
+              this.eventDetails.comments = response.data.comments
+          })
+          this.comment = ''
+        } else {
+          this.$message({
+            message: 'Please comment again!',
+            type: 'error'
+          })
+        }
+      })
+    },
+    deleteComment(comment_id) {
+      delComment(comment_id).then(response => {
+        if(response) {
+          this.$message({
+            message: 'You deleted event succesfully.',
+            type: 'success'
+          })
+          getEventDetail(this.event_id).then(response => {
+              this.eventDetails.comments = response.data.comments
+          })
+          this.comment = ''
+        } else {
+          this.$message({
+            message: 'Please delete comment again!',
+            type: 'error'
+          })
+        }
+      })
+    },
+    getUser() {
+      getUserInfo(this.$store.state.user.user_id).then(response => {
+        this.owner_username = response.data.username
+      })
+    },
+    beautifyDate(date) {
+      var d = new Date(date)
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + (d.getMonth()<10?'0':'') + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      return date
+    },
+    deleteEvent() {
+      delEvent(this.event_id).then(response => {
+        if(response) {
+          this.$message({
+            message: 'Event deleted succesfully.',
+            type: 'success'
+          })
+          this.$router.push({ path: this.redirect || '/events/recommended/' })
+        }
+        else {
+          this.$message({
+            message: 'Please delete again!',
+            type: 'error'
+          })
+        }
       })
     }
   }
@@ -213,4 +327,34 @@ export default {
   .el-carousel{
     max-width: 50%;
   }
+  .imgs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 350px;
+  max-width: none;
+  }
+  .text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .box-card {
+    width: 580px;
+    max-height: 450px;
+  }
+
 </style>
