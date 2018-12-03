@@ -108,7 +108,14 @@ export const constantRouterMap = [
         component: () => import('@/views/events/showEvent'),
         name: 'Show Event',
         meta: { title: 'Show Event' }
-      }
+      },
+      {
+        path: 'edit-event/:id',
+        component: () => import('@/views/events/editEvent'),
+        name: 'Edit Event',
+        meta: { title: 'Edit Event' },
+        hidden: false,
+      },
     ]
   },
   {
