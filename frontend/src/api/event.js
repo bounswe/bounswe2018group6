@@ -168,6 +168,8 @@ export function delComment(comment_id) {
     headers,
     url: '/comments/' + comment_id + '/',
     method: 'delete'
+  })
+}
 
 export function editEvent(data, event_id) {
   console.log(data)

@@ -12,9 +12,6 @@
         <el-button size="large" style="float: right; margin-right: 20px;" type="danger" @click.native.prevent="rateDownEvent" icon="el-icon-arrow-down" circle></el-button>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} ₺ </span>
         <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
-        <p style="font-size: 20px; margin-left: 20px;">{{ eventDetails.date }}</p>
-        <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} ₺ </span>
-          <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
           <span style="margin-right: 20px; float: right;"> Attendance Status </span>
@@ -31,43 +28,38 @@
       </el-carousel>
     </el-row>
 <el-row :gutter="32">
-  <el-col :xs="24" :sm="24" :md="16" :lg="16">
+  
+<div style="margin-top: 30 px" >
+  <el-tag v-for="tag in eventDetails.tags" :key="tag" size="medium">
+    {{ tag.name }}
+  </el-tag>
+  <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
+  <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
+    <el-button >Edit Event</el-button>
+  </router-link>
+</div>
+
+<el-col :xs="24" :sm="24" :md="16" :lg="16">
     <div style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">Description</span>
       <el-card class="box-card">
         <div class="text item">
           {{ eventDetails.description }}
         </div>
+        <googlemaps-geocoder
+        :request="{
+          location: { lat: 41.017822, lng: 28.954770 },
+        }">
+          <template slot-scope="props">
+            <div class="name">{{ props.results[1].address_components[4].long_name }}</div>
+            <div class="name">{{ props.results[1].address_components[5].long_name }}</div>
+            <div class="address">{{ props.results[0].address_components.administrative_area_level_1 }}</div>
+          </template>
+        </googlemaps-geocoder>
       </el-card>
     </div>
-  </el-col>
 
-  <el-col :xs="24" :sm="24" :md="8" :lg="8">
-    <div style="margin-top: 30 px" >
-      <p/>
-      <el-tag v-for="tag in eventDetails.tags" :key="tag" size="medium">
-        {{ tag.name }}
-      </el-tag>
-      <el-button style="float: right;" type="primary" plain size="medium" @click.native.prevent="followEvent">{{ following }}</el-button>
-      <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
-        <el-button >Edit Event</el-button>
-      </router-link>
-    </div>
-    <div style="margin-top: 20px">
-      <span style="font-size: 20px; font-weight:bold;">Description</span>
-      <el-button v-if="is_owner" size="medium" style="float: right;" type="danger" @click="deleteEvent">Delete Event</el-button>
-      <p>{{ eventDetails.description }} </p>
-    </div>
-    <googlemaps-geocoder
-    :request="{
-      location: { lat: 41.017822, lng: 28.954770 },
-    }">
-      <template slot-scope="props">
-        <div class="name">{{ props.results[1].address_components[4].long_name }}</div>
-        <div class="name">{{ props.results[1].address_components[5].long_name }}</div>
-        <div class="address">{{ props.results[0].address_components.administrative_area_level_1 }}</div>
-      </template>
-    </googlemaps-geocoder>
+    
   
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -81,10 +73,11 @@
       <div v-for="com in eventDetails.comments" :key="com.content" class="text item">
          <span> {{ com.content }} </span>
          <span style="font-weight: bold; margin-left: 5px"> {{ 'by ' + com.owner.username }} </span>
-         <el-button v-if="com.owner.username === owner_username" size="mini" style="float: right;" type="danger" @click.native.prevent="deleteComment(com.id)">Delete</el-button>
+         <el-button v-if="com.owner.username === $store.state.user.username" size="mini" style="float: right;" type="danger" @click.native.prevent="deleteComment(com.id)">Delete</el-button>
       </div>
     </el-card>
-    <el-row :gutter="32">
+    </el-col>
+    
       <el-col :xs="24" :sm="24" :md="24" :lg="24">
         <googlemaps-map
           ref="map"
@@ -98,8 +91,7 @@
             label="Baran Et Mangal" />
         </googlemaps-map>
       </el-col>
-    </el-row>
-
+</el-row>
   </div>
 </template>
 
@@ -153,7 +145,6 @@ export default {
     }
   },
   created() {
-    this.getUser()
     this.event_id = this.$route.params.id
     this.additionalBody.event = this.event_id
     this.fetchData(this.event_id)
@@ -307,7 +298,7 @@ export default {
           })
         }
       })
-    }
+    },
     showSuccess(response, file, fileList){
       this.$alert('Picture is added to the event', 'Congrats!', {
           confirmButtonText: 'I love Cultidate',
