@@ -2,10 +2,14 @@
   <div class="components-container">
     <el-row>
       <el-col :span="14"><div class="grid-content bg-purple-light">
-        <center style="font-size: 25px; font-weight:bold"> {{ eventDetails.title }} </center>
+        <center style="font-size: 25px; font-weight:bold;font-family: 'Helvetica', 'Arial', sans-serif; color: #38A1F3;"> {{ eventDetails.title }} </center>
         <p style="font-size: 20px; margin-left: 20px;">by {{ eventDetails.owner.username }} </p>
+        <el-button size="large" style="float: right; margin-right: 20px;" type="success" @click.native.prevent="rateUpEvent" icon="el-icon-arrow-up" circle></el-button>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold;">Date and Time</p>
-        <p style="font-size: 20px; margin-left: 20px;">{{ eventDetails.date }}</p>
+        <span style="font-size: 20px; margin-left: 20px;"> {{ beautifyDate(eventDetails.date) }}</span>
+        <span style="font-size: 20px; float: right; margin-right: 34px;">{{ eventDetails.vote_count }}</span>
+        <div></div>
+        <el-button size="large" style="float: right; margin-right: 20px;" type="danger" @click.native.prevent="rateDownEvent" icon="el-icon-arrow-down" circle></el-button>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 130px;"> <span>Price: {{ eventDetails.price }} </span>
           <el-select v-model="attend" placeholder="Attendance" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
