@@ -6,7 +6,7 @@
           :event-name="event.title"
           :event-link="'events/show-event/' + event.id"
           :description="event.description"
-          :date="event.date"
+          :date="beautifyDate(event.date)"
           :owner="event.owner.username"
           :followers="event.followers"
           :votes="event.votes"
@@ -41,6 +41,11 @@ export default {
         this.eventList = response.data
         console.log(this.eventList)
       })
+    },
+    beautifyDate(date) {
+      var d = new Date(date)
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      return date
     }
   }
 }
