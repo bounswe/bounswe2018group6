@@ -13,7 +13,7 @@
     <el-popover v-if="is_corporate_user" :title="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
-    <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right: 5px;"></i>{{city}}</el-span>
+    <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right:5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
       <el-button round>{{ follower_count }} followers</el-button>
@@ -21,7 +21,7 @@
       <el-button round style="margin-left: 10px;">{{ owned_events_count }} events</el-button>
     </div>
     <div class="block">
-      <el-span class="bio"><i class="el-icon-info" style="margin-right: 5px;"></i>{{bio}}</el-span>
+      <el-span class="bio"><i class="el-icon-info" style="margin-right:5px;"></i>{{bio}}</el-span>
     </div>
     <div class="block">
       <el-tag v-for="tag in tags" :label="tag.name" :key="tag.id" size="medium">
@@ -106,7 +106,7 @@ export default {
 .bio{
   position: absolute;
   top: 120px;
-  margin-left: 60px;
+  margin-left: 170px;
   font-size: 16px;
   text-transform: uppercase;
 }

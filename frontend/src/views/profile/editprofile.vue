@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-    <div style="margin-left: 44.5%; margin-top: 10px;">
+    <div style="margin-left: 43%; margin-top: 10px;">
     <pan-thumb :image="profile_photo" class="center-item"/>
       <profile-upload
         class="avatar-uploader"
@@ -44,7 +44,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="form.is_corporate_user" label="Link">
-        <!-- <el-input v-model="form.corporate_profile.url" :placeholder="form.corporate_profile.url"/> -->
+        <el-input v-model="form.corporate_profile.url" :placeholder="form.corporate_profile.url"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">Update</el-button>
@@ -106,7 +106,11 @@ export default {
         this.form.bio = response.data.bio
         console.log(response)
         this.form.is_corporate_user = response.data.is_corporate_user
-        this.form.corporate_profile = response.data.corporate_profile
+        if (this.form.is_corporate_user == true) {
+          this.form.corporate_profile.url = response.data.corporate_profile.url
+        } else {
+          this.form.corporate_profile.url = "Please enter link"
+        }
         this.profile_photo = response.data.profile_photo
         console.log(response.data)
       })
@@ -143,7 +147,9 @@ export default {
         Vue.delete(this.form, 'current_password')
         Vue.delete(this.form, 'new_password')
       }
-      console.log(this.form.tags)
+      if (this.form.is_corporate_user == false) {
+        Vue.delete(this.form, 'corporate_profile')
+      } 
       editUser(this.$store.state.user.user_id, this.form).then(response => {
         if(response){
           this.$message({

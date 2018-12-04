@@ -8,14 +8,14 @@
       :name="field"
       :on-success="refresh"
       > 
-      <el-button size="small" type="primary">Change Profile Photo</el-button>
+      <el-button size="small" type="primary" style="margin-top: 10px;">Change Profile Photo</el-button>
     </profile-upload>
     <el-span class="name"> {{ name }} </el-span>
     <el-popover v-if="is_corporate_user" :title="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
     <router-link to="/editprofile"><el-button type="primary" icon="el-icon-edit" class="edit" circle/></router-link>
-    <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right: 5px;"></i>{{city}}</el-span>
+    <el-span style="float: right; margin-top: -80px;"><i class="el-icon-location" style="margin-right: 5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
       <el-button round>{{ follower_count }} followers</el-button>
@@ -116,7 +116,7 @@ export default {
 .name{
   position: absolute;
   top: 20px;
-  margin-left: 40px;
+  margin-left: 190px;
   font-weight: bold;
   font-size: 25px;
   text-transform: uppercase;
@@ -125,7 +125,7 @@ export default {
 .bio{
   position: absolute;
   top: 120px;
-  margin-left: 60px;
+  margin-left: 170px;
   font-size: 16px;
   text-transform: uppercase;
 }

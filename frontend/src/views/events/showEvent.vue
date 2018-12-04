@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="14"><div class="grid-content bg-purple-light">
         <center style="font-size: 25px; font-weight:bold;font-family: 'Helvetica', 'Arial', sans-serif; color: #38A1F3;"> {{ eventDetails.title }} </center>
-        <p style="font-size: 20px; margin-left: 20px;"><span style="color: #9ab97d; ">by</span> <router-link :to="'/profile/' + eventDetails.owner.user_id + '/'">{{ eventDetails.owner.username }} </router-link></p>
+        <p style="font-size: 20px; margin-left: 20px;"><span style="color: #9ab97d; ">by</span> <router-link :to="'/profile/' + eventDetails.owner.id + '/'"><mallki :text="eventDetails.owner.username" class-name="mallki-text"/></router-link></p>
         <el-button size="large" style="float: right; margin-right: 20px;" type="success" @click.native.prevent="rateUpEvent" icon="el-icon-arrow-up" circle></el-button>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold; color: #38A1F3;">Date and Time</p>
         <span style="font-size: 20px; margin-left: 20px;"> {{ beautifyDate(eventDetails.date) }}</span>
@@ -108,10 +108,11 @@
 import { getEventDetail, follow, unfollow, attendance, rate, delEvent, createComment, delComment } from '@/api/event'
 import { getUserInfo } from '@/api/user'
 import { getToken } from '@/utils/auth' // getToken from cookie
+import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
   name: 'ShowEvent',
-  components: {},
+  components: {Mallki},
   data() {
     return {
       apiAddress: 'https://cultidate.herokuapp.com/api/medias/',
@@ -388,5 +389,13 @@ export default {
 
   .box-card {
     min-height: 250px;
+  }
+
+  .mallki-text {
+    top: 4px;
+    left: 3px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
   }
 </style>
