@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /** note: Submenu only appear when children.length>=1
  *  detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -121,7 +121,7 @@ export const constantRouterMap = [
   {
     path: '/profile',
     component: Layout,
-    redirect: '/profile/index',
+    // redirect: '/profile/index',
     name: 'profile',
     meta: {
       title: 'Profile',
@@ -129,10 +129,17 @@ export const constantRouterMap = [
     },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
+        path: '/my-profile',
+        component: () => import('@/views/profile/myProfile'),
         name: 'Profile',
-        meta: { title: 'Profile' }
+        meta: { title: 'My Profile' }
+      },
+      {
+        path: '/profile/:id',
+        component: () => import('@/views/profile/showProfile'),
+        name: 'Profile',
+        meta: { title: 'User Profile' },
+        hidden: true
       },
       {
         path: '/editprofile',
