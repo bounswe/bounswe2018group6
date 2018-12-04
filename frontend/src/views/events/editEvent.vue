@@ -1,13 +1,13 @@
 <template>
   <div class="components-container">
     <el-row>
-      <el-col :xs="24" :sm="24" :md="12" :lg="12"> <div class="grid-content bg-purple-light">
+      <el-col :xs="24" :sm="24" :md="16" :lg="16"> <div class="grid-content bg-purple-light">
         <el-input type="textarea" autosize :placeholder="eventDetails.title" v-model="formData.title"> </el-input>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold;">Date and Time</p>
         <el-date-picker
           v-model="formData.date"
           type="datetime"
-          :placeholder="eventDetails.date">
+          :placeholder="beautifyDate(eventDetails.date)">
         </el-date-picker>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold;">Price</p>
         <el-input type="number" style="width: 400px;" :placeholder="eventDetails.price" v-model="formData.price">
@@ -15,7 +15,7 @@
         </el-input>
       </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="12">
+      <el-col :xs="24" :sm="24" :md="8" :lg="8">
         <span style="margin-top: 20px;">Click image to change event's featured image</span>
            <profile-upload
             class="avatar-uploader"
@@ -36,7 +36,7 @@
   
     <div  style="margin-top: 20px">
       <span style="font-size: 20px; font-weight:bold;">Description</span>
-      <el-card class="box-card">
+      <el-card class="box-card" style="margin-top: 10px; margin-right: 100px">
         <el-input type="textarea" autosize :placeholder="eventDetails.description" v-model="formData.description"> </el-input>
       </el-card>
     </div>
@@ -45,9 +45,9 @@
   
     <div style="margin-top: 30 px" >
       <p/>
-      <el-tag v-for="tag in tags" :key="tag" size="medium">
-        {{ tag }}
-      </el-tag>
+        <el-checkbox-group v-model="formData.tags">
+          <el-checkbox-button v-for="tag in tag_list" :label="tag.id" :key="tag.name">{{tag.name}}</el-checkbox-button>
+        </el-checkbox-group>
     </div>
 
 <div>
@@ -72,7 +72,7 @@
     </el-upload>
 </div>
 <div>
-  <el-button type="primary" style="margin:30px;" @click.native.prevent="handleSubmit">Change Event with Current Values</el-button>
+  <el-button size="large" type="primary" style="margin-bottom:50px; margin-top: 50px;" @click.native.prevent="handleSubmit">Change Event with Current Values</el-button>
 </div>
 
 <el-row :gutter="32">
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { getEventDetail, editEvent } from "@/api/event";
+import { getEventDetail, editEvent, getTags } from "@/api/event";
 import ProfileUpload from '@/components/Upload'
 import { getToken } from "@/utils/auth"; // getToken from cookie
 
@@ -105,7 +105,7 @@ export default {
   components: {ProfileUpload},
   data() {
     return {
-      formData: { },
+      formData: { tags: []},
       mediaList: [],
       mediaApiAddress: "https://cultidate.herokuapp.com/api/medias/",
       featuredMediaApiAddress: "",
@@ -123,10 +123,10 @@ export default {
       zoom: 11,
       radio4: "Attend",
       rate: null,
-      tags: ["food", "culture", "kebap"],
       eventDetails: null,
       event_id: null,
-      follow_event_id: null
+      follow_event_id: null,
+      tag_list: []
     };
   },
   created() {
@@ -134,6 +134,7 @@ export default {
     this.featuredMediaApiAddress = "https://cultidate.herokuapp.com/api/events/" + this.event_id + '/'
     this.additionalBody.event = this.event_id;
     this.fetchData(this.event_id);
+    this.getTagList()
   },
   methods: {
     fetchData(event_id) {
@@ -154,6 +155,11 @@ export default {
         }
       });
     },
+    beautifyDate(date) {
+      var d = new Date(date)
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      return date
+    },
     showSuccess(response, file, fileList) {
       this.$alert("Picture is added to the event", "Congrats!", {
         confirmButtonText: "I love Cultidate"
@@ -169,6 +175,11 @@ export default {
       this.$alert("Picture is added to the event", "Congrats!", {
         confirmButtonText: "I love Cultidate"
       });
+    },
+    getTagList() {
+      getTags().then(response => {
+        this.tag_list = response.data
+      })
     },
     handleSubmit(){
       editEvent(this.formData, this.event_id).then(response => {
@@ -238,8 +249,8 @@ export default {
   text-align: center;
 }
 .avatar {
-  width: 300px;
-  height: 300px;
+  width: 330px;
+  height: 330px;
   display: block;
 }
 </style>
