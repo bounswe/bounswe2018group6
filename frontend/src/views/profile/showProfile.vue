@@ -13,7 +13,6 @@
     <el-popover v-if="is_corporate_user" :title="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
-    <router-link to="/editprofile"><el-button type="primary" icon="el-icon-edit" class="edit" circle/></router-link>
     <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right: 5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
@@ -22,7 +21,6 @@
       <el-button round style="margin-left: 10px;">{{ owned_events_count }} events</el-button>
     </div>
     <div class="block">
-      <el-button type="primary" @click="imagecropperShow=true">Change Avatar</el-button>
       <el-span class="bio"><i class="el-icon-info" style="margin-right: 5px;"></i>{{bio}}</el-span>
     </div>
     <div class="block">
@@ -64,7 +62,7 @@ export default {
   },
   methods: {
     getUser() {
-      getUserInfo(this.$store.state.user.user_id).then(response => {
+      getUserInfo(this.$route.params.id).then(response => {
         this.name = response.data.first_name + ' ' + response.data.last_name
         this.follower_count = response.data.follower_count
         this.following_count = response.data.following_count

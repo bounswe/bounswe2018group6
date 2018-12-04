@@ -1,14 +1,16 @@
 <template>
   <div class="tab-container">
     <div style="margin-left: 44.5%; margin-top: 10px;">
-      <el-upload
+    <pan-thumb :image="profile_photo" class="center-item"/>
+      <profile-upload
+        class="avatar-uploader"
         :action="apiAddress"
         :headers="headers"
-				:data="additionalBody"
-				:name="keyName">
-        <pan-thumb :image="profile_photo" class="center-item"/>
-        <el-button style="margin-top: 10px;" slot="trigger" size="small" type="primary">Change Avatar</el-button>
-      </el-upload>
+        :name="field"
+        :on-success="refresh"
+        > 
+        <el-button size="small" type="primary">Change Profile Photo</el-button>
+      </profile-upload>
     </div>
     <div style="margin-bottom: 35px; left: 50%;"/>
     <el-form :label-position="labelPosition"  :model="form" label-width="120px">
@@ -42,7 +44,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="form.is_corporate_user" label="Link">
-        <el-input v-model="form.corporate_profile.url" :placeholder="form.corporate_profile.url"/>
+        <!-- <el-input v-model="form.corporate_profile.url" :placeholder="form.corporate_profile.url"/> -->
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">Update</el-button>
@@ -64,15 +66,6 @@ export default {
   components: { ImageCropper, PanThumb },
   data() {
     return {
-      apiAddress: 'http://cultidate.herokuapp.com/api/user/',
-      keyName: 'file',
-      headers : {
-        // 'Content-Type': 'multipart/form-data',
-        'Authorization': 'Token ' + getToken()
-      },
-      additionalBody: {
-        profile_photo: null
-      },
       labelPosition: 'left',
       passwordType: 'password',
       form: {
@@ -89,23 +82,38 @@ export default {
         }
       },
       tag_list: null,
+      user_id: null,
+      apiAddress: '',
+      field: 'profile_photo',
+      headers : {
+        Authorization: 'Token ' + getToken()
+      },
+      profile_photo: '',
     }
   },
   created() {
+    this.user_id = this.$store.state.user.user_id
+    this.apiAddress = 'https://cultidate.herokuapp.com/api/user/' + this.user_id + '/'
     this.getUser()
     this.getTagList()
-    this.apiAddress = this.apiAddress + this.$store.state.user.user_id + '/'
-    this.additionalBody.profile_photo = this.$store.state.avatar
   },
   methods: {
     getUser() {
-      getUserInfo(this.$store.state.user.user_id).then(response => {
+      getUserInfo(this.user_id).then(response => {
         this.form.first_name = response.data.first_name
         this.form.last_name = response.data.last_name
         this.form.city = response.data.city
         this.form.bio = response.data.bio
+        console.log(response)
         this.form.is_corporate_user = response.data.is_corporate_user
-        this.form.corporate_profile.url = response.data.corporate_profile.url
+        this.form.corporate_profile = response.data.corporate_profile
+        this.profile_photo = response.data.profile_photo
+        console.log(response.data)
+      })
+    },
+    refresh(){
+      getUserInfo(this.user_id).then(response => {
+        this.profile_photo = response.data.profile_photo
       })
     },
     /*
@@ -142,7 +150,7 @@ export default {
             message: 'Changes saved',
             type: 'success'
           })
-          this.$router.push({ path: this.redirect || '/profile/index/' })
+          this.$router.push({ path: this.redirect || '/my-profile/' })
           }
           else {
             this.$message({
