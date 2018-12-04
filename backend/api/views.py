@@ -1,17 +1,23 @@
-from rest_framework import generics, mixins, views, status
+from django.db.models import Q
+from rest_framework import generics, mixins, status, views
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
-                        FollowStatus, Media, Tag, User, VoteStatus)
-from api.permissions import IsOwnerOrReadOnly, IsUserOrReadOnly
+from api.models import (AttendanceStatus, Comment, Conversation,
+                        CorporateUserProfile, Event, FollowStatus, Media,
+                        Message, Tag, User, VoteStatus)
+from api.permissions import (IsOwnerOrParticipant, IsOwnerOrReadOnly,
+                             IsUserOrReadOnly)
 from api.serializers import (AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
+                             ConversationCreateSerializer,
+                             ConversationSerializer,
                              EventCreateUpdateSerializer,
                              EventDetailsSerializer, EventSummarySerializer,
-                             LoginSerializer, FollowCreateSerializer, MediaCreateSerializer,
-                             MediaDetailsSerializer, TagSerializer,
+                             FollowCreateSerializer, LoginSerializer,
+                             MediaCreateSerializer, MediaDetailsSerializer,
+                             MessageCreateSerializer, TagSerializer,
                              UserCreateUpdateSerializer, UserDetailsSerializer,
                              VoteCreateSerializer)
 
@@ -46,6 +52,27 @@ class CommentView(MultiSerializerViewMixin,
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+class ConversationListView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ConversationSerializer
+
+    def get_queryset(self):
+        return Conversation.objects.\
+            filter(Q(owner=self.request.user) | Q(participant=self.request.user)).order_by('-updated')
+
+
+class ConversationView(MultiSerializerViewMixin,
+                       generics.RetrieveAPIView,
+                       generics.CreateAPIView,
+                       generics.DestroyAPIView):
+    queryset = Conversation.objects.all()
+    permission_classes = (IsAuthenticated, IsOwnerOrParticipant)
+    serializer_class = ConversationSerializer
+    method_serializer_classes = {
+        'POST': ConversationCreateSerializer,
+    }
 
 
 class EventListView(generics.ListAPIView):
@@ -94,6 +121,12 @@ class MediaView(generics.RetrieveAPIView,
     queryset = Media.objects.all()
     serializer_class = MediaCreateSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+
+
+class MessageView(generics.CreateAPIView):
+    queryset = Message.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessageCreateSerializer
 
 
 class SignUpView(generics.CreateAPIView):

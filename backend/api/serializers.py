@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
-                        FollowStatus, Location, Media, Tag, User, VoteStatus)
+from api.models import (AttendanceStatus, Comment, Conversation,
+                        CorporateUserProfile, Event, FollowStatus, Location,
+                        Media, Message, Tag, User, VoteStatus)
 
 
 class UserSummarySerializer(serializers.ModelSerializer):
@@ -139,6 +141,80 @@ class MediaDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = ('id', 'owner', 'event', 'file', 'created', 'updated')
+
+
+class MessageCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('id', 'receiver', 'conversation', 'content')
+
+    def validate(self, data):
+        owner = self.context.get("request").user
+        conversation = data.get('conversation')
+        receiver = data.get('receiver')
+
+        if not ((conversation.owner == owner and conversation.participant == receiver) or
+            (conversation.owner == receiver and conversation.participant == owner)):
+            raise serializers.ValidationError(
+                "Cannot create message in a conversation that doesn't belong to this user.")
+        return data
+
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        conversation = validated_data.get('conversation')
+
+        # Update 'updated' field of conversation when a new message is created in that conversation
+        message = Message.objects.create(owner=owner, **validated_data)
+        conversation.updated = message.created
+        conversation.save()
+        return message
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+    receiver = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ('id', 'owner', 'receiver', 'conversation', 'content', 'created')
+
+
+class ConversationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = ('id', 'participant', 'created', 'updated')
+        read_only_fields = ('created', 'updated')
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        participant = validated_data.pop('participant')
+        conversation_set = Conversation.objects.\
+            filter(Q(owner=user, participant=participant) | Q(owner= participant, participant=user))
+        if conversation_set.count() != 0:
+            return conversation_set.first()
+        conversation = Conversation.objects.create(owner=user, participant= participant, **validated_data)
+        return conversation
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+    participant = UserSummarySerializer(read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Conversation
+        fields = ('id', 'owner', 'participant', 'messages', 'created', 'updated')
+        read_only_fields = ('created', 'updated')
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        participant = validated_data.pop('participant')
+        conversation_set = Conversation.objects.\
+            filter(Q(owner=user, participant=participant) | Q(owner= participant, participant=user))
+        if conversation_set.count() != 0:
+            return conversation_set.first()
+        conversation = Conversation.objects.create(owner=user, participant= participant, **validated_data)
+        return conversation
 
 
 class TagSerializer(serializers.ModelSerializer):
