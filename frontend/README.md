@@ -1,13 +1,12 @@
-## Frontend Team
-
-[![Atıf Emre Yüksel](https://avatars3.githubusercontent.com/u/16309848?s=460&v=4)](https://github.com/bounswe/bounswe2018group6/wiki/At%C4%B1f-Emre-Y%C3%BCksel) | [![Ömer Kırbıyık](https://avatars2.githubusercontent.com/u/16326440?s=460&v=4)](https://github.com/bounswe/bounswe2018group6/wiki/%C3%96mer-K%C4%B1rb%C4%B1y%C4%B1k)
-|---|---|
-[Atıf Emre Yüksel](https://github.com/bounswe/bounswe2018group6/wiki/At%C4%B1f-Emre-Y%C3%BCksel) | [Ömer Kırbıyık](https://github.com/bounswe/bounswe2018group6/wiki/%C3%96mer-K%C4%B1rb%C4%B1y%C4%B1k)|[
+## Frontend Team  
+<a href="https://github.com/atifemreyuksel"> <img  src="https://avatars3.githubusercontent.com/u/16309848?s=460&v=4" alt="Atif"
+height="100"/> </a>  <a href="https://github.com/kirbiyik"> <img src="https://avatars2.githubusercontent.com/u/16326440?s=460&v=4" alt="Omer"
+height="100"/></a>
 
 
 ## Online Demo
 
-[Preview](http://cultidate.ml)
+[Click](http://cultidate.ml)
 
 
 ## Getting started
