@@ -245,15 +245,12 @@ class VoteCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializ
             owner=owner, content_type=validated_data.pop('content_type'),
             object_id=validated_data.pop('object_id'), defaults={'vote': vote})
 
-        # TODO Check for any bugs
         content_object = validated_data.pop('content_object')
         if created:
             content_object.update_vote_count(vote_status.vote_value, False)
         else:
-            if vote_status.vote == validated_data['vote']:
-                raise serializers.ValidationError('Cannot vote for the item with the same vote value.')
-            else:
-                vote_status.vote = validated_data['vote']
+            if vote_status.vote != vote:
+                vote_status.vote = vote
                 vote_status.save()
                 content_object.update_vote_count(vote_status.vote_value, True)
         return vote_status
