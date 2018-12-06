@@ -7,6 +7,8 @@ from rest_framework.authtoken.models import Token
 from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
                         FollowStatus, Location, Media, Tag, User, VoteStatus)
 
+from emailer.views import send_activation_email
+
 
 class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
@@ -194,12 +196,13 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
                                                 write_only=True, required=False)
     new_password = serializers.CharField(min_length=8, max_length=20, trim_whitespace=False, 
                                                 write_only=True, required=False)
+    email_sent = serializers.BooleanField(read_only=True, required=False)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'current_password', 'new_password',
                   'first_name', 'last_name', 'profile_photo', 'bio', 'city', 
-                  'is_corporate_user', 'corporate_profile', 'tags')
+                  'is_corporate_user', 'corporate_profile', 'tags', 'email_sent')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8, 'max_length': 20}}
 
     def create(self, validated_data):
@@ -207,6 +210,7 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
         user = User.objects.create_user(username, email, password)
+        user.is_active = False
 
         # corporate profile
         is_corporate_user = validated_data.pop('is_corporate_user', False)
@@ -228,6 +232,11 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
             setattr(user, key, value)
 
         user.save()
+        
+        # send activation email
+        email_sent = send_activation_email(user)
+        user.email_sent = email_sent
+
         return user
 
     def update(self, instance, validated_data):

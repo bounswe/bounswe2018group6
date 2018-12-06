@@ -38,6 +38,8 @@ DEBUG = DJANGO_ENV == 'development'
 
 ALLOWED_HOSTS = []
 
+# For activation emails, backend url is needed.
+HOST_ROOT_URL = os.getenv('HOST_ROOT_URL')
 
 # Application definition
 
@@ -53,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'api',
+    'emailer',
 ]
 
 MIDDLEWARE = [
@@ -147,6 +150,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
 
+FRONTEND_LOGIN_URL = os.getenv('FRONTEND_LOGIN_URL')
 
 # SENTRY
 
