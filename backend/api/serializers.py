@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -10,6 +11,25 @@ from api.models import (AttendanceStatus, Comment, Conversation,
                         Media, Message, Tag, User, VoteStatus)
 
 from emailer.views import send_activation_email
+
+
+class GenericModelValidatorMixin:
+
+    def validate(self, data):
+        content_type = data.get('content_type')
+        object_id = data.get('object_id')
+        try:
+            content_type_obj = ContentType.objects.get(model=content_type)
+            data['content_type'] = content_type_obj
+            data['content_object'] = content_type_obj.get_object_for_this_type(id=object_id)
+            return data
+        except ObjectDoesNotExist:
+            raise serializers.ValidationError('Cannot find an {0} with id {1}.'.format(content_type, object_id))
+
+    def validate_content_type(self, value):
+        if value not in ['event', 'user']:
+            raise serializers.ValidationError('Cannot find content_type {0}'.format(value))
+        return value
 
 
 class UserSummarySerializer(serializers.ModelSerializer):
@@ -40,7 +60,7 @@ class AttendanceDetailsSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'status')
 
 
-class CommentCreateSerializer(serializers.ModelSerializer):
+class CommentCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializer):
     content_type = serializers.CharField()
     owner = UserSummarySerializer(read_only=True)
 
@@ -50,10 +70,9 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        # TODO Validate if content_object exists
-        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
-            .get_object_for_this_type(id=validated_data.pop('object_id'))
-        comment = Comment.objects.create(owner=owner, content_object=content_object, **validated_data)
+        comment = Comment.objects.create(
+            owner=owner, content_object=validated_data.pop('content_object'),
+            content=validated_data.pop('content'))
         return comment
 
 
@@ -70,7 +89,7 @@ class CommentDetailsSerializer(serializers.ModelSerializer):
         return obj.content_type.model
 
 
-class FollowCreateSerializer(serializers.ModelSerializer):
+class FollowCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
@@ -79,11 +98,9 @@ class FollowCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        # TODO Validate if content_object exists
-        # TODO Validate if content object is already followed by owner
-        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
-            .get_object_for_this_type(id=validated_data.pop('object_id'))
-        follow_status = FollowStatus.objects.create(owner=owner, content_object=content_object, **validated_data)
+        follow_status, created = FollowStatus.objects.get_or_create(
+            owner=owner, content_type=validated_data.pop('content_type'),
+            object_id=validated_data.pop('object_id'), defaults={})
         return follow_status
 
 
@@ -214,7 +231,7 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class VoteCreateSerializer(serializers.ModelSerializer):
+class VoteCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
@@ -223,12 +240,13 @@ class VoteCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        # TODO Validate if content_object exists
-        content_type_object = ContentType.objects.get(model=validated_data['content_type'])
-        content_object = content_type_object.get_object_for_this_type(id=validated_data['object_id'])
+        vote = validated_data.pop('vote')
         vote_status, created = VoteStatus.objects.get_or_create(
-            owner=owner, content_type=content_type_object, object_id=validated_data['object_id'],
-            defaults={'vote': validated_data['vote']})
+            owner=owner, content_type=validated_data.pop('content_type'),
+            object_id=validated_data.pop('object_id'), defaults={'vote': vote})
+
+        # TODO Check for any bugs
+        content_object = validated_data.pop('content_object')
         if created:
             content_object.update_vote_count(vote_status.vote_value, False)
         else:
