@@ -204,17 +204,6 @@ class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
         fields = ('id', 'owner', 'participant', 'messages', 'created', 'updated')
-        read_only_fields = ('created', 'updated')
-
-    def create(self, validated_data):
-        user = self.context.get("request").user
-        participant = validated_data.pop('participant')
-        conversation_set = Conversation.objects.\
-            filter(Q(owner=user, participant=participant) | Q(owner= participant, participant=user))
-        if conversation_set.count() != 0:
-            return conversation_set.first()
-        conversation = Conversation.objects.create(owner=user, participant= participant, **validated_data)
-        return conversation
 
 
 class TagSerializer(serializers.ModelSerializer):
