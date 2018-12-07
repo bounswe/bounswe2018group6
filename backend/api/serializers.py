@@ -16,15 +16,16 @@ from emailer.views import send_activation_email
 class GenericModelValidatorMixin:
 
     def validate(self, data):
-        content_type = data.get('content_type')
+        content_type_obj = ContentType.objects.get(model=data.pop('content_type'))
+        data['content_type'] = content_type_obj
         object_id = data.get('object_id')
-        try:
-            content_type_obj = ContentType.objects.get(model=content_type)
-            data['content_type'] = content_type_obj
-            data['content_object'] = content_type_obj.get_object_for_this_type(id=object_id)
-            return data
-        except ObjectDoesNotExist:
-            raise serializers.ValidationError('Cannot find an {0} with id {1}.'.format(content_type, object_id))
+
+        content_object = content_type_obj.get_all_objects_for_this_type(id=object_id).first()
+        if content_object is None:
+            raise serializers.ValidationError(
+                'Cannot find an {0} with id {1}.'.format(content_type_obj.name, object_id))
+        data['content_object'] = content_object
+        return data
 
     def validate_content_type(self, value):
         if value not in ['event', 'user']:
@@ -101,6 +102,8 @@ class FollowCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerial
         follow_status, created = FollowStatus.objects.get_or_create(
             owner=owner, content_type=validated_data.pop('content_type'),
             object_id=validated_data.pop('object_id'), defaults={})
+        if not created:
+            raise serializers.ValidationError('Cannot follow an already followed object.')
         return follow_status
 
 
@@ -249,7 +252,9 @@ class VoteCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializ
         if created:
             content_object.update_vote_count(vote_status.vote_value, False)
         else:
-            if vote_status.vote != vote:
+            if vote_status.vote == vote:
+                raise serializers.ValidationError('Cannot vote an already voted object with the same vote.')
+            else:
                 vote_status.vote = vote
                 vote_status.save()
                 content_object.update_vote_count(vote_status.vote_value, True)
