@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -9,7 +8,6 @@ from rest_framework.authtoken.models import Token
 from api.models import (AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Location,
                         Media, Message, Tag, User, VoteStatus)
-
 from emailer.views import send_activation_email
 
 
