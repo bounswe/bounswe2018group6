@@ -158,6 +158,13 @@ class Comment(GenericModelMixin, OwnerMixin):
     updated = models.DateTimeField(auto_now=True)
 
 
+class Conversation(OwnerMixin):
+    participant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participated_conversation_set',
+                                    on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+
 class FollowStatus(GenericModelMixin, OwnerMixin):
     class Meta:
         # A user cannot follow the same item more than once
@@ -175,6 +182,17 @@ class Media(OwnerMixin):
     event = models.ForeignKey(Event, related_name='medias', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
+class Message(OwnerMixin):
+    # Related fields
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received_message_set',
+                                 on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)
+
+    # Own fields
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
 
 
 class Tag(models.Model):
