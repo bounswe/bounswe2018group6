@@ -168,6 +168,9 @@ export default {
           this.loading = true
           this.$store.dispatch('signupDate', this.signupForm).then(() => {
             this.loading = false
+            this.$alert("Please check your mailbox to confirm your e-mail address.", "Congrats!", {
+              confirmButtonText: "I promise, I will."
+            });
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
             this.loading = false
