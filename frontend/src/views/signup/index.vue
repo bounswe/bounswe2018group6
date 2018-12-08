@@ -1,6 +1,5 @@
 <template>
   <div class="login-container">
-
     <el-form ref="signupForm" :model="signupForm" :rules="signupRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -84,7 +83,6 @@
       <br>
       <social-sign />
     </el-dialog>
-
   </div>
 </template>
 
@@ -255,10 +253,11 @@ $dark_gray:#889aa4;
 $light_gray:#eee;
 
 .login-container {
-  position: fixed;
-  height: 100%;
+  position: relative;
+  height: 300%; // little hacking here to prevent shortage of background in different screens
   width: 100%;
   background-color: $bg;
+  background-size: cover;
   .login-form {
     position: absolute;
     left: 0;
