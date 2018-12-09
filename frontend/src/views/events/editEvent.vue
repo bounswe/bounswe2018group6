@@ -78,17 +78,28 @@
 <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :md="24" :lg="24">
         <div>
-          <googlemaps-map
-            ref="map"
-            :center.sync="mapCenter"
-            :zoom.sync="zoom"
-            style="height: 350px; max-width: %50;"
-            class="map">
-            <googlemaps-marker
-              :position="{ lat: 41.017822, lng: 28.954770 }"
-              title="Baran Et Mangal"
-              label="Baran Et Mangal" />
-          </googlemaps-map>
+          <label> 
+            Select location
+            <GmapAutocomplete placeholder="Please insert location" @place_changed="setPlace">
+            </GmapAutocomplete>
+            <el-button style="margin-left: 205px;" type="primary" @click="usePlace">Add Location</el-button>
+          </label>
+          <br/>
+
+          <GmapMap style="width: 600px; height: 300px; margin-top: 15px;" :zoom="5" :center="{ lat: 41.015137,lng: 28.979530 }">
+            <GmapMarker v-for="(marker, index) in markers"
+              :key="index"
+              :position="marker.position"
+              />
+            <GmapMarker
+              label="★"
+              :title="formData.location.name"
+              :position="{
+                lat: first_lat,
+                lng: first_lng,
+              }"
+              />
+          </GmapMap>
         </div>
       </el-col>
 </el-row>
@@ -99,13 +110,24 @@
 import { getEventDetail, editEvent, getTags } from "@/api/event";
 import ProfileUpload from '@/components/Upload'
 import { getToken } from "@/utils/auth"; // getToken from cookie
+import {gmapApi} from 'vue2-google-maps'
 
 export default {
   name: "EditEvent",
   components: {ProfileUpload},
   data() {
     return {
-      formData: { tags: []},
+      formData: { 
+        tags: [],
+        location: {
+          city: '',
+          district: '',
+          name: '',
+          google_place_id: '',
+          lat: '',
+          lng: ''
+        }
+      },
       mediaList: [],
       mediaApiAddress: "https://cultidate.herokuapp.com/api/medias/",
       featuredMediaApiAddress: "",
@@ -119,14 +141,16 @@ export default {
       },
       keyName: "file",
       mediaLimit: 30,
-      mapCenter: { lat: 41.017822, lng: 28.95477 },
-      zoom: 11,
       radio4: "Attend",
       rate: null,
       eventDetails: null,
       event_id: null,
       follow_event_id: null,
-      tag_list: []
+      tag_list: [],
+      markers: [],
+      place: null,
+      first_lat: null,
+      first_lng: null
     };
   },
   created() {
@@ -134,9 +158,40 @@ export default {
     this.featuredMediaApiAddress = "https://cultidate.herokuapp.com/api/events/" + this.event_id + '/'
     this.additionalBody.event = this.event_id;
     this.fetchData(this.event_id);
-    this.getTagList()
+    this.getTagList();
+
   },
   methods: {
+    setPlace(place) {
+      this.place = place
+      console.log(place)
+      this.first_lat = this.place.geometry.location.lat()
+      this.first_lng = this.place.geometry.location.lng()
+      for (var i = 0; i < this.place.address_components.length; i++) {
+        if(this.place.address_components[i].types[0] == "administrative_area_level_1") {
+          this.formData.location.city = this.place.address_components[i].long_name
+        }
+        else if(this.place.address_components[i].types[0] == "administrative_area_level_2") {
+          this.formData.location.district = this.place.address_components[i].long_name
+        }
+      }
+      console.log(this.formData.location.city + ", " + this.formData.location.district)
+      this.formData.location.name = this.place.name
+      this.formData.location.lat = this.place.geometry.location.lat().toFixed(6)
+      this.formData.location.lng = this.place.geometry.location.lng().toFixed(6)
+      this.formData.location.google_place_id = this.place.id
+    },
+    usePlace(place) {
+      if (this.place) {
+        this.markers.push({
+          position: {
+            lat: this.place.geometry.location.lat(),
+            lng: this.place.geometry.location.lng(),
+          }
+        })
+        this.place = null;
+      }
+    },
     fetchData(event_id) {
       let attends;
       attends = {
@@ -147,6 +202,8 @@ export default {
       };
       getEventDetail(event_id).then(response => {
         this.eventDetails = response.data;
+        this.first_lat = parseFloat(this.eventDetails.location.lat)
+        this.first_lng = parseFloat(this.eventDetails.location.lng)
         for (let i = 0; i < this.eventDetails.medias.length; i++){
           this.mediaList.push({ 
             name: this.eventDetails.medias[i].id,
