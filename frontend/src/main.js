@@ -8,9 +8,9 @@ import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 
-import VueGoogleMaps from 'vue-googlemaps'
-import 'vue-googlemaps/dist/vue-googlemaps.css'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
+import 'vue-googlemaps/dist/vue-googlemaps.css'
 
 
 import '@/styles/index.scss' // global css
@@ -29,11 +29,27 @@ import * as filters from './filters' // global filters
 
 Vue.use(VueGoogleMaps, {
   load: {
-      // put your google API key either in the ./config/local.env.js file or just hardcode in the string below
-      apiKey: process.env.VUE_APP_GOOGLE_API_KEY || '',
-      libraries: ['places'],
-      useBetaRenderer: false
-  }
+    key: 'AIzaSyDS-t83TZZpg3seATKtxq1NOOxuFJeHN_s',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+    // OR: libraries: 'places,drawing'
+    // OR: libraries: 'places,drawing,visualization'
+    // (as you require)
+
+    //// If you want to set the version, you can do so:
+    // v: '3.26',
+  },
+
+  //// If you intend to programmatically custom event listener code
+  //// (e.g. `this.$refs.gmap.$on('zoom_changed', someFunc)`)
+  //// instead of going through Vue templates (e.g. `<GmapMap @zoom_changed="someFunc">`)
+  //// you might need to turn this on.
+  // autobindAllEvents: false,
+
+  //// If you want to manually install components, e.g.
+  //// import {GmapMarker} from 'vue2-google-maps/src/components/marker'
+  //// Vue.component('GmapMarker', GmapMarker)
+  //// then disable the following:
+  // installComponents: true,
 })
 
 Vue.use(Element, {
