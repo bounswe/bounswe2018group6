@@ -92,11 +92,11 @@
               :position="marker.position"
               />
             <GmapMarker
-              v-if="this.place"
               label="★"
+              :title="formData.location.name"
               :position="{
-                lat: this.place.geometry.location.lat(),
-                lng: this.place.geometry.location.lng(),
+                lat: first_lat,
+                lng: first_lng,
               }"
               />
           </GmapMap>
@@ -110,6 +110,7 @@
 import { getEventDetail, editEvent, getTags } from "@/api/event";
 import ProfileUpload from '@/components/Upload'
 import { getToken } from "@/utils/auth"; // getToken from cookie
+import {gmapApi} from 'vue2-google-maps'
 
 export default {
   name: "EditEvent",
@@ -147,7 +148,9 @@ export default {
       follow_event_id: null,
       tag_list: [],
       markers: [],
-      place: null
+      place: null,
+      first_lat: null,
+      first_lng: null
     };
   },
   created() {
@@ -156,12 +159,15 @@ export default {
     this.additionalBody.event = this.event_id;
     this.fetchData(this.event_id);
     this.getTagList();
+
   },
   methods: {
     setPlace(place) {
       this.place = place
-      this.formData.location.city = this.place.address_components[3].long_name
-      this.formData.location.district = this.place.address_components[2].long_name
+      this.first_lat = this.place.geometry.location.lat()
+      this.first_lng = this.place.geometry.location.lng() 
+      this.formData.location.city = this.place.address_components[4].long_name
+      this.formData.location.district = this.place.address_components[3].long_name
       this.formData.location.name = this.place.name
       this.formData.location.lat = this.place.geometry.location.lat().toFixed(6)
       this.formData.location.lng = this.place.geometry.location.lng().toFixed(6)
@@ -188,6 +194,8 @@ export default {
       };
       getEventDetail(event_id).then(response => {
         this.eventDetails = response.data;
+        this.first_lat = parseFloat(this.eventDetails.location.lat)
+        this.first_lng = parseFloat(this.eventDetails.location.lng)
         for (let i = 0; i < this.eventDetails.medias.length; i++){
           this.mediaList.push({ 
             name: this.eventDetails.medias[i].id,
