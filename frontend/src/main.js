@@ -10,9 +10,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 
-import 'vue-googlemaps/dist/vue-googlemaps.css'
-
-
 import '@/styles/index.scss' // global css
 
 import App from './App'
