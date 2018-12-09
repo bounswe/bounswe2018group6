@@ -1,6 +1,6 @@
 import { loginByUsername, getUserInfo, signupDate } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { MessageBox } from 'element-ui'
+import { getToken, setToken, removeToken, getUserIDCookie, removeUserIDCookie, setUserIDCookie } from '@/utils/auth'
+
 
 const user = {
   state: {
@@ -8,7 +8,7 @@ const user = {
     status: '',
     code: '',
     token: getToken(),
-    user_id: -1,
+    user_id: getUserIDCookie(),
     is_corporate_user: null,
     corporate_profile: '',
     follower_count: 0,
@@ -83,6 +83,7 @@ const user = {
           const data = response.data
           commit('SET_TOKEN', data.token)
           setToken(response.data.token)
+          setUserIDCookie(response.data.user_id)
           commit('SET_USER_ID', data.user_id)
           commit('SET_USERNAME', username)
           resolve()
@@ -154,20 +155,17 @@ const user = {
 
     // 登出
     LogOut({ commit, state }) {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      removeToken()
+      // commit('SET_TOKEN', '')
+      // commit('SET_ROLES', [])
+      // removeToken()
 
-      // return new Promise((resolve, reject) => {
-      //   logout(state.token).then(() => {
-      //     commit('SET_TOKEN', '')
-      //     commit('SET_ROLES', [])
-      //     removeToken()
-      //     resolve()
-      //   }).catch(error => {
-      //     reject(error)
-      //   })
-      // })
+      return new Promise((resolve, reject) => {
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', [])
+          removeToken()
+          removeUserIDCookie()
+          resolve()
+      })
     },
 
     // 前端 登出
