@@ -78,28 +78,17 @@
 <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :md="24" :lg="24">
         <div>
-          <label> 
-            Select location
-            <GmapAutocomplete placeholder="Please insert location" @place_changed="setPlace">
-            </GmapAutocomplete>
-            <el-button style="margin-left: 205px;" type="primary" @click="usePlace">Add Location</el-button>
-          </label>
-          <br/>
-
-          <GmapMap style="width: 600px; height: 300px; margin-top: 15px;" :zoom="5" :center="{ lat: 41.015137,lng: 28.979530 }">
-            <GmapMarker v-for="(marker, index) in markers"
-              :key="index"
-              :position="marker.position"
-              />
-            <GmapMarker
-              v-if="this.place"
-              label="★"
-              :position="{
-                lat: this.place.geometry.location.lat(),
-                lng: this.place.geometry.location.lng(),
-              }"
-              />
-          </GmapMap>
+          <googlemaps-map
+            ref="map"
+            :center.sync="mapCenter"
+            :zoom.sync="zoom"
+            style="height: 350px; max-width: %50;"
+            class="map">
+            <googlemaps-marker
+              :position="{ lat: 41.017822, lng: 28.954770 }"
+              title="Baran Et Mangal"
+              label="Baran Et Mangal" />
+          </googlemaps-map>
         </div>
       </el-col>
 </el-row>
@@ -116,17 +105,7 @@ export default {
   components: {ProfileUpload},
   data() {
     return {
-      formData: { 
-        tags: [],
-        location: {
-          city: '',
-          district: '',
-          name: '',
-          google_place_id: '',
-          lat: '',
-          lng: ''
-        }
-      },
+      formData: { tags: []},
       mediaList: [],
       mediaApiAddress: "https://cultidate.herokuapp.com/api/medias/",
       featuredMediaApiAddress: "",
@@ -140,14 +119,14 @@ export default {
       },
       keyName: "file",
       mediaLimit: 30,
+      mapCenter: { lat: 41.017822, lng: 28.95477 },
+      zoom: 11,
       radio4: "Attend",
       rate: null,
       eventDetails: null,
       event_id: null,
       follow_event_id: null,
-      tag_list: [],
-      markers: [],
-      place: null
+      tag_list: []
     };
   },
   created() {
@@ -155,29 +134,9 @@ export default {
     this.featuredMediaApiAddress = "https://cultidate.herokuapp.com/api/events/" + this.event_id + '/'
     this.additionalBody.event = this.event_id;
     this.fetchData(this.event_id);
-    this.getTagList();
+    this.getTagList()
   },
   methods: {
-    setPlace(place) {
-      this.place = place
-      this.formData.location.city = this.place.address_components[3].long_name
-      this.formData.location.district = this.place.address_components[2].long_name
-      this.formData.location.name = this.place.name
-      this.formData.location.lat = this.place.geometry.location.lat().toFixed(6)
-      this.formData.location.lng = this.place.geometry.location.lng().toFixed(6)
-      this.formData.location.google_place_id = this.place.id
-    },
-    usePlace(place) {
-      if (this.place) {
-        this.markers.push({
-          position: {
-            lat: this.place.geometry.location.lat(),
-            lng: this.place.geometry.location.lng(),
-          }
-        })
-        this.place = null;
-      }
-    },
     fetchData(event_id) {
       let attends;
       attends = {

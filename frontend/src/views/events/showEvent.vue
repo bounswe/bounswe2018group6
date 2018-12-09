@@ -51,6 +51,16 @@
         {{ eventDetails.description }}
       </div>
     </el-card>
+    <!--<googlemaps-geocoder
+    :request="{
+      location: { lat: 41.017822, lng: 28.954770 },
+    }">
+      <template slot-scope="props">
+        <div class="name">{{ props.results[1].address_components[4].long_name }}</div>
+        <div class="name">{{ props.results[1].address_components[5].long_name }}</div>
+        <div class="address">{{ props.results[0].address_components.administrative_area_level_1 }}</div>
+      </template>
+    </googlemaps-geocoder>-->
   </el-col>  
    
   <el-col :span="10">
@@ -75,15 +85,17 @@
 <el-row :gutter="32" style="margin-top: 25px;">
   <el-col :xs="24" :sm="24" :md="24" :lg="24">
     <div>
-      <GmapMap 
-      style="height: 350px; max-width: %50;" 
-      :zoom="11" 
-      :center="{ lat: eventDetails.location.lat,lng: eventDetails.location.lng }">
-        <GmapMarker 
-        :position="{ lat: eventDetails.location.lat, lng: eventDetails.location.lng }" 
-        :title="eventDetails.location.name"
-        :label="eventDetails.location.name"/>
-      </GmapMap>
+      <googlemaps-map
+        ref="map"
+        :center.sync="mapCenter"
+        :zoom.sync="zoom"
+        style="height: 350px; max-width: %50;"
+        class="map">
+        <googlemaps-marker
+          :position="{ lat: 41.017822, lng: 28.954770 }"
+          title="Baran Et Mangal"
+          label="Baran Et Mangal" />
+      </googlemaps-map>
     </div>
   </el-col>
 </el-row>
@@ -128,6 +140,8 @@ export default {
       }
       ],
       attend: '',
+      mapCenter: {lat: 41.017822, lng: 28.954770},
+      zoom: 11,
       radio4: 'Attend',
       rate: null,
       eventDetails: null,
@@ -166,8 +180,7 @@ export default {
         } else {
           this.following = 'unfollow'
         }
-        this.eventDetails.location.lat = parseFloat(this.eventDetails.location.lat)
-        this.eventDetails.location.lng = parseFloat(this.eventDetails.location.lng)
+
         this.is_owner = (this.eventDetails.owner.id === this.$store.state.user.user_id) ? true : false
       })
     },
