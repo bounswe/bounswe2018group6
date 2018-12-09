@@ -68,13 +68,12 @@ class AttendanceStatusAdmin(admin.ModelAdmin):
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    # TODO Add required fields after completing the model
-    fields = ('id', 'city', 'district')
+    fields = ('id', 'city', 'district', 'google_place_id', 'name', 'lat', 'lng')
     readonly_fields = ('id',)
 
     ordering = ('city', 'district')
-    list_display = ('id', 'city', 'district')
-    list_editable = ('city', 'district')
+    list_display = ('id', 'city', 'district', 'google_place_id', 'name', 'lat', 'lng')
+    list_editable = ('city', 'district', 'google_place_id', 'name', 'lat', 'lng')
 
 
 @admin.register(Media)

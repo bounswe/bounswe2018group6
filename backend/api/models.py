@@ -172,9 +172,12 @@ class FollowStatus(GenericModelMixin, OwnerMixin):
 
 
 class Location(models.Model):
-    # TODO Add required fields according to preferred Google API
     city = models.CharField(max_length=20)
     district = models.CharField(max_length=20)
+    google_place_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=250)
+    lat = models.DecimalField(max_digits=9, decimal_places=6)
+    lng = models.DecimalField(max_digits=9, decimal_places=6)
 
 
 class Media(OwnerMixin):
