@@ -99,8 +99,15 @@ import { createEvent, getTags } from '@/api/event'
     methods: {
       setPlace(place) {
         this.place = place
-        this.form.location.city = this.place.address_components[3].long_name
-        this.form.location.district = this.place.address_components[2].long_name
+        for (var i = 0; i < this.place.address_components.length; i++) {
+          if(this.place.address_components[i].types[0] == "administrative_area_level_1") {
+            this.form.location.city = this.place.address_components[i].long_name
+          }
+          else if(this.place.address_components[i].types[0] == "administrative_area_level_2") {
+            this.form.location.district = this.place.address_components[i].long_name
+          }
+        }
+        console.log(this.form.location.district + ", " + this.form.location.city)
         this.form.location.name = this.place.name
         this.form.location.lat = this.place.geometry.location.lat().toFixed(6)
         this.form.location.lng = this.place.geometry.location.lng().toFixed(6)

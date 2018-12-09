@@ -164,10 +164,18 @@ export default {
   methods: {
     setPlace(place) {
       this.place = place
+      console.log(place)
       this.first_lat = this.place.geometry.location.lat()
-      this.first_lng = this.place.geometry.location.lng() 
-      this.formData.location.city = this.place.address_components[4].long_name
-      this.formData.location.district = this.place.address_components[3].long_name
+      this.first_lng = this.place.geometry.location.lng()
+      for (var i = 0; i < this.place.address_components.length; i++) {
+        if(this.place.address_components[i].types[0] == "administrative_area_level_1") {
+          this.formData.location.city = this.place.address_components[i].long_name
+        }
+        else if(this.place.address_components[i].types[0] == "administrative_area_level_2") {
+          this.formData.location.district = this.place.address_components[i].long_name
+        }
+      }
+      console.log(this.formData.location.city + ", " + this.formData.location.district)
       this.formData.location.name = this.place.name
       this.formData.location.lat = this.place.geometry.location.lat().toFixed(6)
       this.formData.location.lng = this.place.geometry.location.lng().toFixed(6)
