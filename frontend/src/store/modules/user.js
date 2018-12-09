@@ -88,9 +88,6 @@ const user = {
           commit('SET_USERNAME', username)
           resolve()
         }).catch(error => {
-          MessageBox.alert('Sorry. Check your username or password!', {
-            type: 'warning'
-          })
           reject(error)
         })
       })
@@ -104,9 +101,6 @@ const user = {
           commit('SET_USER_ID', data.id)
           resolve()
         }).catch(error => {
-          MessageBox.alert('This username or email is used. Please, enter new one!', {
-            type: 'warning'
-          })
           reject(error)
         })
       })
@@ -115,8 +109,7 @@ const user = {
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getUserInfo(state.user_id).then(response => {
-          console.log('#data', data)
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+          if (!response.data) {
             reject('error')
           }
           const data = response.data
