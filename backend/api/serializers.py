@@ -116,7 +116,7 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('id', 'city', 'district')
+        fields = ('id', 'city', 'district', 'google_place_id', 'name', 'lat', 'lng')
 
 
 class LoginSerializer(serializers.Serializer):
