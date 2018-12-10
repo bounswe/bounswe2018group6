@@ -168,7 +168,7 @@ export default {
         }
         this.eventDetails.location.lat = parseFloat(this.eventDetails.location.lat)
         this.eventDetails.location.lng = parseFloat(this.eventDetails.location.lng)
-        this.is_owner = (this.eventDetails.owner.id === this.$store.state.user.user_id) ? true : false
+        this.is_owner = (this.eventDetails.owner.id == this.$store.state.user.user_id) ? true : false
       })
     },
     followEvent() {
