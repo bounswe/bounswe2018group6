@@ -48,6 +48,11 @@ export const constantRouterMap = [
     hidden: true
   },
   {
+    path: '/guest',
+    component: () => import('@/views/guest/index'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true

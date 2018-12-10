@@ -10,6 +10,7 @@
             <router-link to="/signup"><el-button round class="button-margin">Sign up</el-button></router-link>
             <router-link v-if="token===''" to="/login?redirect=%2Fdashboard"><el-button round class="button-margin">Login</el-button></router-link>
             <router-link v-else to="/dashboard"><el-button round class="button-margin">Login</el-button></router-link>
+            <router-link to="/guest"><el-button round class="button-margin">Guest view</el-button></router-link>
         </el-row>
         </div>
     </video-bg>
