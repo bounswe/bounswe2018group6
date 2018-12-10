@@ -12,7 +12,7 @@
         <el-button size="large" style="float: right; margin-right: 20px;" type="danger" @click.native.prevent="rateDownEvent" icon="el-icon-arrow-down" circle></el-button>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 60px;"> <span style="font-weight: bold; color: #38A1F3;">Followers:</span> {{ eventDetails.follower_count }}</div>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 70px;"> <span><span style="font-weight: bold; color: #38A1F3;">Price:</span> {{ eventDetails.price }} ₺ </span>
-          <el-select v-model="attend" placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+          <el-select v-model="attend" clearable placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
         </div>
@@ -93,7 +93,7 @@
 
 <script>
 
-import { getEventDetail, follow, unfollow, attendance, rate, delEvent, createComment, delComment } from '@/api/event'
+import { getEventDetail, follow, unfollow, attendance, delAttendance, rate, delEvent, createComment, delComment } from '@/api/event'
 import { getUserInfo } from '@/api/user'
 import { getToken } from '@/utils/auth' // getToken from cookie
 import Mallki from '@/components/TextHoverEffect/Mallki'
@@ -136,7 +136,8 @@ export default {
       event_id: null,
       follow_event_id: null,
       is_owner: false,
-      comment: null
+      comment: null,
+      attend_id: null
     }
   },
   created() {
@@ -169,6 +170,11 @@ export default {
         this.eventDetails.location.lat = parseFloat(this.eventDetails.location.lat)
         this.eventDetails.location.lng = parseFloat(this.eventDetails.location.lng)
         this.is_owner = (this.eventDetails.owner.id == this.$store.state.user.user_id) ? true : false
+        for(var i = 0; i < this.eventDetails.attendance_status.length; i++) {
+          if(this.eventDetails.attendance_status[i].owner.username == this.$store.state.user.username) {
+            this.attend_id = this.eventDetails.attendance_status[i].id
+          }
+        }
       })
     },
     followEvent() {
@@ -199,9 +205,17 @@ export default {
         'M': 'Maybe',
         'B': 'Block'
       }
-      attendance(this.event_id, this.attend).then(response => {
-        this.attend = attends[response.data.status]
-      })
+      if (this.attend == '') {
+        delAttendance(this.attend_id).then(response => {
+          this.attend = null
+          this.attend_id = null
+        })
+      } else {
+          attendance(this.event_id, this.attend).then(response => {
+          this.attend = attends[response.data.status]
+          this.attend_id = response.data.id
+        })
+      }
     },
 
     rateUpEvent() {

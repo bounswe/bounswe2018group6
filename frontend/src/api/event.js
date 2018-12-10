@@ -77,6 +77,18 @@ export function attendance(event, status) {
   })
 }
 
+export function delAttendance(attend_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/attendance/' + attend_id + '/',
+    method: 'delete'
+  })
+}
+
 export function createEvent(data) {
     const headers = {
         //ContentType: 'application/json',
