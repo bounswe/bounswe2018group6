@@ -10,7 +10,9 @@
         <mallki :text="eventName" class-name="mallki-text" />
       </router-link>
       <div style="padding-top:35px;">
-        <span>{{ description }}</span>
+        <span><read-more more-str="Read more" less-str="Read less" :text="description" :max-chars="60" link="#"></read-more></span>
+        
+
       </div>
       <div style="padding-top:20px;">
         <span>Date: {{ date }}</span>
@@ -93,6 +95,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" >
 .box-card-component{
+   height: 600px;
   .el-card__header {
     padding: 0px!important;
   }
