@@ -7,6 +7,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+import ReadMore from 'vue-read-more';
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 
@@ -48,6 +49,8 @@ Vue.use(VueGoogleMaps, {
   //// then disable the following:
   // installComponents: true,
 })
+
+Vue.use(ReadMore);
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
