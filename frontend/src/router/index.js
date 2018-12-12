@@ -153,6 +153,30 @@ export const constantRouterMap = [
       },
     ]
   },
+  {
+    path: '/message',
+    component: Layout,
+    name: 'message',
+    meta: {
+      title: 'Message',
+      icon: 'message'
+    },
+    children: [
+      {
+        path: '/message/:id',
+        component: () => import('@/views/message/messaging'),
+        name: 'Message',
+        meta: { title: 'Message' },
+        hidden: true
+      },
+      {
+        path: '/conversations',
+        component: () => import('@/views/message/conversations'),
+        name: 'Conversations',
+        meta: { title: 'Conversations' }
+      }
+    ]
+  },
   
   // {
   //   path: '/documentation',
