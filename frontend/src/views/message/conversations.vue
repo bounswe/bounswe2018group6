@@ -13,13 +13,13 @@
             
           </div>
           <div v-for="conversation in conversations" :key="conversation.id" class="text item">
-            <router-link :to="'/message/' + conversation.id"><img :src="conversation.participant.profile_photo" class="user-avatar"></router-link>
+            <router-link :to="'/message/' + conversation.id"><img :src="decideOwner(conversation, 'profile_photo')" class="user-avatar"></router-link>
             <div>
               <span style="font-weight: bold; font-size: 20px; text-transform: uppercase;">
-              <router-link :to="'/message/' + conversation.id"><span>{{ conversation.participant.first_name + " " + conversation.participant.last_name }}</span></router-link> 
+              <router-link :to="'/message/' + conversation.id"><span>{{ decideOwner(conversation, 'first_name') + " " + decideOwner(conversation, 'last_name') }}</span></router-link> 
               </span>
             </div>
-            <span style="font-size: 18px;"> <router-link :to="'/message/' + conversation.id">{{ conversation.participant.username }}</router-link></span>
+            <span style="font-size: 18px;"> <router-link :to="'/message/' + conversation.id">{{ decideOwner(conversation, 'username') }}</router-link></span>
             <span style="float: right; font-size: 18px;"><span style="font-weight: bold;">Last message:</span>{{ beautifyDate(conversation.updated) }}</span>
           </div>
         </el-card>
@@ -59,6 +59,17 @@ export default {
       getAllConversations().then(response => {
           this.conversations = response.data
       })
+    },
+    decideOwner(conversation, attr) {
+      console.log(conversation.owner.username)
+      console.log(this.$store.state.user.username)
+      if(conversation.owner.username == this.$store.state.user.username) {
+        console.log("owner")
+        return conversation.participant[attr];
+      } else {
+        console.log("participant")
+        return conversation.owner[attr];
+      }
     },
     beautifyDate(date) {
       var d = new Date(date)

@@ -4,18 +4,22 @@
       <el-col :span="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span><img :src="conversation.participant.profile_photo" class="user-avatar"></span>
-            <span style="font-weight:bold; font-size: 20px; text-transform: uppercase; margin-left: 10px;">{{ conversation.participant.first_name + " " + conversation.participant.last_name }}</span>
+            <span><img :src="decideOwner(conversation, 'profile_photo')" class="user-avatar"></span>
+            <span style="font-weight:bold; font-size: 20px; text-transform: uppercase; margin-left: 10px;">{{ decideOwner(conversation, 'first_name') + " " + decideOwner(conversation, 'last_name') }}</span>
           </div>
           <div v-for="message in conversation.messages" :key="message.id" class="text item">
             <div style="font-weight:bold; text-transform: uppercase;">{{message.owner.first_name + " " + message.owner.last_name }}</div> 
-            <span>{{ message.content }}</span>
+            <el-row :gutter="16">
+              <el-col>
+                <span>{{ message.content }}</span>
+              </el-col>
+            </el-row>
             <span style="float: right;">{{ beautifyDate(message.created) }}</span>
           </div>
         </el-card>
         <el-footer style="margin-right: 110px; margin-left: 110px;">
-          <el-input placeholder="Please write message..." v-model="current_message" class="input-with-select">
-            <el-button slot="append" icon="el-icon-check" @click.native.prevent="createMessages"></el-button>
+          <el-input placeholder="Please write message..." v-model="current_message" class="input-with-select" @keyup.enter.native="createMessages(conversation)">
+            <el-button slot="append" icon="el-icon-check" @click.native.prevent="createMessages(conversation)"></el-button>
           </el-input>
         </el-footer>
       </el-col>
@@ -36,7 +40,8 @@ export default {
     return {
       current_message: '',
       conversation: null,
-      interval: null
+      interval: null,
+      receiver_id: null
     }
   },
   created() {
@@ -54,13 +59,29 @@ export default {
           this.conversation = response.data
       })
     },
-    createMessages() {
-      createMessage(this.conversation.participant.id, this.conversation.id, this.current_message).then( response => {
+    createMessages(conversation) {
+      if(conversation.owner.username == this.$store.state.user.username) {
+        this.receiver_id = conversation.participant.id;
+      } else {
+        this.receiver_id = conversation.owner.id;
+      }
+      createMessage(this.receiver_id, this.conversation.id, this.current_message).then( response => {
         getConversationDetails(this.$route.params.id).then(response => {
           this.conversation = response.data
           this.current_message = ''
         })
       })
+    },
+    decideOwner(conversation, attr) {
+      console.log(conversation.owner.username)
+      console.log(this.$store.state.user.username)
+      if(conversation.owner.username == this.$store.state.user.username) {
+        console.log("owner")
+        return conversation.participant[attr];
+      } else {
+        console.log("participant")
+        return conversation.owner[attr];
+      }
     },
     beautifyDate(date) {
       var d = new Date(date)
@@ -97,7 +118,7 @@ export default {
     clear: both
   }
   .box-card {
-    height: 80vh;
+    min-height: 80vh;
     margin-left: 130px;
     margin-right: 130px;
   }
