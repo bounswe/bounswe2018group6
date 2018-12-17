@@ -13,9 +13,6 @@ class UserSummarySerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'first_name', 'last_name', 'profile_photo')
 
-    def search(self, validated_data):
-        keyword = validated_data.pop('keyword')
-
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
     owner = UserSummarySerializer(read_only=True)
@@ -335,9 +332,6 @@ class EventSummarySerializer(serializers.ModelSerializer):
             own_vote = obj.votes.all().filter(owner=user).first()
             return {'id': own_vote.id, 'vote': own_vote.vote} if own_vote else None
         return None
-
-    def search(self, validated_data):
-        keyword = validated_data.pop('keyword')
 
 
 class EventCreateUpdateSerializer(serializers.ModelSerializer):

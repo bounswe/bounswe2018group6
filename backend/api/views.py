@@ -53,13 +53,20 @@ class EventListView(generics.ListAPIView):
     serializer_class = EventSummarySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title','description')
-    method_serializer_classes = {
-        'GET': EventSummarySerializer,
-    }
+    
     def search(self, request, *args, **kwargs):
         keyword = self.request.keyword
         return self.objects.filter()
 
+class EventLocationSearchView(generics.ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSummarySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('location__city','location__district')
+    
+    def search(self, request, *args, **kwargs):
+        keyword = self.request.keyword
+        return self.objects.filter()
 
 class EventView(MultiSerializerViewMixin,
                 generics.RetrieveAPIView,
@@ -133,9 +140,7 @@ class UserListView(generics.ListAPIView):
     serializer_class = UserSummarySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username','first_name','last_name')
-    method_serializer_classes = {
-        'GET': UserSummarySerializer,
-    }
+    
     def search(self, request, *args, **kwargs):
         keyword = self.request.keyword
         return self.objects.filter()
