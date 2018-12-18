@@ -1,5 +1,7 @@
 from django.db.models import Q
-from rest_framework import generics, mixins, status, views
+
+from rest_framework import generics, mixins, views, status, filters
+
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -19,7 +21,7 @@ from api.serializers import (AttendanceCreateSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
                              MessageCreateSerializer, TagSerializer,
                              UserCreateUpdateSerializer, UserDetailsSerializer,
-                             VoteCreateSerializer)
+                             UserSummarySerializer, VoteCreateSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -78,8 +80,17 @@ class ConversationView(MultiSerializerViewMixin,
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('title','description')
+    
 
-
+class EventLocationSearchView(generics.ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSummarySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('location__city','location__district')
+    
+    
 class EventView(MultiSerializerViewMixin,
                 generics.RetrieveAPIView,
                 generics.CreateAPIView,
@@ -153,6 +164,12 @@ class UserView(MultiSerializerViewMixin,
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSummarySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('username','first_name','last_name')
+    
 
 class VoteView(generics.CreateAPIView,
                generics.DestroyAPIView):
