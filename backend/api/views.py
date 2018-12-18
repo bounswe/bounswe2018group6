@@ -54,9 +54,6 @@ class EventListView(generics.ListAPIView):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title','description')
     
-    def search(self, request, *args, **kwargs):
-        keyword = self.request.keyword
-        return self.objects.filter()
 
 class EventLocationSearchView(generics.ListAPIView):
     queryset = Event.objects.all()
@@ -64,10 +61,7 @@ class EventLocationSearchView(generics.ListAPIView):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('location__city','location__district')
     
-    def search(self, request, *args, **kwargs):
-        keyword = self.request.keyword
-        return self.objects.filter()
-
+    
 class EventView(MultiSerializerViewMixin,
                 generics.RetrieveAPIView,
                 generics.CreateAPIView,
@@ -141,9 +135,6 @@ class UserListView(generics.ListAPIView):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username','first_name','last_name')
     
-    def search(self, request, *args, **kwargs):
-        keyword = self.request.keyword
-        return self.objects.filter()
 
 class VoteView(generics.CreateAPIView,
                generics.DestroyAPIView):
