@@ -471,7 +471,8 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
         # and create a new one. Else, discard it.
         if 'location' in validated_data:
             location_data = validated_data.pop('location')
-            instance.location.delete()
+            if instance.location:
+                instance.location.delete()
             instance.location = Location.objects.create(**location_data)
 
         # If 'tags' key is given in data, clear current tags
