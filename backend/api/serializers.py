@@ -1,17 +1,40 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from api.models import (AttendanceStatus, Comment, CorporateUserProfile, Event,
-                        FollowStatus, Location, Media, Tag, User, VoteStatus)
+from api.models import (AttendanceStatus, Comment, Conversation,
+                        CorporateUserProfile, Event, FollowStatus, Location,
+                        Media, Message, Tag, User, VoteStatus)
+from emailer.views import send_activation_email
+
+
+class GenericModelValidatorMixin:
+
+    def validate(self, data):
+        content_type_obj = ContentType.objects.get(model=data.pop('content_type'))
+        data['content_type'] = content_type_obj
+        object_id = data.get('object_id')
+
+        content_object = content_type_obj.get_all_objects_for_this_type(id=object_id).first()
+        if content_object is None:
+            raise serializers.ValidationError(
+                'Cannot find an {0} with id {1}.'.format(content_type_obj.name, object_id))
+        data['content_object'] = content_object
+        return data
+
+    def validate_content_type(self, value):
+        if value not in ['event', 'user']:
+            raise serializers.ValidationError('Cannot find content_type {0}'.format(value))
+        return value
 
 
 class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'profile_photo')
+        fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo')
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
@@ -36,7 +59,7 @@ class AttendanceDetailsSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'status')
 
 
-class CommentCreateSerializer(serializers.ModelSerializer):
+class CommentCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializer):
     content_type = serializers.CharField()
     owner = UserSummarySerializer(read_only=True)
 
@@ -46,10 +69,9 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        # TODO Validate if content_object exists
-        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
-            .get_object_for_this_type(id=validated_data.pop('object_id'))
-        comment = Comment.objects.create(owner=owner, content_object=content_object, **validated_data)
+        comment = Comment.objects.create(
+            owner=owner, content_object=validated_data.pop('content_object'),
+            content=validated_data.pop('content'))
         return comment
 
 
@@ -66,7 +88,7 @@ class CommentDetailsSerializer(serializers.ModelSerializer):
         return obj.content_type.model
 
 
-class FollowCreateSerializer(serializers.ModelSerializer):
+class FollowCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
@@ -75,11 +97,11 @@ class FollowCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        # TODO Validate if content_object exists
-        # TODO Validate if content object is already followed by owner
-        content_object = ContentType.objects.get(model=validated_data.pop('content_type')) \
-            .get_object_for_this_type(id=validated_data.pop('object_id'))
-        follow_status = FollowStatus.objects.create(owner=owner, content_object=content_object, **validated_data)
+        follow_status, created = FollowStatus.objects.get_or_create(
+            owner=owner, content_type=validated_data.pop('content_type'),
+            object_id=validated_data.pop('object_id'), defaults={})
+        if not created:
+            raise serializers.ValidationError('Cannot follow an already followed object.')
         return follow_status
 
 
@@ -94,7 +116,7 @@ class FollowDetailsSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('id', 'city', 'district')
+        fields = ('id', 'city', 'district', 'google_place_id', 'name', 'lat', 'lng')
 
 
 class LoginSerializer(serializers.Serializer):
@@ -141,13 +163,76 @@ class MediaDetailsSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'event', 'file', 'created', 'updated')
 
 
+class MessageCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('id', 'receiver', 'conversation', 'content')
+
+    def validate(self, data):
+        owner = self.context.get("request").user
+        conversation = data.get('conversation')
+        receiver = data.get('receiver')
+
+        if not ((conversation.owner == owner and conversation.participant == receiver) or
+            (conversation.owner == receiver and conversation.participant == owner)):
+            raise serializers.ValidationError(
+                "Cannot create message in a conversation that doesn't belong to this user.")
+        return data
+
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        conversation = validated_data.get('conversation')
+
+        # Update 'updated' field of conversation when a new message is created in that conversation
+        message = Message.objects.create(owner=owner, **validated_data)
+        conversation.updated = message.created
+        conversation.save()
+        return message
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+    receiver = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ('id', 'owner', 'receiver', 'conversation', 'content', 'created')
+
+
+class ConversationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = ('id', 'participant', 'created', 'updated')
+        read_only_fields = ('created', 'updated')
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        participant = validated_data.pop('participant')
+        conversation_set = Conversation.objects.\
+            filter(Q(owner=user, participant=participant) | Q(owner= participant, participant=user))
+        if conversation_set.count() != 0:
+            return conversation_set.first()
+        conversation = Conversation.objects.create(owner=user, participant= participant, **validated_data)
+        return conversation
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+    participant = UserSummarySerializer(read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Conversation
+        fields = ('id', 'owner', 'participant', 'messages', 'created', 'updated')
+
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name')
 
 
-class VoteCreateSerializer(serializers.ModelSerializer):
+class VoteCreateSerializer(GenericModelValidatorMixin, serializers.ModelSerializer):
     content_type = serializers.CharField()
 
     class Meta:
@@ -156,19 +241,19 @@ class VoteCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner = self.context.get("request").user
-        # TODO Validate if content_object exists
-        content_type_object = ContentType.objects.get(model=validated_data['content_type'])
-        content_object = content_type_object.get_object_for_this_type(id=validated_data['object_id'])
+        vote = validated_data.pop('vote')
         vote_status, created = VoteStatus.objects.get_or_create(
-            owner=owner, content_type=content_type_object, object_id=validated_data['object_id'],
-            defaults={'vote': validated_data['vote']})
+            owner=owner, content_type=validated_data.pop('content_type'),
+            object_id=validated_data.pop('object_id'), defaults={'vote': vote})
+
+        content_object = validated_data.pop('content_object')
         if created:
             content_object.update_vote_count(vote_status.vote_value, False)
         else:
-            if vote_status.vote == validated_data['vote']:
-                raise serializers.ValidationError('Cannot vote for the item with the same vote value.')
+            if vote_status.vote == vote:
+                raise serializers.ValidationError('Cannot vote an already voted object with the same vote.')
             else:
-                vote_status.vote = validated_data['vote']
+                vote_status.vote = vote
                 vote_status.save()
                 content_object.update_vote_count(vote_status.vote_value, True)
         return vote_status
@@ -194,35 +279,47 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
                                                 write_only=True, required=False)
     new_password = serializers.CharField(min_length=8, max_length=20, trim_whitespace=False, 
                                                 write_only=True, required=False)
+    email_sent = serializers.BooleanField(read_only=True, required=False)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'current_password', 'new_password',
                   'first_name', 'last_name', 'profile_photo', 'bio', 'city', 
-                  'is_corporate_user', 'corporate_profile', 'tags')
+                  'is_corporate_user', 'corporate_profile', 'tags', 'email_sent')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8, 'max_length': 20}}
 
     def create(self, validated_data):
         username = validated_data.pop('username', None)
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
-
         user = User.objects.create_user(username, email, password)
+        user.is_active = False
 
+        # corporate profile
         is_corporate_user = validated_data.pop('is_corporate_user', False)
-        corporate_profile = validated_data.pop('corporate_profile', None)
-        
         user.is_corporate_user = is_corporate_user
+        corporate_profile = validated_data.pop('corporate_profile', None)
         if is_corporate_user and corporate_profile is not None:
             corp = CorporateUserProfile.objects.create(**corporate_profile)
             user.corporate_profile = corp
         else:
             user.corporate_profile = None
-        
+
+        # tags
+        if 'tags' in validated_data:
+            tags_data = validated_data.pop('tags')
+            for tag in tags_data:
+                user.tags.add(tag)
+
         for key, value in validated_data.items():
             setattr(user, key, value)
 
         user.save()
+        
+        # send activation email
+        email_sent = send_activation_email(user)
+        user.email_sent = email_sent
+
         return user
 
     def update(self, instance, validated_data):

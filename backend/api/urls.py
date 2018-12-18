@@ -13,6 +13,11 @@ urlpatterns = [
     url(r'^comments/(?P<pk>[0-9]+)/$', views.CommentView.as_view()),
     url(r'^comments/$', views.CommentView.as_view()),
 
+    url(r'^conversations_list/$', views.ConversationListView.as_view()),
+    url(r'^conversations/(?P<pk>[0-9]+)/$', views.ConversationView.as_view()),
+    url(r'^conversations/$', views.ConversationView.as_view()),
+    url(r'^messages/$', views.MessageView.as_view()),
+
     url(r'^events_list/$', views.EventListView.as_view()),
     url(r'^events_location/$', views.EventLocationSearchView.as_view()),
     url(r'^events/(?P<pk>[0-9]+)/$', views.EventView.as_view()),

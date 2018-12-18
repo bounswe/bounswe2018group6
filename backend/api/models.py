@@ -158,6 +158,13 @@ class Comment(GenericModelMixin, OwnerMixin):
     updated = models.DateTimeField(auto_now=True)
 
 
+class Conversation(OwnerMixin):
+    participant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participated_conversation_set',
+                                    on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+
 class FollowStatus(GenericModelMixin, OwnerMixin):
     class Meta:
         # A user cannot follow the same item more than once
@@ -165,9 +172,12 @@ class FollowStatus(GenericModelMixin, OwnerMixin):
 
 
 class Location(models.Model):
-    # TODO Add required fields according to preferred Google API
     city = models.CharField(max_length=20)
     district = models.CharField(max_length=20)
+    google_place_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=250)
+    lat = models.DecimalField(max_digits=9, decimal_places=6)
+    lng = models.DecimalField(max_digits=9, decimal_places=6)
 
 
 class Media(OwnerMixin):
@@ -175,6 +185,17 @@ class Media(OwnerMixin):
     event = models.ForeignKey(Event, related_name='medias', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
+class Message(OwnerMixin):
+    # Related fields
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received_message_set',
+                                 on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)
+
+    # Own fields
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
 
 
 class Tag(models.Model):

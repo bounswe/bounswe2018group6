@@ -14,7 +14,9 @@ import os
 
 import dj_database_url
 import django_heroku
+import sentry_sdk
 from dotenv import load_dotenv
+from sentry_sdk.integrations.django import DjangoIntegration
 
 load_dotenv()
 
@@ -36,6 +38,8 @@ DEBUG = DJANGO_ENV == 'development'
 
 ALLOWED_HOSTS = []
 
+# For activation emails, backend url is needed.
+HOST_ROOT_URL = os.getenv('HOST_ROOT_URL')
 
 # Application definition
 
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'api',
+    'emailer',
 ]
 
 MIDDLEWARE = [
@@ -144,6 +149,15 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
+
+FRONTEND_LOGIN_URL = os.getenv('FRONTEND_LOGIN_URL')
+
+# SENTRY
+
+sentry_sdk.init(
+    dsn="https://446e4cda629244769558b67371364076@sentry.io/1335347",
+    integrations=[DjangoIntegration()]
+)
 
 
 # Internationalization
