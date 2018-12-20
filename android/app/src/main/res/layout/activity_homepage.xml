@@ -34,6 +34,7 @@
 
                 <ImageView
                     android:id="@+id/img_home"
+                    android:onClick="onClick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/homepage" />
@@ -49,6 +50,8 @@
 
                 <ImageView
                     android:id="@+id/img_profile"
+                    android:onClick="onClick"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/profile" />
@@ -64,6 +67,7 @@
 
                 <ImageView
                     android:id="@+id/img_create"
+                    android:onClick="onClick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/add" />
@@ -79,6 +83,7 @@
 
                 <ImageView
                     android:id="@+id/img_message"
+                    android:onClick="onClick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/message" />
@@ -94,6 +99,7 @@
 
                 <ImageView
                     android:id="@+id/img_settings"
+                    android:onClick="onClick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/settings" />
