@@ -393,11 +393,17 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     def get_followings(self, obj):
         return {
-            # "events" : [
-            #     {"follow_status_id": obj.id, "event": EventSummarySerializer(obj.content_object).data } for obj in FollowStatus.objects.filter(owner=obj, content_type__model='event').all()
-            # ],
+            "events" : [
+                {
+                    "follow_status_id": obj.id,
+                    "event": EventSummarySerializer(obj.content_object, context=self.context).data
+                } for obj in FollowStatus.objects.filter(owner=obj, content_type__model='event').all()
+            ],
             "users": [
-                {"follow_status_id": obj.id, "user": UserSummarySerializer(obj.content_object).data} for obj in FollowStatus.objects.filter(owner=obj, content_type__model='user').all()
+                {
+                    "follow_status_id": obj.id,
+                    "user": UserSummarySerializer(obj.content_object, context=self.context).data
+                } for obj in FollowStatus.objects.filter(owner=obj, content_type__model='user').all()
             ]
         }
 
