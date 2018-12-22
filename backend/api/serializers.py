@@ -372,10 +372,10 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
 class UserDetailsSerializer(serializers.ModelSerializer):
     comments = CommentDetailsSerializer(many=True, read_only=True)
     corporate_profile = CorporateUserSerializer()
-    followers = FollowDetailsSerializer(many=True, read_only=True)
     tags = TagSerializer(many=True, read_only=True)
     votes = VoteDetailsSerializer(many=True, read_only=True)
     blocked_users_count = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
     followings = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
@@ -388,6 +388,16 @@ class UserDetailsSerializer(serializers.ModelSerializer):
                   'following_count', 'followings', 'own_follow_status', 'owned_events_count',
                   'blocked_users_count', 'is_corporate_user', 'corporate_profile')
 
+    def get_followers(self, obj):
+        return {
+            "users": [
+                {
+                    "follow_status_id": fs.id,
+                    "user": UserSummarySerializer(fs.owner, context=self.context).data
+                } for fs in obj.followers.all()
+            ]
+        }
+
     def get_following_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()
 
@@ -395,15 +405,15 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         return {
             "events" : [
                 {
-                    "follow_status_id": obj.id,
-                    "event": EventSummarySerializer(obj.content_object, context=self.context).data
-                } for obj in FollowStatus.objects.filter(owner=obj, content_type__model='event').all()
+                    "follow_status_id": fs.id,
+                    "event": EventSummarySerializer(fs.content_object, context=self.context).data
+                } for fs in FollowStatus.objects.filter(owner=obj, content_type__model='event').all()
             ],
             "users": [
                 {
-                    "follow_status_id": obj.id,
-                    "user": UserSummarySerializer(obj.content_object, context=self.context).data
-                } for obj in FollowStatus.objects.filter(owner=obj, content_type__model='user').all()
+                    "follow_status_id": fs.id,
+                    "user": UserSummarySerializer(fs.content_object, context=self.context).data
+                } for fs in FollowStatus.objects.filter(owner=obj, content_type__model='user').all()
             ]
         }
 
