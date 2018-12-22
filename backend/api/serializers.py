@@ -370,23 +370,43 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    corporate_profile = CorporateUserSerializer()
-    tags = TagSerializer(many=True, read_only=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
+    corporate_profile = CorporateUserSerializer()
+    followers = FollowDetailsSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
     votes = VoteDetailsSerializer(many=True, read_only=True)
-    following_count = serializers.SerializerMethodField()
     blocked_users_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+    followings = serializers.SerializerMethodField()
+    own_follow_status = serializers.SerializerMethodField()
     owned_events_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
-                  'tags', 'comments', 'votes', 'follower_count',
-                  'following_count', 'owned_events_count', 'blocked_users_count',
-                  'is_corporate_user', 'corporate_profile')
+        fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
+                  'tags', 'comments', 'votes', 'follower_count', 'followers',
+                  'following_count', 'followings', 'own_follow_status', 'owned_events_count',
+                  'blocked_users_count', 'is_corporate_user', 'corporate_profile')
 
     def get_following_count(self, obj):
         return FollowStatus.objects.filter(owner=obj).count()
+
+    def get_followings(self, obj):
+        return {
+            # "events" : [
+            #     {"follow_status_id": obj.id, "event": EventSummarySerializer(obj.content_object).data } for obj in FollowStatus.objects.filter(owner=obj, content_type__model='event').all()
+            # ],
+            "users": [
+                {"follow_status_id": obj.id, "user": UserSummarySerializer(obj.content_object).data} for obj in FollowStatus.objects.filter(owner=obj, content_type__model='user').all()
+            ]
+        }
+
+    def get_own_follow_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_follow = obj.followers.all().filter(owner=user).first()
+            return {'id': own_follow.id} if own_follow else None
+        return None
 
     def get_blocked_users_count(self, obj):
         return obj.blocked_users.count()

@@ -22,7 +22,6 @@ urlpatterns = [
     url(r'^events_location/$', views.EventLocationSearchView.as_view()),
     url(r'^events/(?P<pk>[0-9]+)/$', views.EventView.as_view()),
     url(r'^events/$', views.EventView.as_view()),
-    
 
     url(r'^follow/(?P<pk>[0-9]+)/$', views.FollowView.as_view()),
     url(r'^follow/$', views.FollowView.as_view()),
