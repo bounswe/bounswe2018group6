@@ -8,8 +8,8 @@
           :description="event.description"
           :date="beautifyDate(event.date)"
           :owner="event.owner.username"
-          :followers="event.followers"
-          :votes="event.votes"
+          :followers="event.follower_count"
+          :votes="event.vote_count"
           :price="event.price"
           :image="event.featured_image" />
       </el-col>

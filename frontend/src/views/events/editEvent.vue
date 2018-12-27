@@ -164,7 +164,6 @@ export default {
   methods: {
     setPlace(place) {
       this.place = place
-      console.log(place)
       this.first_lat = this.place.geometry.location.lat()
       this.first_lng = this.place.geometry.location.lng()
       for (var i = 0; i < this.place.address_components.length; i++) {
@@ -175,7 +174,6 @@ export default {
           this.formData.location.district = this.place.address_components[i].long_name
         }
       }
-      console.log(this.formData.location.city + ", " + this.formData.location.district)
       this.formData.location.name = this.place.name
       this.formData.location.lat = this.place.geometry.location.lat().toFixed(6)
       this.formData.location.lng = this.place.geometry.location.lng().toFixed(6)
@@ -204,6 +202,7 @@ export default {
         this.eventDetails = response.data;
         this.first_lat = parseFloat(this.eventDetails.location.lat)
         this.first_lng = parseFloat(this.eventDetails.location.lng)
+        this.formData.location = this.eventDetails.location
         for (let i = 0; i < this.eventDetails.medias.length; i++){
           this.mediaList.push({ 
             name: this.eventDetails.medias[i].id,

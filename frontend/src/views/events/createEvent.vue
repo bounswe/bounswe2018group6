@@ -107,7 +107,6 @@ import { createEvent, getTags } from '@/api/event'
             this.form.location.district = this.place.address_components[i].long_name
           }
         }
-        console.log(this.form.location.district + ", " + this.form.location.city)
         this.form.location.name = this.place.name
         this.form.location.lat = this.place.geometry.location.lat().toFixed(6)
         this.form.location.lng = this.place.geometry.location.lng().toFixed(6)

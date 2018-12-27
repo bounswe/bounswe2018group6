@@ -64,7 +64,8 @@
         </el-popover>
       </div>
       <div v-for="com in eventDetails.comments" :key="com.content" class="text item">
-        <span style="font-weight: bold; margin-left: 5px"> {{com.owner.username + ": " }} </span>
+        <span v-if="com.owner.username != $store.state.user.username" style="font-weight: bold; margin-left: 5px"><router-link :to="'/profile/' + eventDetails.owner.id + '/'">{{com.owner.username + ": " }}</router-link></span>
+        <span v-else style="font-weight: bold; margin-left: 5px">{{com.owner.username + ": " }}</span>
         <span> {{ com.content }} </span>
         <el-button v-if="com.owner.username === $store.state.user.username" size="mini" style="float: right;" type="danger" icon="el-icon-delete" circle @click.native.prevent="deleteComment(com.id)"></el-button>
         <span style="font-weight: bold; margin-right: 15px; float: right; color: #77450d;"> {{ beautifyDate(com.created)}} </span>
