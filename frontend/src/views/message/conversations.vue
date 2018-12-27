@@ -6,7 +6,7 @@
           <div slot="header" class="clearfix">
             <span style="font-weight:bold;">Conversations</span>
             <el-popover placement="left" width="400" trigger="click">
-              <el-input autosize placeholder="Please write user id..." v-model="receiver_id"></el-input>
+              <el-input autosize placeholder="Please write username..." v-model="receiver_username"></el-input>
               <el-button style="float: left; margin-top: 5px;" type="primary" @click.native.prevent="createConversations">Submit</el-button>
               <el-button style="float: right;" type="primary" slot="reference">Create Conversation</el-button>
             </el-popover>
@@ -30,7 +30,7 @@
 <script>
 
 import { getAllConversations, createConversation, getConversationDetails } from '@/api/message'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, userSearch } from '@/api/user'
 import { getToken } from '@/utils/auth' // getToken from cookie
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
@@ -40,7 +40,8 @@ export default {
   data() {
     return {
       conversations: null,
-      receiver_id: null
+      receiver_id: null,
+      receiver_username: ''
     }
   },
   created() {
@@ -48,12 +49,17 @@ export default {
   },
   methods: {
     createConversations() {
-      createConversation(parseFloat(this.receiver_id)).then(response => {
-        this.receiver_id = null
-        getAllConversations().then(response => {
-          this.conversations = response.data
+      userSearch(this.receiver_username).then(response => {
+        console.log(response.data[0].id)
+        this.receiver_id = response.data[0].id
+        createConversation(parseFloat(this.receiver_id)).then(response => {
+          this.receiver_id = null
+          this.receiver_username = ''
+          getAllConversations().then(response => {
+            this.conversations = response.data
+          })
         })
-      }) 
+      })
     },
     getConversations() {
       getAllConversations().then(response => {
@@ -61,13 +67,9 @@ export default {
       })
     },
     decideOwner(conversation, attr) {
-      console.log(conversation.owner.username)
-      console.log(this.$store.state.user.username)
       if(conversation.owner.username == this.$store.state.user.username) {
-        console.log("owner")
         return conversation.participant[attr];
       } else {
-        console.log("participant")
         return conversation.owner[attr];
       }
     },
@@ -108,7 +110,7 @@ export default {
   .box-card {
     margin-left: 330px;
     margin-right: 330px;
-    height: 80vh;
+    min-height: 80vh;
   }
   .user-avatar {
     width: 80px;

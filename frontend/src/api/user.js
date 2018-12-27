@@ -68,3 +68,15 @@ export function follow(object_id) {
     data
   })
 }
+
+export function userSearch(username) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/users_list/?search=' + username,
+    method: 'get'
+  })
+}
