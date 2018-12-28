@@ -5,6 +5,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
 
 urlpatterns = [
+    url(r'^annotations/(?P<pk>[0-9]+)/$', views.AnnotationView.as_view()),
+    url(r'^annotations/$', views.AnnotationView.as_view()),
+
     url(r'^attendance/(?P<pk>[0-9]+)/$', views.AttendanceView.as_view()),
     url(r'^attendance/$', views.AttendanceView.as_view()),
 

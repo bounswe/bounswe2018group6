@@ -5,7 +5,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from api.models import (AttendanceStatus, Comment, Conversation,
+from api.models import (Annotation, AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Location,
                         Media, Message, ShareStatus, Tag, User, VoteStatus)
 from emailer.views import send_activation_email
@@ -35,6 +35,35 @@ class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo')
+
+
+class AnnotationCreate(GenericModelValidatorMixin, serializers.ModelSerializer):
+    content_type = serializers.CharField()
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Annotation
+        fields = ('id', 'owner', 'data', 'content_type', 'object_id', 'created', 'updated')
+
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        annotation = Annotation.objects.create(
+            owner=owner, content_object=validated_data.pop('content_object'),
+            data=validated_data.pop('data'))
+        return annotation
+
+
+class AnnotationDetailsSerializer(serializers.ModelSerializer):
+    content_type = serializers.SerializerMethodField()
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Annotation
+        fields = ('id', 'owner', 'data', 'content_type', 'object_id', 'created', 'updated')
+        read_only_fields = ('content_type', 'object_id')
+
+    def get_content_type(self, obj):
+        return obj.content_type.model
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
@@ -230,7 +259,7 @@ class ShareCreateSerializer(serializers.ModelSerializer):
     owner = UserSummarySerializer(read_only=True)
 
     class Meta:
-        model = AttendanceStatus
+        model = ShareStatus
         fields = ('id', 'owner', 'event')
 
     def create(self, validated_data):
@@ -246,7 +275,7 @@ class ShareDetailsSerializer(serializers.ModelSerializer):
     owner = UserSummarySerializer(read_only=True)
 
     class Meta:
-        model = AttendanceStatus
+        model = ShareStatus
         fields = ('id', 'owner')
 
 
@@ -394,6 +423,7 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    annotations = AnnotationDetailsSerializer(many=True, read_only=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
     corporate_profile = CorporateUserSerializer()
     tags = TagSerializer(many=True, read_only=True)
@@ -408,7 +438,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
-                  'tags', 'comments', 'votes', 'follower_count', 'followers',
+                  'tags', 'annotations', 'comments', 'votes', 'follower_count', 'followers',
                   'following_count', 'followings', 'own_follow_status', 'owned_events_count',
                   'blocked_users_count', 'is_corporate_user', 'corporate_profile')
 
@@ -558,6 +588,7 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
+    annotations = AnnotationDetailsSerializer(many=True, read_only=True)
     artists = UserSummarySerializer(many=True, read_only=True)
     attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
@@ -575,7 +606,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
-                  'created', 'updated', 'artists', 'attendance_status', 'own_attendance_status',
+                  'created', 'updated', 'annotations', 'artists', 'attendance_status', 'own_attendance_status',
                   'comments', 'followers', 'follower_count', 'own_follow_status', 'share_status', 'own_share_status',
                   'medias', 'tags', 'vote_count', 'own_vote')
 

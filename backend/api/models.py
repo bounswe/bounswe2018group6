@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import (GenericForeignKey,
                                                 GenericRelation)
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 
@@ -14,6 +15,16 @@ def file_upload_path(instance, filename):
 
 
 ### Mixins ###
+
+class AnnotationMixin(models.Model):
+    """
+    Each model that contains `Annotation`s must use this mixin.
+    """
+    annotations = GenericRelation('Annotation')
+
+    class Meta:
+        abstract = True
+
 
 class CommentMixin(models.Model):
     """
@@ -90,7 +101,7 @@ class GenericModelMixin(models.Model):
 
 ## User & Related Models
 
-class User(AbstractUser, CommentMixin, FollowMixin, TagMixin, VoteMixin):
+class User(AbstractUser, AnnotationMixin, CommentMixin, FollowMixin, TagMixin, VoteMixin):
     # Related fields
     blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False,
                                            related_name='user_blocked_users')
@@ -118,7 +129,7 @@ class CorporateUserProfile(models.Model):
 
 ## Event & Related Models
 
-class Event(CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
+class Event(AnnotationMixin, CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
     # Related fields
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
@@ -132,6 +143,12 @@ class Event(CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
     date = models.DateTimeField(default=timezone.now)
     price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, default=0.0)
     organizer_url = models.URLField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+
+class Annotation(GenericModelMixin, OwnerMixin):
+    data = JSONField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
