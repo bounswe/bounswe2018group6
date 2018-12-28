@@ -1,14 +1,12 @@
 from django.db.models import Q
-
-from rest_framework import generics, mixins, views, status, filters
-
+from rest_framework import filters, generics, mixins, status, views
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
 from api.models import (AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Media,
-                        Message, Tag, User, VoteStatus)
+                        Message, ShareStatus, Tag, User, VoteStatus)
 from api.permissions import (IsOwnerOrParticipant, IsOwnerOrReadOnly,
                              IsUserOrReadOnly)
 from api.serializers import (AttendanceCreateSerializer,
@@ -19,9 +17,10 @@ from api.serializers import (AttendanceCreateSerializer,
                              EventDetailsSerializer, EventSummarySerializer,
                              FollowCreateSerializer, LoginSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
-                             MessageCreateSerializer, TagSerializer,
-                             UserCreateUpdateSerializer, UserDetailsSerializer,
-                             UserSummarySerializer, VoteCreateSerializer)
+                             MessageCreateSerializer, ShareCreateSerializer,
+                             TagSerializer, UserCreateUpdateSerializer,
+                             UserDetailsSerializer, UserSummarySerializer,
+                             VoteCreateSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -138,6 +137,13 @@ class MessageView(generics.CreateAPIView):
     queryset = Message.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageCreateSerializer
+
+
+class ShareView(generics.CreateAPIView,
+                     generics.DestroyAPIView):
+    queryset = ShareStatus.objects.all()
+    serializer_class = ShareCreateSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
 
 class SignUpView(generics.CreateAPIView):

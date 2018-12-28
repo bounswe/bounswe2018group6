@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from api.models import (AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Location,
-                        Media, Message, Tag, User, VoteStatus)
+                        Media, Message, ShareStatus, Tag, User, VoteStatus)
 from emailer.views import send_activation_email
 
 
@@ -226,6 +226,30 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'participant', 'messages', 'created', 'updated')
 
 
+class ShareCreateSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = AttendanceStatus
+        fields = ('id', 'owner', 'event')
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        share_status, created = ShareStatus.objects.get_or_create(
+            owner=user, event=validated_data.pop('event'), defaults={})
+        if not created:
+            raise serializers.ValidationError('Cannot share an already shared.')
+        return share_status
+
+
+class ShareDetailsSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = AttendanceStatus
+        fields = ('id', 'owner')
+
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -435,6 +459,7 @@ class EventSummarySerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
+    own_share_status = serializers.SerializerMethodField()
     own_vote = serializers.SerializerMethodField()
     owner = UserSummarySerializer()
     tags = TagSerializer(many=True, read_only=True)
@@ -443,7 +468,7 @@ class EventSummarySerializer(serializers.ModelSerializer):
         model = Event
         fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
                   'location', 'created', 'updated', 'own_attendance_status', 'follower_count',
-                  'own_follow_status', 'vote_count', 'own_vote', 'tags')
+                  'own_follow_status', 'own_share_status', 'vote_count', 'own_vote', 'tags')
 
     def get_own_attendance_status(self, obj):
         user = self.context.get("request").user
@@ -457,6 +482,13 @@ class EventSummarySerializer(serializers.ModelSerializer):
         if user and user.is_authenticated:
             own_follow = obj.followers.all().filter(owner=user).first()
             return {'id': own_follow.id} if own_follow else None
+        return None
+
+    def get_own_share_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_share = obj.share_status.all().filter(owner=user).first()
+            return {'id': own_share.id} if own_share else None
         return None
 
     def get_own_vote(self, obj):
@@ -532,8 +564,10 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     followers = FollowDetailsSerializer(many=True, read_only=True)
     location = LocationSerializer(read_only=True)
     medias = MediaDetailsSerializer(many=True, read_only=True)
+    share_status = ShareDetailsSerializer(many=True, read_only=True)
     own_attendance_status = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
+    own_share_status = serializers.SerializerMethodField()
     own_vote = serializers.SerializerMethodField()
     owner = UserSummarySerializer()
     tags = TagSerializer(many=True, read_only=True)
@@ -542,8 +576,8 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
                   'created', 'updated', 'artists', 'attendance_status', 'own_attendance_status',
-                  'comments', 'followers', 'follower_count', 'own_follow_status', 'medias',
-                  'tags', 'vote_count', 'own_vote')
+                  'comments', 'followers', 'follower_count', 'own_follow_status', 'share_status', 'own_share_status',
+                  'medias', 'tags', 'vote_count', 'own_vote')
 
     def get_own_attendance_status(self, obj):
         user = self.context.get("request").user
@@ -557,6 +591,13 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated:
             own_follow = obj.followers.all().filter(owner=user).first()
             return {'id': own_follow.id} if own_follow else None
+        return None
+
+    def get_own_share_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_share = obj.share_status.all().filter(owner=user).first()
+            return {'id': own_share.id} if own_share else None
         return None
 
     def get_own_vote(self, obj):

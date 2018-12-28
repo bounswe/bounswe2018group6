@@ -29,6 +29,9 @@ urlpatterns = [
     url(r'^medias/(?P<pk>[0-9]+)/$', views.MediaView.as_view()),
     url(r'^medias/$', views.MediaView.as_view()),
 
+    url(r'^share/(?P<pk>[0-9]+)/$', views.ShareView.as_view()),
+    url(r'^share/$', views.ShareView.as_view()),
+
     url(r'^signup/$', views.SignUpView.as_view()),
 
     url(r'^tags/$', views.TagList.as_view()),
