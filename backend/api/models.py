@@ -198,6 +198,14 @@ class Message(OwnerMixin):
     created = models.DateTimeField(auto_now_add=True)
 
 
+class ShareStatus(OwnerMixin):
+    event = models.ForeignKey(Event, related_name='share_status', on_delete=models.CASCADE)
+
+    class Meta:
+        # There can be only one share status between User and Event.
+        unique_together = ('owner', 'event')
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=20)
 
