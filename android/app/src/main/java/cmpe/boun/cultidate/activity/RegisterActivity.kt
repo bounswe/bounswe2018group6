@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<UserSignup>, response: Response<UserSignup>) {
                     if (response.isSuccessful && response.code() == 201) {
-                        Toast.makeText(applicationContext, "User is created", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "User is created, please check your email for verification.", Toast.LENGTH_SHORT).show()
                         finish()
                         val intent = Intent(applicationContext, LoginActivity::class.java)
                         startActivity(intent)
