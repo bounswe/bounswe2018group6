@@ -154,10 +154,11 @@ FRONTEND_LOGIN_URL = os.getenv('FRONTEND_LOGIN_URL')
 
 # SENTRY
 
-sentry_sdk.init(
-    dsn="https://446e4cda629244769558b67371364076@sentry.io/1335347",
-    integrations=[DjangoIntegration()]
-)
+if DJANGO_ENV == 'production':
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_URL'),
+        integrations=[DjangoIntegration()]
+    )
 
 
 # Internationalization

@@ -5,6 +5,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
 
 urlpatterns = [
+    url(r'^annotations/(?P<pk>[0-9]+)/$', views.AnnotationView.as_view()),
+    url(r'^annotations/$', views.AnnotationView.as_view()),
+
     url(r'^attendance/(?P<pk>[0-9]+)/$', views.AttendanceView.as_view()),
     url(r'^attendance/$', views.AttendanceView.as_view()),
 
@@ -22,13 +25,15 @@ urlpatterns = [
     url(r'^events_location/$', views.EventLocationSearchView.as_view()),
     url(r'^events/(?P<pk>[0-9]+)/$', views.EventView.as_view()),
     url(r'^events/$', views.EventView.as_view()),
-    
 
     url(r'^follow/(?P<pk>[0-9]+)/$', views.FollowView.as_view()),
     url(r'^follow/$', views.FollowView.as_view()),
 
     url(r'^medias/(?P<pk>[0-9]+)/$', views.MediaView.as_view()),
     url(r'^medias/$', views.MediaView.as_view()),
+
+    url(r'^share/(?P<pk>[0-9]+)/$', views.ShareView.as_view()),
+    url(r'^share/$', views.ShareView.as_view()),
 
     url(r'^signup/$', views.SignUpView.as_view()),
 
