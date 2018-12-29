@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 import cmpe.boun.cultidate.activity.LoginActivity
 import cmpe.boun.cultidate.activity.ProfileActivity
 import cmpe.boun.cultidate.api.ApiInterface
