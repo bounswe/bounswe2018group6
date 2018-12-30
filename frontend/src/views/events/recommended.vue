@@ -20,7 +20,11 @@
           :followers="event.follower_count"
           :votes="event.vote_count"
           :price="event.price"
-          :image="event.featured_image" />
+          :image="event.featured_image" 
+          :owner-id="event.owner.id" 
+          :city="event.location.city"
+          :district="event.location.district"
+          />
       </el-col>
     </el-row>
 
@@ -59,7 +63,6 @@ export default {
       return date
     },
     searchEvents() {
-      console.log("search type is " + this.search_type)
       if(this.search_type == 1) {
         searchByTitle(this.search_word).then(response => {
           this.eventList = response.data
@@ -69,6 +72,13 @@ export default {
         searchByLocation(this.search_word).then(response => {
           this.eventList = response.data
         })
+      }
+      // search type is not selected
+      else{
+        this.$message({
+            message: 'Select search type from dropdown.',
+            type: 'error'
+          })
       }
     }
   }

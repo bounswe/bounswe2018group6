@@ -21,10 +21,18 @@
         <span>Price: {{ price }}</span>
       </div>
       <div style="padding-top:20px;">
-        <span>Owner: {{ owner }}</span>
+        <router-link :to="'/profile/' + ownerId">
+          <span>Owner: {{ owner }}</span>
+        </router-link>
       </div>
       <div style="padding-top:20px;">
         <span>Followers: {{ followers }}</span>
+      </div>
+      <div style="padding-top:20px;">
+        <span>City: {{ city }}</span>
+      </div>
+      <div style="padding-top:20px;">
+        <span>District: {{ district }}</span>
       </div>
       <div style="padding-top:20px;">
         <span>Votes: {{ votes }}</span>
@@ -61,10 +69,10 @@ export default {
       type: String
     },
     date: {
-      type: Date
+      type: String
     },
     price: {
-      type: Number
+      type: String
     },
     owner: {
       type: String
@@ -77,7 +85,16 @@ export default {
     },
     image: {
       type: String
-    }
+    },
+    ownerId: {
+      type: Number
+    },
+    city: {
+      type: String
+    },
+    district: {
+      type: String
+    },
   },
   data() {
     return {
@@ -95,7 +112,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" >
 .box-card-component{
-   height: 600px;
+   height: 650px;
   .el-card__header {
     padding: 0px!important;
   }
