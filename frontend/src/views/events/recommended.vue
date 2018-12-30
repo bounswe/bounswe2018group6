@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <el-row style="margin-bottom: 15px;">
-      <el-input placeholder="Please search event" v-model="search_word" class="input-with-select">
+      <el-input placeholder="Please search event" v-model="search_word" class="input-with-select" @keyup.enter.native="searchEvents" >
         <el-select v-model="search_type" slot="prepend" placeholder="Search with">
           <el-option label="Content" value="1"></el-option>
           <el-option label="Location" value="2"></el-option>
