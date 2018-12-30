@@ -52,3 +52,31 @@ export function editUser(user_id, data) {
   })
 }
 
+export function follow(object_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  const data = {
+    "content_type": "user",
+    "object_id": object_id
+  }
+  return request({
+    headers,
+    url: '/follow/',
+    method: 'post',
+    data
+  })
+}
+
+export function userSearch(username) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/users_list/?search=' + username,
+    method: 'get'
+  })
+}

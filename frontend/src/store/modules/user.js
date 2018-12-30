@@ -21,7 +21,8 @@ const user = {
     roles: [],
     setting: {
       articlePlatform: []
-    }
+    },
+    username: ''
   },
 
   mutations: {
@@ -121,6 +122,7 @@ const user = {
           }
           commit('SET_FIRSTNAME', data.first_name)
           commit('SET_LASTNAME', data.last_name)
+          commit('SET_USERNAME', data.username)
           commit('SET_PROFILE_PHOTO', data.profile_photo)
           commit('SET_FOLLOWER', data.follower_count)
           commit('SET_FOLLOWING', data.following_count)

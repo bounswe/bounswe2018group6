@@ -3,9 +3,8 @@ import { getToken } from '@/utils/auth' // getToken from cookie
 
 export function fetchEvents() {
   return request({
-    url: '/events_list',
+    url: '/events_list/',
     method: 'get',
-    // params: 
   })
 }
 
@@ -184,7 +183,6 @@ export function delComment(comment_id) {
 }
 
 export function editEvent(data, event_id) {
-  console.log(data)
   const headers = {
       //ContentType: 'application/json',
       Authorization: 'Token ' + getToken(),
@@ -194,5 +192,29 @@ export function editEvent(data, event_id) {
       url: '/events/' + event_id + '/',
       method: 'put',
       data
+  })
+}
+
+export function searchByTitle(tag) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_list/?search=' + tag,
+    method: 'get'
+  })
+}
+
+export function searchByLocation(location) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_location/?search=' + location,
+    method: 'get'
   })
 }

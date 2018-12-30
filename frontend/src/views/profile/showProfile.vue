@@ -13,6 +13,7 @@
     <el-popover v-if="is_corporate_user" :title="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
+    <el-button type="primary" size="mini" class="follow" @click.native.prevent="followUser"> {{ following }} </el-button>
     <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right:5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
@@ -34,7 +35,8 @@
 <script>
 import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, follow } from '@/api/user'
+import { unfollow } from '@/api/event'
 
 export default {
   name: 'Profile',
@@ -52,9 +54,11 @@ export default {
       corporate_profile: null,
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191',
+      image: null,
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      following: null,
+      follow_id: null
     }
   },
   created() {
@@ -72,9 +76,28 @@ export default {
         this.bio = response.data.bio
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
-        
+        this.image = response.data.profile_photo
+        if(response.data.own_follow_status == null) {
+          this.following = "follow" 
+        } else {
+          this.follow_id = response.data.own_follow_status.id
+          this.following = "unfollow"
+        }
       })
     },
+    followUser() {
+      if(this.following == "follow") {
+        follow(parseInt(this.$route.params.id)).then(response => {
+          this.follow_id = response.data.id
+          this.following = "unfollow"
+        })
+      } else {
+        unfollow(this.follow_id).then(response => {
+          this.follow_id = null
+          this.following = "follow"
+        })
+      }
+    }
   }
 }
 </script>
@@ -117,7 +140,7 @@ export default {
   left: 190px;
 }
 
-.edit{
+.follow{
   position: absolute;
   top: 16px;
   right: 0px;
