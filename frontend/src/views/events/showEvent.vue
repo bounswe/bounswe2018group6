@@ -3,6 +3,7 @@
     <el-row>
       <el-col :span="14"><div class="grid-content bg-purple-light">
         <center style="font-size: 25px; font-weight:bold;font-family: 'Helvetica', 'Arial', sans-serif; color: #38A1F3;"> {{ eventDetails.title }} </center>
+        <el-button style="float: right; margin-right: 20px; margin-top: 10px;" type="warning" @click.native.prevent="message2owner" icon="el-icon-message">Message to owner</el-button>
         <p style="font-size: 20px; margin-left: 20px;"><span style="color: #9ab97d; ">by</span> <router-link :to="'/profile/' + eventDetails.owner.id + '/'"><mallki :text="eventDetails.owner.username" class-name="mallki-text"/></router-link></p>
         <el-button size="large" style="float: right; margin-right: 20px;" type="success" @click.native.prevent="rateUpEvent" icon="el-icon-arrow-up" circle></el-button>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold; color: #38A1F3;">Date and Time</p>
@@ -97,6 +98,7 @@
 
 import { getEventDetail, follow, unfollow, attendance, delAttendance, rate, delEvent, createComment, delComment } from '@/api/event'
 import { getUserInfo } from '@/api/user'
+import { createConversation } from '@/api/message'
 import { getToken } from '@/utils/auth' // getToken from cookie
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
@@ -139,7 +141,8 @@ export default {
       follow_event_id: null,
       is_owner: false,
       comment: null,
-      attend_id: null
+      attend_id: null,
+      owner_conversation_id: null
     }
   },
   created() {
@@ -323,6 +326,12 @@ export default {
           confirmButtonText: 'I love Cultidate',
         });
     },
+    message2owner() {
+      createConversation(parseFloat(this.eventDetails.owner.id)).then(response => {
+        this.owner_conversation_id = response.data.id
+        this.$router.push('/message/' + this.owner_conversation_id)
+      })
+    }
   }
 }
 </script>
