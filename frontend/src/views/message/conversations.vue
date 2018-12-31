@@ -17,6 +17,7 @@
             <div>
               <span style="font-weight: bold; font-size: 20px; text-transform: uppercase;">
               <router-link :to="'/message/' + conversation.id"><span>{{ decideOwner(conversation, 'first_name') + " " + decideOwner(conversation, 'last_name') }}</span></router-link> 
+              <el-button style="float: right; margin-top: -15px;" type="danger" icon="el-icon-delete" @click="deleteConversation(conversation.id)">Delete</el-button>
               </span>
             </div>
             <span style="font-size: 18px;"> <router-link :to="'/message/' + conversation.id">{{ decideOwner(conversation, 'username') }}</router-link></span>
@@ -29,7 +30,7 @@
 </template>
 <script>
 
-import { getAllConversations, createConversation, getConversationDetails } from '@/api/message'
+import { getAllConversations, createConversation, getConversationDetails, deleteConversations } from '@/api/message'
 import { getUserInfo, userSearch } from '@/api/user'
 import { getToken } from '@/utils/auth' // getToken from cookie
 import Mallki from '@/components/TextHoverEffect/Mallki'
@@ -73,9 +74,16 @@ export default {
         return conversation.owner[attr];
       }
     },
+    deleteConversation(conversation_id) {
+      deleteConversations(parseFloat(conversation_id)).then(response => {
+        getAllConversations().then(response => {
+          this.conversations = response.data
+        })
+      })
+    },
     beautifyDate(date) {
       var d = new Date(date)
-      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + (d.getMonth()<10?'0':'') + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + ((d.getMonth() + 1)<10?'0':'') + (d.getMonth() + 1) + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
       return date
     }
   }

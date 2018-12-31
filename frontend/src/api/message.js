@@ -59,3 +59,15 @@ export function createMessage(receiver_id, conversation_id, content) {
     data
   })  
 }
+
+export function deleteConversations(conversation_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers: headers,
+    url: '/conversations/' + conversation_id + '/',
+    method: 'delete'
+  })
+}
