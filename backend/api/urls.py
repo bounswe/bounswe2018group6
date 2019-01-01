@@ -1,3 +1,5 @@
+import notifications.urls
+from django.conf.urls import include, url
 from django.urls import path
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
@@ -32,6 +34,10 @@ urlpatterns = [
 
     url(r'^medias/(?P<pk>[0-9]+)/$', views.MediaView.as_view()),
     url(r'^medias/$', views.MediaView.as_view()),
+
+    url(r'^notifications/all/$', views.all_notifications_list),
+    url(r'^notifications/unread/$', views.unread_notifications_list),
+    url(r'^notifications/mark_as_read/$', views.mark_all_as_read),
 
     url(r'^share/(?P<pk>[0-9]+)/$', views.ShareView.as_view()),
     url(r'^share/$', views.ShareView.as_view()),
