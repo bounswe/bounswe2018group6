@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^messages/$', views.MessageView.as_view()),
 
     url(r'^events_list/$', views.EventListView.as_view()),
+    url(r'^events_recommended_list/$', views.EventRecommendedListView.as_view()),
     url(r'^events_location/$', views.EventLocationSearchView.as_view()),
     url(r'^events/(?P<pk>[0-9]+)/$', views.EventView.as_view()),
     url(r'^events/$', views.EventView.as_view()),

@@ -93,6 +93,11 @@ class ConversationView(MultiSerializerViewMixin,
     }
 
 
+class EventRecommendedListView(generics.ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSummarySerializer
+
+
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
