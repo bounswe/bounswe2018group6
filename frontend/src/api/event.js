@@ -246,3 +246,15 @@ export function unshare(share_id) {
     method: 'delete'
   })
 }
+
+export function fetchRecommendations() {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_recommended_list/',
+    method: 'get'
+  })
+}

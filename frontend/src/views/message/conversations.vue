@@ -22,6 +22,7 @@
             </div>
             <span style="font-size: 18px;"> <router-link :to="'/message/' + conversation.id">{{ decideOwner(conversation, 'username') }}</router-link></span>
             <span style="float: right; font-size: 18px;"><span style="font-weight: bold;">Last message:</span>{{ beautifyDate(conversation.updated) }}</span>
+            <hr class="hr">
           </div>
         </el-card>
       </el-col>
@@ -124,5 +125,8 @@ export default {
     width: 80px;
     height: 80px;
     border-radius: 30px;
+  }
+  .hr {
+    border-color: rgb(228, 228, 228);
   }
 </style>
