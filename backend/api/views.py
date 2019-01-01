@@ -1,5 +1,8 @@
 from django.db.models import Count, Q
+from django.http import HttpResponse, JsonResponse
+from notifications.models import Notification, NotificationQuerySet
 from rest_framework import filters, generics, mixins, status, views
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -23,6 +26,44 @@ from api.serializers import (AnnotationCreate, AnnotationDetailsSerializer,
                              UserDetailsSerializer, UserSummarySerializer,
                              VoteCreateSerializer)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_notifications_list(request):
+    all_list = []
+    for notification in request.user.notifications.all():
+        all_list.append({
+            "id": notification.id,
+            "data": notification.verb,
+            "timestamp": notification.timestamp
+        })
+    data = {
+        'count': request.user.notifications.all().count(),
+        'notifications': all_list
+    }
+    return JsonResponse(data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def unread_notifications_list(request):
+    unread_list = []
+    for notification in request.user.notifications.unread():
+        unread_list.append({
+            "id": notification.id,
+            "data": notification.verb,
+            "timestamp": notification.timestamp
+        })
+    data = {
+        'count': request.user.notifications.unread().count(),
+        'notifications': unread_list
+    }
+    return JsonResponse(data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_all_as_read(request):
+    request.user.notifications.mark_all_as_read()
+    return HttpResponse(status=200)
 
 class MultiSerializerViewMixin(object):
 
