@@ -6,10 +6,9 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.encoding import force_text
 from django.views import View
-
 from api.models import User
 from .models import EmailLog
-from .tokens import account_activation_token
+from .tokens import account_activation_token, password_reset_token
 
 
 def send_activation_email(user):
@@ -18,11 +17,39 @@ def send_activation_email(user):
     activate_url = urljoin(settings.HOST_ROOT_URL, 
                             'e/activate/{uid}/{token}/'.format(uid=user.pk, token=token))
     
-    message = 'Welcome to Cultidate!\n\nTo activate your account please click here: {url}\n\nBest regards,\nCultidate Team'.format(url=activate_url)
+    message = 'Welcome to Cultidate!\n\nTo activate your account, please click here: {url}\n\nBest regards,\nCultidate Team'.format(url=activate_url)
     
     try:
         send_mail(
             '[Cultidate] Activate your account',
+            message,
+            settings.EMAIL_HOST_USER,
+            [recipient],
+            fail_silently=False
+        )
+        sent = True
+    except:
+        sent = False
+    
+    EmailLog.objects.create(user=user,
+                            sender=settings.EMAIL_HOST_USER,
+                            recipient=recipient,
+                            success=sent)
+
+    return sent
+
+
+def send_reset_password_email(user):
+    recipient = user.email
+    token = password_reset_token.make_token(user)
+    activate_url = urljoin(settings.FRONTEND_RESET_PASSWORD_URL, 
+                            '{uid}/{token}/'.format(uid=user.pk, token=token))
+    
+    message = 'Hello there!\n\nA forgot password request has been made.\n\nTo reset your password, please click here: {url}\n\nBest regards,\nCultidate Team'.format(url=activate_url)
+    
+    try:
+        send_mail(
+            '[Cultidate] Trouble Signing In?',
             message,
             settings.EMAIL_HOST_USER,
             [recipient],

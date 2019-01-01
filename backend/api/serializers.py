@@ -8,7 +8,8 @@ from rest_framework.authtoken.models import Token
 from api.models import (AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Location,
                         Media, Message, Tag, User, VoteStatus)
-from emailer.views import send_activation_email
+from emailer.tokens import password_reset_token
+from emailer.views import send_activation_email, send_reset_password_email
 
 
 class GenericModelValidatorMixin:
@@ -366,6 +367,46 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
             setattr(instance, key, value)
 
         instance.save()
+        return instance
+
+
+class UserForgotPasswordRequestSerializer(serializers.Serializer):
+    email_sent = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('email',)
+        extra_kwargs = {'email': {'read_only': True}}
+
+    def create(self, validated_data):
+        try:
+            user = User.objects.get(email=validated_data.pop('email', None))
+        except User.DoesNotExist:
+            raise serializers.ValidationError('User with given email does not exist.')
+        
+        # send reset password email
+        email_sent = send_reset_password_email(user)
+        user.email_sent = email_sent
+
+        return user
+
+
+class UserForgotPasswordSerializer(serializers.ModelSerializer):
+    reset_token = serializers.SlugField(min_length=40, max_length=40, write_only=True)
+    new_password = serializers.CharField(min_length=8, max_length=20,
+                                            trim_whitespace=False, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'reset_token', 'new_password')
+
+    def update(self, instance, validated_data):
+        reset_token = validated_data.pop('reset_token', None)
+        new_password = validated_data.pop('new_password', None)
+
+        if password_reset_token.check_token(instance, reset_token):
+            instance.set_password(new_password)
+
         return instance
 
 

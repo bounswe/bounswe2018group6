@@ -18,8 +18,10 @@ from api.serializers import (AttendanceCreateSerializer,
                              FollowCreateSerializer, LoginSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
                              MessageCreateSerializer, TagSerializer,
-                             UserCreateUpdateSerializer, UserDetailsSerializer,
-                             VoteCreateSerializer)
+                             UserCreateUpdateSerializer, 
+                             UserForgotPasswordRequestSerializer,
+                             UserForgotPasswordSerializer,
+                             UserDetailsSerializer, VoteCreateSerializer)
 
 
 class MultiSerializerViewMixin(object):
@@ -102,6 +104,16 @@ class FollowView(generics.CreateAPIView,
     queryset = FollowStatus.objects.all()
     serializer_class = FollowCreateSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+
+class ForgotPasswordView(mixins.CreateModelMixin,
+                         mixins.UpdateModelMixin):
+    permission_classes = (AllowAny,)
+    #serializer_class = UserForgotPasswordRequestSerializer
+    method_serializer_classes = {
+        'POST': UserForgotPasswordRequestSerializer,
+        'PUT': UserForgotPasswordSerializer,
+    }
 
 
 class LoginView(views.APIView):

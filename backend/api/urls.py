@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^tags/$', views.TagList.as_view()),
 
     url(r'^user/(?P<pk>[0-9]+)/$', views.UserView.as_view()),
+    url(r'^forgot_password/$', views.ForgotPasswordView.as_view()),
 
     url(r'^vote/(?P<pk>[0-9]+)/$', views.VoteView.as_view()),
     url(r'^vote/$', views.VoteView.as_view()),
