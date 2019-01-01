@@ -8,7 +8,7 @@ import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 import cmpe.boun.cultidate.api.ApiInterface
 import cmpe.boun.cultidate.model.UserSignup
 import retrofit2.Call
@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<UserSignup>, response: Response<UserSignup>) {
                     if (response.isSuccessful && response.code() == 201) {
-                        Toast.makeText(applicationContext, "User is created", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "User is created, please check your email for verification.", Toast.LENGTH_SHORT).show()
                         finish()
                         val intent = Intent(applicationContext, LoginActivity::class.java)
                         startActivity(intent)

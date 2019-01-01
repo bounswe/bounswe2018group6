@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 import cmpe.boun.cultidate.api.ApiInterface
 import cmpe.boun.cultidate.model.AuthResponse
 import cmpe.boun.cultidate.model.UserProfile

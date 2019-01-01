@@ -2,7 +2,7 @@ package cmpe.boun.cultidate.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 
 class SettingsActivity: AppCompatActivity() {
 
