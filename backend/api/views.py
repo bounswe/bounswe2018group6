@@ -94,8 +94,10 @@ class ConversationView(MultiSerializerViewMixin,
 
 
 class EventRecommendedListView(generics.ListAPIView):
-    queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
+
+    def get_queryset(self):
+        return sorted(Event.objects.all(), reverse=True, key=lambda x: sum(tag in x.tags.all() for tag in self.request.user.tags.all()))
 
 
 class EventListView(generics.ListAPIView):
