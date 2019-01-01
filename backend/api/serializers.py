@@ -5,9 +5,9 @@ from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from api.models import (AttendanceStatus, Comment, Conversation,
+from api.models import (Annotation, AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Location,
-                        Media, Message, Tag, User, VoteStatus)
+                        Media, Message, ShareStatus, Tag, User, VoteStatus)
 from emailer.views import send_activation_email
 
 
@@ -35,6 +35,35 @@ class UserSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo')
+
+
+class AnnotationCreate(GenericModelValidatorMixin, serializers.ModelSerializer):
+    content_type = serializers.CharField()
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Annotation
+        fields = ('id', 'owner', 'data', 'content_type', 'object_id', 'created', 'updated')
+
+    def create(self, validated_data):
+        owner = self.context.get("request").user
+        annotation = Annotation.objects.create(
+            owner=owner, content_object=validated_data.pop('content_object'),
+            data=validated_data.pop('data'))
+        return annotation
+
+
+class AnnotationDetailsSerializer(serializers.ModelSerializer):
+    content_type = serializers.SerializerMethodField()
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Annotation
+        fields = ('id', 'owner', 'data', 'content_type', 'object_id', 'created', 'updated')
+        read_only_fields = ('content_type', 'object_id')
+
+    def get_content_type(self, obj):
+        return obj.content_type.model
 
 
 class AttendanceCreateSerializer(serializers.ModelSerializer):
@@ -226,6 +255,30 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'participant', 'messages', 'created', 'updated')
 
 
+class ShareCreateSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = ShareStatus
+        fields = ('id', 'owner', 'event')
+
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        share_status, created = ShareStatus.objects.get_or_create(
+            owner=user, event=validated_data.pop('event'), defaults={})
+        if not created:
+            raise serializers.ValidationError('Cannot share an already shared.')
+        return share_status
+
+
+class ShareDetailsSerializer(serializers.ModelSerializer):
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = ShareStatus
+        fields = ('id', 'owner')
+
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -265,6 +318,160 @@ class VoteDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = VoteStatus
         fields = ('id', 'owner', 'vote')
+
+
+class EventSummarySerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
+    own_attendance_status = serializers.SerializerMethodField()
+    own_follow_status = serializers.SerializerMethodField()
+    own_share_status = serializers.SerializerMethodField()
+    own_vote = serializers.SerializerMethodField()
+    owner = UserSummarySerializer()
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Event
+        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
+                  'location', 'created', 'updated', 'own_attendance_status', 'follower_count',
+                  'own_follow_status', 'own_share_status', 'vote_count', 'own_vote', 'tags')
+
+    def get_own_attendance_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_attendance = obj.attendance_status.all().filter(owner=user).first()
+            return {'id': own_attendance.id, 'status': own_attendance.status} if own_attendance else None
+        return None
+
+    def get_own_follow_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_follow = obj.followers.all().filter(owner=user).first()
+            return {'id': own_follow.id} if own_follow else None
+        return None
+
+    def get_own_share_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_share = obj.share_status.all().filter(owner=user).first()
+            return {'id': own_share.id} if own_share else None
+        return None
+
+    def get_own_vote(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_vote = obj.votes.all().filter(owner=user).first()
+            return {'id': own_vote.id, 'vote': own_vote.vote} if own_vote else None
+        return None
+
+
+class EventCreateUpdateSerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
+    owner = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = Event
+        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
+                  'created', 'updated', 'organizer_url', 'artists', 'location', 'tags')
+
+    def create(self, validated_data):
+        # Required fields
+        owner = self.context.get("request").user
+        location_data = validated_data.pop('location')
+        location = Location.objects.create(**location_data)
+
+        # Optional fields
+        artists_data = validated_data.pop('artists', [])
+        tags_data = validated_data.pop('tags', [])
+        event = Event.objects.create(owner=owner, location=location, **validated_data)
+        for artist in artists_data:
+            event.artists.add(artist)
+        for tag in tags_data:
+            event.tags.add(tag)
+        return event
+
+    def update(self, instance, validated_data):
+        owner = self.context.get("request").user
+
+        # If 'artists' key is given in data, clear current artists
+        # and add new ones. Else, discard it.
+        if 'artists' in validated_data:
+            artists_data = validated_data.pop('artists')
+            instance.artists.clear()
+            for artist in artists_data:
+                instance.artists.add(artist)
+
+        # If 'location' key is given in data, delete current location
+        # and create a new one. Else, discard it.
+        if 'location' in validated_data:
+            location_data = validated_data.pop('location')
+            if instance.location:
+                instance.location.delete()
+            instance.location = Location.objects.create(**location_data)
+
+        # If 'tags' key is given in data, clear current tags
+        # and add new ones. Else, discard it.
+        if 'tags' in validated_data:
+            tags_data = validated_data.pop('tags')
+            instance.tags.clear()
+            for tag in tags_data:
+                instance.tags.add(tag)
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
+
+
+class EventDetailsSerializer(serializers.ModelSerializer):
+    annotations = AnnotationDetailsSerializer(many=True, read_only=True)
+    artists = UserSummarySerializer(many=True, read_only=True)
+    attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
+    comments = CommentDetailsSerializer(many=True, read_only=True)
+    followers = FollowDetailsSerializer(many=True, read_only=True)
+    location = LocationSerializer(read_only=True)
+    medias = MediaDetailsSerializer(many=True, read_only=True)
+    share_status = ShareDetailsSerializer(many=True, read_only=True)
+    own_attendance_status = serializers.SerializerMethodField()
+    own_follow_status = serializers.SerializerMethodField()
+    own_share_status = serializers.SerializerMethodField()
+    own_vote = serializers.SerializerMethodField()
+    owner = UserSummarySerializer()
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Event
+        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
+                  'created', 'updated', 'annotations', 'artists', 'attendance_status', 'own_attendance_status',
+                  'comments', 'followers', 'follower_count', 'own_follow_status', 'share_status', 'own_share_status',
+                  'medias', 'tags', 'vote_count', 'own_vote')
+
+    def get_own_attendance_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_attendance = obj.attendance_status.all().filter(owner=user).first()
+            return {'id': own_attendance.id, 'status': own_attendance.status} if own_attendance else None
+        return None
+
+    def get_own_follow_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_follow = obj.followers.all().filter(owner=user).first()
+            return {'id': own_follow.id} if own_follow else None
+        return None
+
+    def get_own_share_status(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_share = obj.share_status.all().filter(owner=user).first()
+            return {'id': own_share.id} if own_share else None
+        return None
+
+    def get_own_vote(self, obj):
+        user = self.context.get("request").user
+        if user and user.is_authenticated:
+            own_vote = obj.votes.all().filter(owner=user).first()
+            return {'id': own_vote.id, 'vote': own_vote.vote} if own_vote else None
+        return None
 
 
 class CorporateUserSerializer(serializers.ModelSerializer):
@@ -370,6 +577,7 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    annotations = AnnotationDetailsSerializer(many=True, read_only=True)
     comments = CommentDetailsSerializer(many=True, read_only=True)
     corporate_profile = CorporateUserSerializer()
     tags = TagSerializer(many=True, read_only=True)
@@ -380,13 +588,17 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     followings = serializers.SerializerMethodField()
     own_follow_status = serializers.SerializerMethodField()
     owned_events_count = serializers.SerializerMethodField()
+    owned_events = serializers.SerializerMethodField()
+    shared_events_count = serializers.SerializerMethodField()
+    shared_events = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'profile_photo', 'bio', 'city',
-                  'tags', 'comments', 'votes', 'follower_count', 'followers',
+                  'tags', 'annotations', 'comments', 'votes', 'follower_count', 'followers',
                   'following_count', 'followings', 'own_follow_status', 'owned_events_count',
-                  'blocked_users_count', 'is_corporate_user', 'corporate_profile')
+                  'owned_events', 'shared_events_count', 'shared_events', 'blocked_users_count',
+                  'is_corporate_user', 'corporate_profile')
 
     def get_followers(self, obj):
         return {
@@ -429,139 +641,12 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     def get_owned_events_count(self, obj):
         return obj.event_set.count()
+    
+    def get_owned_events(self, obj):
+        return [EventSummarySerializer(event, context=self.context).data for event in Event.objects.filter(owner=obj)]
 
+    def get_shared_events_count(self, obj):
+        return ShareStatus.objects.filter(owner=obj).count()
 
-class EventSummarySerializer(serializers.ModelSerializer):
-    location = LocationSerializer()
-    own_attendance_status = serializers.SerializerMethodField()
-    own_follow_status = serializers.SerializerMethodField()
-    own_vote = serializers.SerializerMethodField()
-    owner = UserSummarySerializer()
-    tags = TagSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Event
-        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
-                  'location', 'created', 'updated', 'own_attendance_status', 'follower_count',
-                  'own_follow_status', 'vote_count', 'own_vote', 'tags')
-
-    def get_own_attendance_status(self, obj):
-        user = self.context.get("request").user
-        if user and user.is_authenticated:
-            own_attendance = obj.attendance_status.all().filter(owner=user).first()
-            return {'id': own_attendance.id, 'status': own_attendance.status} if own_attendance else None
-        return None
-
-    def get_own_follow_status(self, obj):
-        user = self.context.get("request").user
-        if user and user.is_authenticated:
-            own_follow = obj.followers.all().filter(owner=user).first()
-            return {'id': own_follow.id} if own_follow else None
-        return None
-
-    def get_own_vote(self, obj):
-        user = self.context.get("request").user
-        if user and user.is_authenticated:
-            own_vote = obj.votes.all().filter(owner=user).first()
-            return {'id': own_vote.id, 'vote': own_vote.vote} if own_vote else None
-        return None
-
-
-class EventCreateUpdateSerializer(serializers.ModelSerializer):
-    location = LocationSerializer()
-    owner = UserSummarySerializer(read_only=True)
-
-    class Meta:
-        model = Event
-        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price',
-                  'created', 'updated', 'organizer_url', 'artists', 'location', 'tags')
-
-    def create(self, validated_data):
-        # Required fields
-        owner = self.context.get("request").user
-        location_data = validated_data.pop('location')
-        location = Location.objects.create(**location_data)
-
-        # Optional fields
-        artists_data = validated_data.pop('artists', [])
-        tags_data = validated_data.pop('tags', [])
-        event = Event.objects.create(owner=owner, location=location, **validated_data)
-        for artist in artists_data:
-            event.artists.add(artist)
-        for tag in tags_data:
-            event.tags.add(tag)
-        return event
-
-    def update(self, instance, validated_data):
-        owner = self.context.get("request").user
-
-        # If 'artists' key is given in data, clear current artists
-        # and add new ones. Else, discard it.
-        if 'artists' in validated_data:
-            artists_data = validated_data.pop('artists')
-            instance.artists.clear()
-            for artist in artists_data:
-                instance.artists.add(artist)
-
-        # If 'location' key is given in data, delete current location
-        # and create a new one. Else, discard it.
-        if 'location' in validated_data:
-            location_data = validated_data.pop('location')
-            if instance.location:
-                instance.location.delete()
-            instance.location = Location.objects.create(**location_data)
-
-        # If 'tags' key is given in data, clear current tags
-        # and add new ones. Else, discard it.
-        if 'tags' in validated_data:
-            tags_data = validated_data.pop('tags')
-            instance.tags.clear()
-            for tag in tags_data:
-                instance.tags.add(tag)
-
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
-        instance.save()
-        return instance
-
-
-class EventDetailsSerializer(serializers.ModelSerializer):
-    artists = UserSummarySerializer(many=True, read_only=True)
-    attendance_status = AttendanceDetailsSerializer(many=True, read_only=True)
-    comments = CommentDetailsSerializer(many=True, read_only=True)
-    followers = FollowDetailsSerializer(many=True, read_only=True)
-    location = LocationSerializer(read_only=True)
-    medias = MediaDetailsSerializer(many=True, read_only=True)
-    own_attendance_status = serializers.SerializerMethodField()
-    own_follow_status = serializers.SerializerMethodField()
-    own_vote = serializers.SerializerMethodField()
-    owner = UserSummarySerializer()
-    tags = TagSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Event
-        fields = ('id', 'owner', 'featured_image', 'title', 'description', 'date', 'price', 'location', 'organizer_url',
-                  'created', 'updated', 'artists', 'attendance_status', 'own_attendance_status',
-                  'comments', 'followers', 'follower_count', 'own_follow_status', 'medias',
-                  'tags', 'vote_count', 'own_vote')
-
-    def get_own_attendance_status(self, obj):
-        user = self.context.get("request").user
-        if user and user.is_authenticated:
-            own_attendance = obj.attendance_status.all().filter(owner=user).first()
-            return {'id': own_attendance.id, 'status': own_attendance.status} if own_attendance else None
-        return None
-
-    def get_own_follow_status(self, obj):
-        user = self.context.get("request").user
-        if user and user.is_authenticated:
-            own_follow = obj.followers.all().filter(owner=user).first()
-            return {'id': own_follow.id} if own_follow else None
-        return None
-
-    def get_own_vote(self, obj):
-        user = self.context.get("request").user
-        if user and user.is_authenticated:
-            own_vote = obj.votes.all().filter(owner=user).first()
-            return {'id': own_vote.id, 'vote': own_vote.vote} if own_vote else None
-        return None
+    def get_shared_events(self, obj):
+        return [EventSummarySerializer(sh.event, context=self.context).data for sh in ShareStatus.objects.filter(owner=obj)]

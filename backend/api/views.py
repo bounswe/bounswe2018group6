@@ -1,17 +1,19 @@
-from django.db.models import Q
-
-from rest_framework import generics, mixins, views, status, filters
-
+from django.db.models import Count, Q
+from django.http import HttpResponse, JsonResponse
+from notifications.models import Notification, NotificationQuerySet
+from rest_framework import filters, generics, mixins, status, views
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from api.models import (AttendanceStatus, Comment, Conversation,
+from api.models import (Annotation, AttendanceStatus, Comment, Conversation,
                         CorporateUserProfile, Event, FollowStatus, Media,
-                        Message, Tag, User, VoteStatus)
+                        Message, ShareStatus, Tag, User, VoteStatus)
 from api.permissions import (IsOwnerOrParticipant, IsOwnerOrReadOnly,
                              IsUserOrReadOnly)
-from api.serializers import (AttendanceCreateSerializer,
+from api.serializers import (AnnotationCreate, AnnotationDetailsSerializer,
+                             AttendanceCreateSerializer,
                              CommentCreateSerializer, CommentDetailsSerializer,
                              ConversationCreateSerializer,
                              ConversationSerializer,
@@ -19,10 +21,49 @@ from api.serializers import (AttendanceCreateSerializer,
                              EventDetailsSerializer, EventSummarySerializer,
                              FollowCreateSerializer, LoginSerializer,
                              MediaCreateSerializer, MediaDetailsSerializer,
-                             MessageCreateSerializer, TagSerializer,
-                             UserCreateUpdateSerializer, UserDetailsSerializer,
-                             UserSummarySerializer, VoteCreateSerializer)
+                             MessageCreateSerializer, ShareCreateSerializer,
+                             TagSerializer, UserCreateUpdateSerializer,
+                             UserDetailsSerializer, UserSummarySerializer,
+                             VoteCreateSerializer)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_notifications_list(request):
+    all_list = []
+    for notification in request.user.notifications.all():
+        all_list.append({
+            "id": notification.id,
+            "data": notification.verb,
+            "timestamp": notification.timestamp
+        })
+    data = {
+        'count': request.user.notifications.all().count(),
+        'notifications': all_list
+    }
+    return JsonResponse(data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def unread_notifications_list(request):
+    unread_list = []
+    for notification in request.user.notifications.unread():
+        unread_list.append({
+            "id": notification.id,
+            "data": notification.verb,
+            "timestamp": notification.timestamp
+        })
+    data = {
+        'count': request.user.notifications.unread().count(),
+        'notifications': unread_list
+    }
+    return JsonResponse(data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_all_as_read(request):
+    request.user.notifications.mark_all_as_read()
+    return HttpResponse(status=200)
 
 class MultiSerializerViewMixin(object):
 
@@ -31,6 +72,22 @@ class MultiSerializerViewMixin(object):
             return self.method_serializer_classes[self.request.method]
         except:
             return super(MultiSerializerViewMixin, self).get_serializer_class()
+
+
+class AnnotationView(MultiSerializerViewMixin,
+                     generics.RetrieveAPIView,
+                     generics.CreateAPIView,
+                     generics.DestroyAPIView,
+                     mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationDetailsSerializer
+    method_serializer_classes = {
+        'POST': AnnotationCreate,
+    }
+
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
 class AttendanceView(generics.CreateAPIView,
@@ -61,7 +118,7 @@ class ConversationListView(generics.ListAPIView):
     serializer_class = ConversationSerializer
 
     def get_queryset(self):
-        return Conversation.objects.\
+        return Conversation.objects. \
             filter(Q(owner=self.request.user) | Q(participant=self.request.user)).order_by('-updated')
 
 
@@ -77,20 +134,27 @@ class ConversationView(MultiSerializerViewMixin,
     }
 
 
+class EventRecommendedListView(generics.ListAPIView):
+    serializer_class = EventSummarySerializer
+
+    def get_queryset(self):
+        return sorted(Event.objects.annotate(num_tags=Count('tags')).filter(num_tags__gt=0), reverse=True, key=lambda x: sum(tag in x.tags.all() for tag in self.request.user.tags.all()))
+
+
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('title','description')
-    
+
 
 class EventLocationSearchView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('location__city','location__district')
-    
-    
+
+
 class EventView(MultiSerializerViewMixin,
                 generics.RetrieveAPIView,
                 generics.CreateAPIView,
@@ -140,6 +204,13 @@ class MessageView(generics.CreateAPIView):
     serializer_class = MessageCreateSerializer
 
 
+class ShareView(generics.CreateAPIView,
+                generics.DestroyAPIView):
+    queryset = ShareStatus.objects.all()
+    serializer_class = ShareCreateSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+
+
 class SignUpView(generics.CreateAPIView):
     serializer_class = UserCreateUpdateSerializer
     permission_classes = (AllowAny,)
@@ -164,12 +235,13 @@ class UserView(MultiSerializerViewMixin,
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
+
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSummarySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username','first_name','last_name')
-    
+
 
 class VoteView(generics.CreateAPIView,
                generics.DestroyAPIView):

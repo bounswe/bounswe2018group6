@@ -1,3 +1,5 @@
+import notifications.urls
+from django.conf.urls import include, url
 from django.urls import path
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
@@ -5,6 +7,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
 
 urlpatterns = [
+    url(r'^annotations/(?P<pk>[0-9]+)/$', views.AnnotationView.as_view()),
+    url(r'^annotations/$', views.AnnotationView.as_view()),
+
     url(r'^attendance/(?P<pk>[0-9]+)/$', views.AttendanceView.as_view()),
     url(r'^attendance/$', views.AttendanceView.as_view()),
 
@@ -19,6 +24,7 @@ urlpatterns = [
     url(r'^messages/$', views.MessageView.as_view()),
 
     url(r'^events_list/$', views.EventListView.as_view()),
+    url(r'^events_recommended_list/$', views.EventRecommendedListView.as_view()),
     url(r'^events_location/$', views.EventLocationSearchView.as_view()),
     url(r'^events/(?P<pk>[0-9]+)/$', views.EventView.as_view()),
     url(r'^events/$', views.EventView.as_view()),
@@ -28,6 +34,13 @@ urlpatterns = [
 
     url(r'^medias/(?P<pk>[0-9]+)/$', views.MediaView.as_view()),
     url(r'^medias/$', views.MediaView.as_view()),
+
+    url(r'^notifications/all/$', views.all_notifications_list),
+    url(r'^notifications/unread/$', views.unread_notifications_list),
+    url(r'^notifications/mark_as_read/$', views.mark_all_as_read),
+
+    url(r'^share/(?P<pk>[0-9]+)/$', views.ShareView.as_view()),
+    url(r'^share/$', views.ShareView.as_view()),
 
     url(r'^signup/$', views.SignUpView.as_view()),
 
