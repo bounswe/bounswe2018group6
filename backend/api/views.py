@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Count, Q
 from rest_framework import filters, generics, mixins, status, views
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -97,7 +97,7 @@ class EventRecommendedListView(generics.ListAPIView):
     serializer_class = EventSummarySerializer
 
     def get_queryset(self):
-        return sorted(Event.objects.all(), reverse=True, key=lambda x: sum(tag in x.tags.all() for tag in self.request.user.tags.all()))
+        return sorted(Event.objects.annotate(num_tags=Count('tags')).filter(num_tags__gt=0), reverse=True, key=lambda x: sum(tag in x.tags.all() for tag in self.request.user.tags.all()))
 
 
 class EventListView(generics.ListAPIView):
