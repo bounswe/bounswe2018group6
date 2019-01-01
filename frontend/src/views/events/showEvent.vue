@@ -3,17 +3,18 @@
     <el-row>
       <el-col :span="14"><div class="grid-content bg-purple-light">
         <center style="font-size: 25px; font-weight:bold;font-family: 'Helvetica', 'Arial', sans-serif; color: #38A1F3;"> {{ eventDetails.title }} </center>
-        <el-button style="float: right; margin-right: 20px; margin-top: 10px;" type="warning" @click.native.prevent="message2owner" icon="el-icon-message">Message to owner</el-button>
+        <el-button class="message-owner" style="float: right; margin-right: 20px; margin-top: 10px;" type="warning" @click.native.prevent="message2owner" icon="el-icon-message">Message {{ eventDetails.owner.username }}</el-button>
+        <el-button style="float: right; margin-right: 5px; margin-top: 10px;" icon="el-icon-question" type="primary" @click.prevent.stop="guide">Guide</el-button>
         <p style="font-size: 20px; margin-left: 20px;"><span style="color: #9ab97d; ">by</span> <router-link :to="'/profile/' + eventDetails.owner.id + '/'"><mallki :text="eventDetails.owner.username" class-name="mallki-text"/></router-link></p>
-        <el-button size="large" style="float: right; margin-right: 20px;" type="success" @click.native.prevent="rateUpEvent" icon="el-icon-arrow-up" circle></el-button>
+        <el-button class="rate" size="large" style="float: right; margin-right: 20px;" type="success" @click.native.prevent="rateUpEvent" icon="el-icon-arrow-up" circle></el-button>
         <p style="font-size: 20px; margin-left: 20px; font-weight:bold; color: #38A1F3;">Date and Time</p>
         <span style="font-size: 20px; margin-left: 20px;"> {{ beautifyDate(eventDetails.date) }}</span>
         <span style="font-size: 20px; float: right; margin-right: 34px;">{{ eventDetails.vote_count }}</span>
         <div></div>
         <el-button size="large" style="float: right; margin-right: 20px;" type="danger" @click.native.prevent="rateDownEvent" icon="el-icon-arrow-down" circle></el-button>
-        <div style="font-size: 20px; margin-left: 20px; margin-top: 60px;"> <span style="font-weight: bold; color: #38A1F3;">Followers:</span> {{ eventDetails.follower_count }}</div>
+        <div  style="font-size: 20px; margin-left: 20px; margin-top: 60px;"> <span style="font-weight: bold; color: #38A1F3;">Followers:</span> {{ eventDetails.follower_count }}</div>
         <div style="font-size: 20px; margin-left: 20px; margin-top: 70px;"> <span><span style="font-weight: bold; color: #38A1F3;">Price:</span> {{ eventDetails.price }} ₺ </span>
-          <el-select v-model="attend" clearable placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
+          <el-select class="attendance" v-model="attend" clearable placeholder="Tell Us Your Status" style="margin-right: 20px; float: right;" @change="attendanceEvent">
             <el-option v-for="item in options" :key="item.attend" :label="item.label" :value="item.attend"/>
           </el-select>
         </div>
@@ -34,7 +35,7 @@
     <el-tag style="margin-left: 15px;" v-for="tag in eventDetails.tags" :key="tag" size="medium">
       {{ tag.name }}
     </el-tag>
-    <el-button style="float: right; margin-right: 15px" type="primary" plain size="small" @click.native.prevent="followEvent">{{ following }}</el-button>
+    <el-button class="follow" style="float: right; margin-right: 15px" type="primary" plain size="small" @click.native.prevent="followEvent">{{ following }}</el-button>
     <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
       <el-button type="primary" plain size="small" style="float: right; margin-right: 5px">Edit Event</el-button>
     </router-link>
@@ -61,7 +62,7 @@
         <el-popover placement="left" width="400" trigger="click">
           <el-input type="textarea" autosize placeholder="Please comment..." v-model="comment"></el-input>
           <el-button style="float: left; margin-top: 5px;" type="primary" @click.native.prevent="addComment">Submit</el-button>
-          <el-button style="float: right; padding: 3px 0" type="text" slot="reference">Add Comment</el-button>
+          <el-button class="add-comment" style="float: right; padding: 3px 0" type="text" slot="reference">Add Comment</el-button>
         </el-popover>
       </div>
       <div v-for="com in eventDetails.comments" :key="com.content" class="text item">
@@ -101,6 +102,9 @@ import { getUserInfo } from '@/api/user'
 import { createConversation } from '@/api/message'
 import { getToken } from '@/utils/auth' // getToken from cookie
 import Mallki from '@/components/TextHoverEffect/Mallki'
+import * as Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
+import steps from './defineSteps'
 
 export default {
   name: 'ShowEvent',
@@ -142,13 +146,17 @@ export default {
       is_owner: false,
       comment: null,
       attend_id: null,
-      owner_conversation_id: null
+      owner_conversation_id: null,
+      driver: null,
     }
   },
   created() {
     this.event_id = this.$route.params.id
     this.additionalBody.event = this.event_id
     this.fetchData(this.event_id)
+  },
+  mounted() {
+    this.driver = new Driver()
   },
   methods: {
     fetchData(event_id) {
@@ -331,7 +339,11 @@ export default {
         this.owner_conversation_id = response.data.id
         this.$router.push('/message/' + this.owner_conversation_id)
       })
-    }
+    },
+    guide() {
+      this.driver.defineSteps(steps)
+      this.driver.start()
+    },
   }
 }
 </script>
