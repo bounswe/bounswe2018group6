@@ -57,6 +57,7 @@
     "sortablejs": "1.7.0",
     "vue": "2.5.17",
     "vue-count-to": "1.0.13",
+    "vue-facebook-signin-button": "^1.0.1",
     "vue-i18n": "7.3.2",
     "vue-read-more": "^1.1.1",
     "vue-router": "3.0.1",
