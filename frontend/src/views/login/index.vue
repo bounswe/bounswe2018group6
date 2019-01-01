@@ -37,11 +37,11 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="centerDialogVisible=true">{{ $t('login.logIn') }}</el-button>
       <router-link to="/signup?redirect=%2Fdashboard"><el-button class="signup-button" type="primary">Sign Up</el-button></router-link>
-      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
+      <el-button class="thirdparty-button" type="primary" @click="showDialog=true;">{{ $t('login.thirdparty') }}</el-button>
     </el-form>
-
+    
     <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
       {{ $t('login.thirdpartyTips') }}
       <br>
@@ -50,6 +50,22 @@
       <social-sign />
     </el-dialog>
 
+    <el-dialog
+      :visible.sync="centerDialogVisible"
+      append-to-body
+      top="0"
+      center>
+      <el-card :body-style="{ padding: '0px' }">
+        <img src="src/assets/newyear.jpg" class="image">
+        <div style="padding: 14px;">
+        </div>
+      </el-card>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="pan-btn pink-btn" type="primary" @click="handleLogin">
+          <h1 style="text-align:center">Happy New 2019!</h1>
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -88,7 +104,8 @@ export default {
       passwordType: 'password',
       loading: false,
       showDialog: false,
-      redirect: undefined
+      redirect: undefined,
+      centerDialogVisible: false
     }
   },
   watch: {
@@ -125,7 +142,6 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -269,6 +285,30 @@ $light_gray:#eee;
     position: absolute;
     left: 35px;
     bottom: -5px;
+  }
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .button {
+    padding: 0;
+    float: right;
+  }
+
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+      display: table;
+      content: "";
+  }
+  
+  .clearfix:after {
+      clear: both
   }
 }
 </style>
