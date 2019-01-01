@@ -192,6 +192,7 @@ class UserView(MultiSerializerViewMixin,
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
+
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSummarySerializer
