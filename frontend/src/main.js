@@ -9,6 +9,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import ReadMore from 'vue-read-more';
 
+import FBSignInButton from 'vue-facebook-signin-button'
+
 import * as VueGoogleMaps from 'vue2-google-maps'
 
 import '@/styles/index.scss' // global css
@@ -51,6 +53,9 @@ Vue.use(VueGoogleMaps, {
 })
 
 Vue.use(ReadMore);
+Vue.use(FBSignInButton)
+
+
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
