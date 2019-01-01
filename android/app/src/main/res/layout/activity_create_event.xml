@@ -27,7 +27,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.35"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -43,7 +43,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.15"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -53,14 +53,15 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <EditText
                     android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:hint="Date"/>
             </LinearLayout>
 
             <LinearLayout
@@ -77,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:hint="price" />
+                    android:hint="Price" />
             </LinearLayout>
         </LinearLayout>
 
@@ -153,13 +154,11 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/tag"
+            <Button
+                android:id="@+id/button4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Tags" />
+                android:text="Create" />
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
