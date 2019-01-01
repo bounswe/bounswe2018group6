@@ -1,11 +1,17 @@
 <template>
   <div class="social-signup-container">
-    <div class="sign-btn" @click="wechatHandleClick('wechat')">
-      <span class="wx-svg-container"><svg-icon icon-class="wechat" class="icon"/></span> 微信
+    <div>
+      <!-- <span class="wx-svg-container"><svg-icon icon-class="wechat" class="icon"/></span> 微信 -->
+      <fb-signin-button
+        :params="fbSignInParams"
+        @success="onSignInSuccess"
+        @error="onSignInError">
+        Sign in with Facebook
+      </fb-signin-button>
     </div>
-    <div class="sign-btn" @click="tencentHandleClick('tencent')">
+    <!-- <div class="sign-btn" @click="tencentHandleClick('tencent')">
       <span class="qq-svg-container"><svg-icon icon-class="qq" class="icon"/></span> QQ
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -14,6 +20,14 @@
 
 export default {
   name: 'SocialSignin',
+  data () {
+    return {
+      fbSignInParams: {
+        scope: 'email',
+        return_scopes: true
+      }
+    }
+  },
   methods: {
     wechatHandleClick(thirdpart) {
       alert('ok')
@@ -30,7 +44,18 @@ export default {
       // const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/auth-redirect')
       // const url = 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirect_uri
       // openWindow(url, thirdpart, 540, 540)
+    },
+    onSignInSuccess (response) {
+      FB.api('/me', dude => {
+        console.log(`Good to see you, ${dude.name}.`)
+        console.log(dude)
+      })
+    },
+    onSignInError (error) {
+      console.log('OH NOES', error)
+      console.log(error)
     }
+    
   }
 }
 </script>
@@ -67,4 +92,12 @@ export default {
       margin-left: 50px;
     }
   }
+  .fb-signin-button {
+  /* This is where you control how the button looks. Be creative! */
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: #4267b2;
+  color: #fff;
+}
 </style>
