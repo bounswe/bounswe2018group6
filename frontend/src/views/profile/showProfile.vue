@@ -67,7 +67,6 @@ export default {
   methods: {
     getUser() {
       getUserInfo(parseFloat(this.$route.params.id)).then(response => {
-        console.log("1",response.data)
         this.name = response.data.first_name + ' ' + response.data.last_name
         this.follower_count = response.data.follower_count
         this.following_count = response.data.following_count
