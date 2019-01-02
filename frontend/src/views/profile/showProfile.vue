@@ -77,7 +77,6 @@ export default {
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
         this.image = response.data.profile_photo
-        console.log("2",response.data)
         if(response.data.own_follow_status == null) {
           this.following = "follow" 
         } else {
