@@ -19,6 +19,7 @@ export function getUserInfo(user_id) {
     Authorization: 'Token ' + getToken(),
   }
   return request({
+    headers,
     url: '/user/' + user_id + '/',
     method: 'get'
   })
@@ -78,5 +79,41 @@ export function userSearch(username) {
     headers,
     url: '/users_list/?search=' + username,
     method: 'get'
+  })
+}
+
+export function getAllNotifications() {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/notifications/all/',
+    method: 'get'
+  })
+}
+
+export function getUnreadNotifications() {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/notifications/unread/',
+    method: 'get'
+  })
+}
+
+export function makeNotificationsRead() {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/notifications/mark_as_read/',
+    method: 'post'
   })
 }
