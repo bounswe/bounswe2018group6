@@ -33,6 +33,24 @@
       </el-card>
     </el-col>
   </el-row>
+  <el-dialog
+    title="Congrats"
+    :visible.sync="dialogVisible"
+    width="50%"
+    :before-close="handleClose">
+    <span>Annotation is added.</span>
+    <span slot="footer" class="dialog-footer">
+      <el-popover
+      placement="bottom"
+      title="The W3C Web Annotation Data Model: "
+      width="600"
+      trigger="hover"
+      :content="last_annot_data">
+      <el-button slot="reference">How do you store annotations?</el-button>
+    </el-popover>
+      <el-button type="primary" @click="dialogVisible = false">I love Cultidate!</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 
@@ -51,6 +69,8 @@ import { getEventDetail, createAnnotation} from '@/api/event'
         page_url: null,
         annot_texts: null,
         motivations: null,
+        dialogVisible: false,
+        last_annot_data: null,
       }
     },
     created() {
@@ -95,9 +115,8 @@ import { getEventDetail, createAnnotation} from '@/api/event'
         }
         createAnnotation(annot_data).then(response => {
           if(response) {
-            this.$alert("Annotation is added.", "Congrats!", {
-              confirmButtonText: "I love Cultidate"
-            });
+            this.last_annot_data = JSON.stringify(annot_data, undefined, 2);
+            this.dialogVisible = true
           }
         })
       }      
