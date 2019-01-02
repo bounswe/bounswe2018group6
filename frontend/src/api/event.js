@@ -218,3 +218,43 @@ export function searchByLocation(location) {
     method: 'get'
   })
 }
+
+export function share(event_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  const data = {
+    "event": event_id
+  }
+  return request({
+    headers,
+    url: '/share/',
+    method: 'post',
+    data
+  })
+}
+
+export function unshare(share_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/share/' + share_id + '/',
+    method: 'delete'
+  })
+}
+
+export function fetchRecommendations() {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_recommended_list/',
+    method: 'get'
+  })
+}

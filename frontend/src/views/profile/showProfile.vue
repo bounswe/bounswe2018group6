@@ -17,8 +17,18 @@
     <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right:5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
-      <el-button round>{{ follower_count }} followers</el-button>
-      <el-button round style="margin-left: 10px;">{{ following_count }} followings</el-button>
+      <el-button round @click="dialogFollowerVisible = true">{{ follower_count }} followers</el-button>
+      <el-dialog title="Followers" :visible.sync="dialogFollowerVisible">
+          <el-table :data="followers" style="width: 100%">
+            <el-table-column v-for="v in props" :key="v.prop" :prop="v.prop" :label="v.label"/>
+          </el-table>
+      </el-dialog>
+      <el-button round style="margin-left: 10px;" @click="dialogFollowingVisible = true">{{ following_count }} followings</el-button>
+      <el-dialog title="Followings" :visible.sync="dialogFollowingVisible">
+        <el-table :data="followings" style="width: 100%">
+          <el-table-column v-for="v in props" :key="v.prop" :prop="v.prop" :label="v.label"/>
+        </el-table>
+      </el-dialog>
       <el-button round style="margin-left: 10px;">{{ owned_events_count }} events</el-button>
     </div>
     <div class="block">
@@ -37,7 +47,12 @@ import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
 import { getUserInfo, follow } from '@/api/user'
 import { unfollow } from '@/api/event'
+import Vue from 'vue'
 
+Vue.component('column', {
+	props: ['prop', 'label'],
+	template:'<el-table-column :prop="prop" :label="label" min-width="180"></el-table-column>'
+})
 export default {
   name: 'Profile',
   components: { ImageCropper, PanThumb },
@@ -58,7 +73,21 @@ export default {
       inputVisible: false,
       inputValue: '',
       following: null,
-      follow_id: null
+      follow_id: null,
+      followers: null,
+      dialogFollowerVisible: false,
+      followings: null,
+      dialogFollowingVisible: false,
+      props: [{
+        prop:'username',
+        label:'Username'
+      },{
+        prop:'first_name',
+        label:'First name'
+      },{
+        prop:'last_name',
+        label:'Last name'
+      }]
     }
   },
   created() {
@@ -69,7 +98,7 @@ export default {
       getUserInfo(parseFloat(this.$route.params.id)).then(response => {
         this.name = response.data.first_name + ' ' + response.data.last_name
         this.follower_count = response.data.follower_count
-        this.following_count = response.data.following_count
+        this.following_count = response.data.followings.users.length
         this.owned_events_count = response.data.owned_events_count
         this.tags = response.data.tags
         this.city = response.data.city
@@ -82,6 +111,14 @@ export default {
         } else {
           this.following = "unfollow"
           this.follow_id = response.data.own_follow_status.id
+        }
+        this.followers = response.data.followers.users
+        this.followings = response.data.followings.users
+        for(var i = 0; i < this.followers.length; i++) {
+          this.followers[i] = this.followers[i].user
+        }
+        for(var i = 0; i < this.followings.length; i++) {
+          this.followings[i] = this.followings[i].user
         }
       })
     },

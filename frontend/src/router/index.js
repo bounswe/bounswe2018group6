@@ -96,9 +96,15 @@ export const constantRouterMap = [
     },
     children: [
       {
+        path: 'all-events',
+        component: () => import('@/views/events/allEvents'),
+        name: 'All Events',
+        meta: { title: 'All Events' }
+      },
+      {
         path: 'recommended',
         component: () => import('@/views/events/recommended'),
-        name: 'Events',
+        name: 'Recommendations',
         meta: { title: 'Recommended' }
       },
       {

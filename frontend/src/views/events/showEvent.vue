@@ -35,11 +35,12 @@
     <el-tag style="margin-left: 15px;" v-for="tag in eventDetails.tags" :key="tag" size="medium">
       {{ tag.name }}
     </el-tag>
-    <el-button class="follow" style="float: right; margin-right: 15px" type="primary" plain size="small" @click.native.prevent="followEvent">{{ following }}</el-button>
+    <el-button style="float: right; margin-right: 15px" type="primary" plain size="small" @click.native.prevent="followEvent">{{ following }}</el-button>
+    <el-button size="small" style="float: right; margin-right: 10px;" type="success" @click="shareEvent">{{ is_share }}</el-button>
     <router-link v-if="is_owner" :to="'/events/edit-event/' + event_id">
-      <el-button type="primary" plain size="small" style="float: right; margin-right: 5px">Edit Event</el-button>
+      <el-button type="primary" plain size="small" style="float: right;">Edit Event</el-button>
     </router-link>
-    <el-button v-if="is_owner" size="small" style="float: right; margin-right: 5px;" type="danger" @click="deleteEvent">Delete Event</el-button>
+    <el-button v-if="is_owner" size="small" style="float: right; margin-right: 10px;" type="danger" @click="deleteEvent">Delete Event</el-button>
   </div>
 </el-row>
 
@@ -97,8 +98,7 @@
 
 <script>
 
-import { getEventDetail, follow, unfollow, attendance, delAttendance, rate, delEvent, createComment, delComment } from '@/api/event'
-import { getUserInfo } from '@/api/user'
+import { getEventDetail, follow, unfollow, attendance, delAttendance, rate, delEvent, createComment, delComment, share, unshare } from '@/api/event'
 import { createConversation } from '@/api/message'
 import { getToken } from '@/utils/auth' // getToken from cookie
 import Mallki from '@/components/TextHoverEffect/Mallki'
@@ -147,6 +147,8 @@ export default {
       comment: null,
       attend_id: null,
       owner_conversation_id: null,
+      is_share: null,
+      share_event_id: null
       driver: null,
     }
   },
@@ -169,9 +171,6 @@ export default {
       }
       getEventDetail(event_id).then(response => {
         this.eventDetails = response.data
-        if (response.data.own_follow_status != null) {
-          this.follow_event_id = response.data.own_follow_status.id
-        }
         if (response.data.own_attendance_status != null) {
           this.attend = attends[response.data.own_attendance_status.status]
         }
@@ -179,6 +178,13 @@ export default {
           this.following = 'follow'
         } else {
           this.following = 'unfollow'
+          this.follow_event_id = response.data.own_follow_status.id
+        }
+        if (response.data.own_share_status == null) {
+          this.is_share = 'share'
+        } else {
+          this.is_share = 'unshare'
+          this.share_event_id = response.data.own_share_status.id
         }
         this.eventDetails.location.lat = parseFloat(this.eventDetails.location.lat)
         this.eventDetails.location.lng = parseFloat(this.eventDetails.location.lng)
@@ -207,8 +213,7 @@ export default {
             this.eventDetails.follower_count = response.data.follower_count
           })
         })
-      }
-      
+      }  
     },
     attendanceEvent() {
       let attends
@@ -309,7 +314,8 @@ export default {
     },
     beautifyDate(date) {
       var d = new Date(date)
-      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + ((d.getMonth() + 1)<10?'0':'') + (d.getMonth() + 1) + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + ((d.getMonth() + 1)<10?'0':'') + (d.getMonth() + 1) + "/" +
+               d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
       return date
     },
     deleteEvent() {
@@ -339,6 +345,19 @@ export default {
         this.owner_conversation_id = response.data.id
         this.$router.push('/message/' + this.owner_conversation_id)
       })
+    },
+    shareEvent() {
+      if (this.is_share == 'share') {
+        share(parseInt(this.event_id)).then(response => {
+          this.is_share = 'unshare'
+          this.share_event_id = response.data.id
+        })
+      } else {
+        unshare(this.share_event_id).then(response => {
+          this.is_share = 'share'
+          this.share_event_id = null
+        })
+      }
     },
     guide() {
       this.driver.defineSteps(steps)
