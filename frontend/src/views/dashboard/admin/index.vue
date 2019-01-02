@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
-    <panel-group @handleSetLineChartData="handleSetLineChartData"/>
+     <panel-group/>
     <el-row :gutter="32">
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
         <todo-list/>
