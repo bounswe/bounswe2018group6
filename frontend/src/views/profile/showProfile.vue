@@ -39,6 +39,27 @@
         {{ tag.name }}
       </el-tag>
     </div>
+    <div style="margin-top: 20px;">
+      <h3 style="margin-left: 8px;">Shared Events</h3>
+      <el-row :gutter="8">
+        <el-col v-for="event in sharedEvents" :key="event.id" :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
+          <box-card
+            :event-name="event.title"
+            :event-link="'events/show-event/' + event.id"
+            :description="event.description"
+            :date="beautifyDate(event.date)"
+            :owner="event.owner.username"
+            :followers="event.follower_count"
+            :votes="event.vote_count"
+            :price="event.price"
+            :image="event.featured_image" 
+            :owner-id="event.owner.id" 
+            :city="event.location.city"
+            :district="event.location.district"
+            />
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -47,6 +68,7 @@ import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
 import { getUserInfo, follow } from '@/api/user'
 import { unfollow } from '@/api/event'
+import BoxCard from '@/views/dashboard/admin/components/BoxCard'
 import Vue from 'vue'
 
 Vue.component('column', {
@@ -55,7 +77,7 @@ Vue.component('column', {
 })
 export default {
   name: 'Profile',
-  components: { ImageCropper, PanThumb },
+  components: { ImageCropper, PanThumb, BoxCard },
   data() {
     return {
       name: '',
@@ -87,7 +109,8 @@ export default {
       },{
         prop:'last_name',
         label:'Last name'
-      }]
+      }],
+      sharedEvents: null
     }
   },
   created() {
@@ -106,6 +129,7 @@ export default {
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
         this.image = response.data.profile_photo
+        this.sharedEvents = response.data.shared_events
         if(response.data.own_follow_status == null) {
           this.following = "follow" 
         } else {
@@ -134,6 +158,11 @@ export default {
           this.following = "follow"
         })
       }
+    },   
+    beautifyDate(date) {
+      var d = new Date(date)
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      return date
     }
   }
 }
