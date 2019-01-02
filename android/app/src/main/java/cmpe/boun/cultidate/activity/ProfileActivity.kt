@@ -1,6 +1,5 @@
 package cmpe.boun.cultidate.activity
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -59,7 +58,9 @@ class ProfileActivity : AppCompatActivity() {
                     nameText.text = String.format("%s %s", response.body()!!.firstName, response.body()!!.lastName)
                     placeText.text = String.format("%s ",response.body()!!.city) // String.format("%s %s", response.body()!!.firstName, response.body()!!.lastName)
                     //bioText.text = String.format("%s ",response.body()!!.bio)
-                    interestsText.text = String.format("%s ",response.body()!!.city)
+                    var interests = "Interests: "
+                    response.body()!!.tags!!.forEach { e -> interests += e.name + "; "}
+                    interestsText.text = interests
 
 
                     Picasso.get().load(String.format("%s ",response.body()!!.profile_photo)).into(profileImage)

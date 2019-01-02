@@ -1,9 +1,9 @@
 package cmpe.boun.cultidate.model
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import org.json.JSONArray
-import org.json.JSONObject
 
 data class UserProfile(
 
@@ -18,10 +18,7 @@ data class UserProfile(
 
         @field:SerializedName("username")
         var username: String?,
-/*
-        @field:SerializedName("password")
-        var password: String?,
-*/
+
         @field:SerializedName("bio")
         var bio: String?,
 
@@ -44,7 +41,16 @@ data class UserProfile(
         var blocked_user_count: Int?,
 
         @field:SerializedName("is_corporate_user")
-        var is_corporate_user: Boolean?//,
+        var is_corporate_user: Boolean?,
+
+        @field:SerializedName("tags")
+        var tags: List<UserTag>?
+
+        //@field:SerializedName("tags")
+        //var tags: Observable<List<UserTag>>?,
+
+        //data class ()
+
 
         //@field:JsonAdapter("tags")
 
@@ -74,3 +80,12 @@ data class UserProfile(
 */
 )
 
+data class UserTag(
+
+        @field:SerializedName("id")
+        var id: Int?,
+
+        @field:SerializedName("name")
+        var name: String?
+
+)

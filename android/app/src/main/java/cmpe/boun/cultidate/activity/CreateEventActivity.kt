@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 import cmpe.boun.cultidate.api.ApiInterface
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -56,8 +56,8 @@ class CreateEventActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.code() == 201) {
                         Toast.makeText(applicationContext, "Event is created", Toast.LENGTH_SHORT).show()
                         finish()
-                        val intent = Intent(applicationContext, EventActivity::class.java)
-                        startActivity(intent)
+                        //val intent = Intent(applicationContext, EventActivity::class.java)
+                        //startActivity(intent)
                     } else {
                         Toast.makeText(applicationContext, "Event creation failed", Toast.LENGTH_SHORT).show()
                     }

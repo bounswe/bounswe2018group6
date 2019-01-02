@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cmpe.boun.cultidate">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -10,21 +11,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        >
-        <activity android:name="cmpe.boun.cultidate.MainActivity">
+        android:usesCleartextTraffic="true">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cmpe.boun.cultidate.activity.LoginActivity" android:screenOrientation="portrait" android:label="Login"> </activity>
-        <activity android:name="cmpe.boun.cultidate.activity.RegisterActivity" android:screenOrientation="portrait" android:label="Register"> </activity>
-        <activity android:name="cmpe.boun.cultidate.activity.ForgotPassActivity" android:screenOrientation="portrait" android:label="ForgotPass"> </activity>
-        <activity android:name="cmpe.boun.cultidate.activity.ProfileActivity" android:screenOrientation="portrait" android:label="ProfilePage"> </activity>
-        <activity android:name="cmpe.boun.cultidate.activity.SettingsActivity" android:screenOrientation="portrait" android:label="SettingsPage"> </activity>
-
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="Login"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:label="Register"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ForgotPassActivity"
+            android:label="ForgotPass"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:label="ProfilePage"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="SettingsPage"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.HomePageActivity"></activity>
     </application>
 
 </manifest>
