@@ -258,3 +258,16 @@ export function fetchRecommendations() {
     method: 'get'
   })
 }
+
+export function createAnnotation(data) {
+  const headers = {
+      //ContentType: 'application/json',
+      Authorization: 'Token ' + getToken(),
+  }
+  return request({
+      headers,
+      url: '/annotations/',
+      method: 'post',
+      data
+  })
+}

@@ -20,7 +20,7 @@
         </div>
       </div>
       </el-col>
-      <el-carousel trigger="click" height="350px">
+      <el-carousel ref="imcarousel" trigger="click" height="350px" :autoplay="is_loop" :loop="is_loop">
         <el-carousel-item>
           <img :src="eventDetails.featured_image" class="imgs">
         </el-carousel-item>
@@ -41,6 +41,17 @@
       <el-button type="primary" plain size="small" style="float: right;">Edit Event</el-button>
     </router-link>
     <el-button v-if="is_owner" size="small" style="float: right; margin-right: 10px;" type="danger" @click="deleteEvent">Delete Event</el-button>
+    <el-popover
+      placement="bottom"
+      title="Annotation"
+      width="400"
+      trigger="click"
+      :content="annot_info">
+      <el-button slot="reference" size="small" style="float: right; margin-right: 10px;" @click="stopCarousel">Show Annotations</el-button>
+    </el-popover>
+    <router-link :to="'/events/annotate-event/' + event_id">
+      <el-button type="primary" plain size="small" style="float: right;">Create Annotation</el-button>
+    </router-link>
   </div>
 </el-row>
 
@@ -150,6 +161,8 @@ export default {
       is_share: null,
       share_event_id: null,
       driver: null,
+      is_loop: true,
+      annot_info: '',
     }
   },
   created() {
@@ -194,7 +207,11 @@ export default {
             this.attend_id = this.eventDetails.attendance_status[i].id
           }
         }
-      })
+        const last_annotation = this.eventDetails.annotations[this.eventDetails.annotations.length -1]
+        this.annot_info = "Owner: " + last_annotation.owner.username + "\n" + 
+                          "Motivation: " + last_annotation.data.motivation + "\n" + 
+                          "Text: " + last_annotation.data.body + "\n"
+        })
     },
     followEvent() {
       if (this.following == 'follow') {
@@ -363,6 +380,10 @@ export default {
       this.driver.defineSteps(steps)
       this.driver.start()
     },
+    stopCarousel(){
+      this.$refs.imcarousel.setActiveItem(0)
+      this.is_loop = false
+    }
   }
 }
 </script>
