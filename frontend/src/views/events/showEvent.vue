@@ -148,7 +148,7 @@ export default {
       attend_id: null,
       owner_conversation_id: null,
       is_share: null,
-      share_event_id: null
+      share_event_id: null,
       driver: null,
     }
   },
