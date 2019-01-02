@@ -48,6 +48,11 @@ export const constantRouterMap = [
     hidden: true
   },
   {
+    path: '/guest',
+    component: () => import('@/views/guest/index'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -91,9 +96,15 @@ export const constantRouterMap = [
     },
     children: [
       {
+        path: 'all-events',
+        component: () => import('@/views/events/allEvents'),
+        name: 'All Events',
+        meta: { title: 'All Events' }
+      },
+      {
         path: 'recommended',
         component: () => import('@/views/events/recommended'),
-        name: 'Events',
+        name: 'Recommendations',
         meta: { title: 'Recommended' }
       },
       {
@@ -114,6 +125,13 @@ export const constantRouterMap = [
         component: () => import('@/views/events/editEvent'),
         name: 'Edit Event',
         meta: { title: 'Edit Event' },
+        hidden: true,
+      },
+      {
+        path: 'annotate-event/:id',
+        component: () => import('@/views/events/annotation'),
+        name: 'Annotate Event',
+        meta: { title: 'Annotate Event' },
         hidden: true,
       },
     ]
@@ -146,6 +164,30 @@ export const constantRouterMap = [
         component: () => import('@/views/profile/editprofile'),
         hidden: true
       },
+    ]
+  },
+  {
+    path: '/message',
+    component: Layout,
+    name: 'message',
+    meta: {
+      title: 'Message',
+      icon: 'message'
+    },
+    children: [
+      {
+        path: '/message/:id',
+        component: () => import('@/views/message/messaging'),
+        name: 'Message',
+        meta: { title: 'Message' },
+        hidden: true
+      },
+      {
+        path: '/conversations',
+        component: () => import('@/views/message/conversations'),
+        name: 'Conversations',
+        meta: { title: 'Conversations' }
+      }
     ]
   },
   
