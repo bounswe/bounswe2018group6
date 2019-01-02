@@ -66,7 +66,8 @@ export default {
   },
   methods: {
     getUser() {
-      getUserInfo(this.$route.params.id).then(response => {
+      getUserInfo(parseFloat(this.$route.params.id)).then(response => {
+        console.log("1",response.data)
         this.name = response.data.first_name + ' ' + response.data.last_name
         this.follower_count = response.data.follower_count
         this.following_count = response.data.following_count
@@ -77,11 +78,12 @@ export default {
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
         this.image = response.data.profile_photo
+        console.log("2",response.data)
         if(response.data.own_follow_status == null) {
           this.following = "follow" 
         } else {
-          this.follow_id = response.data.own_follow_status.id
           this.following = "unfollow"
+          this.follow_id = response.data.own_follow_status.id
         }
       })
     },
