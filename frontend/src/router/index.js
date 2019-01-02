@@ -127,6 +127,13 @@ export const constantRouterMap = [
         meta: { title: 'Edit Event' },
         hidden: true,
       },
+      {
+        path: 'annotate-event/:id',
+        component: () => import('@/views/events/annotation'),
+        name: 'Annotate Event',
+        meta: { title: 'Annotate Event' },
+        hidden: true,
+      },
     ]
   },
   {
