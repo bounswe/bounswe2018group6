@@ -45,6 +45,24 @@ class AnnotationCreate(GenericModelValidatorMixin, serializers.ModelSerializer):
         model = Annotation
         fields = ('id', 'owner', 'data', 'content_type', 'object_id', 'created', 'updated')
 
+    def validate(self, data):
+        super().validate(data)
+
+        annotation = data.get('data')
+        missing_fields = []
+        if '@context' not in annotation: missing_fields.append('@context')
+        if 'id' not in annotation: missing_fields.append('id')
+        if 'type' not in annotation: missing_fields.append('type')
+        if 'body' not in annotation: missing_fields.append('body')
+        if 'target' not in annotation: missing_fields.append('target')
+        if len(missing_fields) > 0:
+            raise serializers.ValidationError({
+                'missing_fields': missing_fields,
+                'description': 'Please check W3C standards for annotations. "https://www.w3.org/TR/annotation-model/"'
+            })
+
+        return data
+
     def create(self, validated_data):
         owner = self.context.get("request").user
         annotation = Annotation.objects.create(
