@@ -198,7 +198,7 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/title"
+                    android:id="@+id/follower_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="TextView" />

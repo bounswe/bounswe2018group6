@@ -1,6 +1,6 @@
 import { loginByUsername, getUserInfo, signupDate } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { MessageBox } from 'element-ui'
+import { getToken, setToken, removeToken, getUserIDCookie, removeUserIDCookie, setUserIDCookie } from '@/utils/auth'
+
 
 const user = {
   state: {
@@ -8,7 +8,7 @@ const user = {
     status: '',
     code: '',
     token: getToken(),
-    user_id: -1,
+    user_id: getUserIDCookie(),
     is_corporate_user: null,
     corporate_profile: '',
     follower_count: 0,
@@ -21,7 +21,8 @@ const user = {
     roles: [],
     setting: {
       articlePlatform: []
-    }
+    },
+    username: ''
   },
 
   mutations: {
@@ -83,13 +84,11 @@ const user = {
           const data = response.data
           commit('SET_TOKEN', data.token)
           setToken(response.data.token)
+          setUserIDCookie(response.data.user_id)
           commit('SET_USER_ID', data.user_id)
           commit('SET_USERNAME', username)
           resolve()
         }).catch(error => {
-          MessageBox.alert('Sorry. Check your username or password!', {
-            type: 'warning'
-          })
           reject(error)
         })
       })
@@ -103,9 +102,6 @@ const user = {
           commit('SET_USER_ID', data.id)
           resolve()
         }).catch(error => {
-          MessageBox.alert('This username or email is used. Please, enter new one!', {
-            type: 'warning'
-          })
           reject(error)
         })
       })
@@ -114,8 +110,7 @@ const user = {
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getUserInfo(state.user_id).then(response => {
-          console.log('#data', data)
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+          if (!response.data) {
             reject('error')
           }
           const data = response.data
@@ -127,6 +122,7 @@ const user = {
           }
           commit('SET_FIRSTNAME', data.first_name)
           commit('SET_LASTNAME', data.last_name)
+          commit('SET_USERNAME', data.username)
           commit('SET_PROFILE_PHOTO', data.profile_photo)
           commit('SET_FOLLOWER', data.follower_count)
           commit('SET_FOLLOWING', data.following_count)
@@ -154,20 +150,17 @@ const user = {
 
     // 登出
     LogOut({ commit, state }) {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
-      removeToken()
+      // commit('SET_TOKEN', '')
+      // commit('SET_ROLES', [])
+      // removeToken()
 
-      // return new Promise((resolve, reject) => {
-      //   logout(state.token).then(() => {
-      //     commit('SET_TOKEN', '')
-      //     commit('SET_ROLES', [])
-      //     removeToken()
-      //     resolve()
-      //   }).catch(error => {
-      //     reject(error)
-      //   })
-      // })
+      return new Promise((resolve, reject) => {
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', [])
+          removeToken()
+          removeUserIDCookie()
+          resolve()
+      })
     },
 
     // 前端 登出

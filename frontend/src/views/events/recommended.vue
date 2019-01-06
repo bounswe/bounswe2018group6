@@ -8,10 +8,14 @@
           :description="event.description"
           :date="beautifyDate(event.date)"
           :owner="event.owner.username"
-          :followers="event.followers"
-          :votes="event.votes"
+          :followers="event.follower_count"
+          :votes="event.vote_count"
           :price="event.price"
-          :image="event.featured_image" />
+          :image="event.featured_image" 
+          :owner-id="event.owner.id" 
+          :city="event.location.city"
+          :district="event.location.district"
+          />
       </el-col>
     </el-row>
 
@@ -20,16 +24,18 @@
 
 <script>
 import BoxCard from '@/views/dashboard/admin/components/BoxCard'
-import { fetchEvents } from '@/api/event'
+import { fetchRecommendations } from '@/api/event'
 
 export default {
-  name: 'DashboardAdmin',
+  name: 'Recommendations',
   components: {
     BoxCard
   },
   data() {
     return {
-      eventList: null
+      eventList: null,
+      search_type: null,
+      search_word: null
     }
   },
   created() {
@@ -37,9 +43,8 @@ export default {
   },
   methods: {
     fetchData() {
-      fetchEvents().then(response => {
+      fetchRecommendations().then(response => {
         this.eventList = response.data
-        console.log(this.eventList)
       })
     },
     beautifyDate(date) {
@@ -52,13 +57,22 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
+  .dashboard-editor-container {
+    padding: 32px;
+    background-color: rgb(240, 242, 245);
+    .chart-wrapper {
+      background: #fff;
+      padding: 16px 16px 0;
+      margin-bottom: 32px;
+    }
   }
-}
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
+  .el-input {
+    width: 500px;
+  }
+  .el-select {
+    width: 120px;
+  }
 </style>

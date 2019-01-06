@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message, MessageBox} from 'element-ui'
 import store from '@/store'
 // import { getToken } from '@/utils/auth'
 
@@ -30,28 +30,25 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => response,
-  /**
-   * 下面的注释为通过在response里，自定义code来标示请求状态
-   * 当code返回如下情况则说明权限有问题，登出并返回到登录页
-   * 如想通过 xmlhttprequest 来状态码标识 逻辑可写在下面error中
-   * 以下代码均为样例，请结合自生需求加以修改，若不需要，则可删除
-   */
   response => {
-    console.log('#response', Object.keys(response))
-    console.log('#response2', response.response.status)
+    console.log('#response', response.response)
     const res = response
-    // if (res.response.status !== 200) {
-    //   // MessageBox.alert('Sorry. Check your username or password!', {
-    //   //   type: 'warning'
-    //   // }).then(() => {
-    //   //   store.dispatch('FedLogOut').then(() => {
-    //   //     location.reload() // avoid bugs by reloading
-    //   //   })
-    //   // })
-    //   return Promise.reject('error')
-    // } else {
-    //   return response.data
-    // }
+    if (res.response.status !== 200 && res.response.status !== 201) {
+      let error_message = ''
+      for (var error_key in res.response.data) {
+        // check if the property/key is defined in the object itself, not in parent
+        if (res.response.data.hasOwnProperty(error_key))
+            error_message += error_key + ': ' + res.response.data[error_key] + '\n'
+      }
+      MessageBox.alert(error_message, {
+        type: 'error',
+      })
+      console.log(error_message)
+      return Promise.reject('error')
+    } 
+    else {
+      return res.response.data
+     }
   },
   error => {
     console.log('err' + error) // for debug

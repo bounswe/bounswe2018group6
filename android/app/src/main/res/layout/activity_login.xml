@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     tools:layout_editor_absoluteY="81dp">
 
+
+    <!--
+
+   "activity_login" is the Android layout page for
+    login that is created by referencing the Login's
+    API endpoints.
+
+    It contains Edit Texts:
+       -Username
+       -Password
+
+    Buttons:
+       -Login
+       -Register
+       -Facebook Login
+
+    Image View:
+       -Logo of the app
+
+    -->
+
     <ProgressBar
         android:id="@+id/loginProgress"
         android:layout_width="match_parent"

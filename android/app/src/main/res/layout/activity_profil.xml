@@ -7,6 +7,23 @@
     android:background="#ffffff"
     tools:layout_editor_absoluteY="81dp">
 
+    <!--
+
+    "activity_profile" is the Android layout page for
+    profile page that is created by referencing the Profile's
+    API endpoints.
+
+    It contains Text Views:
+      -Events + Counts
+      -Followers + Counts
+      -Followings + Counts
+
+
+     Image View:
+        -Profile picture of the user
+
+    -->
+
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
         android:layout_width="148dp"

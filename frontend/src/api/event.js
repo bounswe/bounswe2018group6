@@ -3,9 +3,8 @@ import { getToken } from '@/utils/auth' // getToken from cookie
 
 export function fetchEvents() {
   return request({
-    url: '/events_list',
+    url: '/events_list/',
     method: 'get',
-    // params: 
   })
 }
 
@@ -74,6 +73,18 @@ export function attendance(event, status) {
     url: '/attendance/',
     method: 'post',
     data
+  })
+}
+
+export function delAttendance(attend_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/attendance/' + attend_id + '/',
+    method: 'delete'
   })
 }
 
@@ -172,7 +183,6 @@ export function delComment(comment_id) {
 }
 
 export function editEvent(data, event_id) {
-  console.log(data)
   const headers = {
       //ContentType: 'application/json',
       Authorization: 'Token ' + getToken(),
@@ -181,6 +191,83 @@ export function editEvent(data, event_id) {
       headers,
       url: '/events/' + event_id + '/',
       method: 'put',
+      data
+  })
+}
+
+export function searchByTitle(tag) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_list/?search=' + tag,
+    method: 'get'
+  })
+}
+
+export function searchByLocation(location) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_location/?search=' + location,
+    method: 'get'
+  })
+}
+
+export function share(event_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  const data = {
+    "event": event_id
+  }
+  return request({
+    headers,
+    url: '/share/',
+    method: 'post',
+    data
+  })
+}
+
+export function unshare(share_id) {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/share/' + share_id + '/',
+    method: 'delete'
+  })
+}
+
+export function fetchRecommendations() {
+  const headers = {
+    //ContentType: 'application/json',
+    Authorization: 'Token ' + getToken(),
+  }
+  return request({
+    headers,
+    url: '/events_recommended_list/',
+    method: 'get'
+  })
+}
+
+export function createAnnotation(data) {
+  const headers = {
+      //ContentType: 'application/json',
+      Authorization: 'Token ' + getToken(),
+  }
+  return request({
+      headers,
+      url: '/annotations/',
+      method: 'post',
       data
   })
 }

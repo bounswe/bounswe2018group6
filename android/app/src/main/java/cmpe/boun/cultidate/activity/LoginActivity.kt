@@ -8,7 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 import cmpe.boun.cultidate.api.ApiInterface
 import cmpe.boun.cultidate.model.AuthResponse
 import cmpe.boun.cultidate.model.User
@@ -18,9 +18,32 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
+/**
+ * LoginActivity class contains the methods
+ * that a user can login on the page that is created
+ * as activity_login layout by binding the
+ * Login API endpoints.
+ *
+ * @author Atıf
+ *
+ * Notes: compiling and working
+ */
 class LoginActivity : AppCompatActivity() {
 
+
+    /**
+     * onCreate method is generic method that contains
+     * the codes about the main functionality of the
+     * class. Create a request for the API for user to
+     * login the system according to fields in API.
+     *
+     * All fields are defined.
+     *
+     * Response types and fail messages are defined.
+     *
+     * @param savedInstanceState
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -92,6 +115,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+
+    /**
+     * createService() method creates a request to API
+     *
+     * @return retrofit.create(ApiInterface::class.java)
+     *
+     */
     fun createService(): ApiInterface {
         val BASE_URL = "http://cultidate.herokuapp.com/"
         val retrofit = Retrofit.Builder()
@@ -102,6 +132,14 @@ class LoginActivity : AppCompatActivity() {
         return retrofit.create(ApiInterface::class.java)
     }
 
+    /**
+     * isPassValid() method checks whether the entering password
+     * is valid according to the standards or not.
+     *
+     * @return true if valid
+     *
+     * @return false if not valid
+     */
     fun isPassValid(password: CharSequence): Boolean {
         val regex = Regex(pattern = "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])")
         return password.length > 6 && password.contains(regex)

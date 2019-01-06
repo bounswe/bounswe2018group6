@@ -18,8 +18,18 @@
     <el-span style="float: right; margin-top: -80px;"><i class="el-icon-location" style="margin-right: 5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
-      <el-button round>{{ follower_count }} followers</el-button>
-      <el-button round style="margin-left: 10px;">{{ following_count }} followings</el-button>
+      <el-button round @click="dialogFollowerVisible = true">{{ follower_count }} followers</el-button>
+      <el-dialog title="Followers" :visible.sync="dialogFollowerVisible">
+          <el-table :data="followers" style="width: 100%">
+            <el-table-column v-for="v in props" :key="v.prop" :prop="v.prop" :label="v.label"/>
+          </el-table>
+      </el-dialog>
+      <el-button round style="margin-left: 10px;" @click="dialogFollowingVisible = true">{{ following_count }} followings</el-button>
+      <el-dialog title="Followings" :visible.sync="dialogFollowingVisible">
+        <el-table :data="followings" style="width: 100%">
+          <el-table-column v-for="v in props" :key="v.prop" :prop="v.prop" :label="v.label"/>
+        </el-table>
+      </el-dialog>
       <el-button round style="margin-left: 10px;">{{ owned_events_count }} events</el-button>
     </div>
     <div class="block">
@@ -30,6 +40,27 @@
         {{ tag.name }}
       </el-tag>
     </div>
+    <div style="margin-top: 20px;">
+      <h3 style="margin-left: 8px;">Shared Events</h3>
+      <el-row :gutter="8">
+        <el-col v-for="event in sharedEvents" :key="event.id" :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
+          <box-card
+            :event-name="event.title"
+            :event-link="'events/show-event/' + event.id"
+            :description="event.description"
+            :date="beautifyDate(event.date)"
+            :owner="event.owner.username"
+            :followers="event.follower_count"
+            :votes="event.vote_count"
+            :price="event.price"
+            :image="event.featured_image" 
+            :owner-id="event.owner.id" 
+            :city="event.location.city"
+            :district="event.location.district"
+            />
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -39,11 +70,16 @@ import PanThumb from '@/components/PanThumb'
 import { getUserInfo } from '@/api/user'
 import ProfileUpload from '@/components/Upload'
 import { getToken } from '@/utils/auth'
+import BoxCard from '@/views/dashboard/admin/components/BoxCard'
+import Vue from 'vue'
 
-
+Vue.component('column', {
+	props: ['prop', 'label'],
+	template:'<el-table-column :prop="prop" :label="label" min-width="180"></el-table-column>'
+})
 export default {
   name: 'Profile',
-  components: { ImageCropper, PanThumb, ProfileUpload },
+  components: { ImageCropper, PanThumb, ProfileUpload, BoxCard },
   data() {
     return {
       name: '',
@@ -65,8 +101,22 @@ export default {
       field: 'profile_photo',
       headers : {
         Authorization: 'Token ' + getToken()
-      }
-
+      },
+      followers: null,
+      dialogFollowerVisible: false,
+      followings: null,
+      dialogFollowingVisible: false,
+      props: [{
+        prop:'username',
+        label:'Username'
+      },{
+        prop:'first_name',
+        label:'First name'
+      },{
+        prop:'last_name',
+        label:'Last name'
+      }],
+      sharedEvents: null
     }
   },
   created() {
@@ -79,7 +129,7 @@ export default {
       getUserInfo(this.user_id).then(response => {
         this.name = response.data.first_name + ' ' + response.data.last_name
         this.follower_count = response.data.follower_count
-        this.following_count = response.data.following_count
+        this.following_count = response.data.followings.users.length
         this.owned_events_count = response.data.owned_events_count
         this.tags = response.data.tags
         this.city = response.data.city
@@ -87,12 +137,26 @@ export default {
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
         this.profile_photo = response.data.profile_photo
+        this.followers = response.data.followers.users
+        this.followings = response.data.followings.users
+        this.sharedEvents = response.data.shared_events
+        for(var i = 0; i < this.followers.length; i++) {
+          this.followers[i] = this.followers[i].user
+        }
+        for(var i = 0; i < this.followings.length; i++) {
+          this.followings[i] = this.followings[i].user
+        }
       })
     },
     refresh(){
       getUserInfo(this.user_id).then(response => {
         this.profile_photo = response.data.profile_photo
       })
+    },   
+    beautifyDate(date) {
+      var d = new Date(date)
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      return date
     }
   }
 }

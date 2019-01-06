@@ -26,8 +26,8 @@ interface ApiInterface {
     @POST("api/events/")
     fun createEvent(@Body event: EventCreate): Call<EventCreate>
 
+
     @GET("api/events/2/")
     fun event(@Body event: Event): Call<Event>
-
 }
 

@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">Followers</div>
-          <count-to :start-val="0" :end-val="10" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="follower_count" :duration="1" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -17,19 +17,19 @@
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Messages</div>
-          <count-to :start-val="0" :end-val="0" :duration="1" class="card-panel-num"/>
+          <div class="card-panel-text">Followings</div>
+          <count-to :start-val="0" :end-val="following_count" :duration="1" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="chart" class-name="card-panel-icon" />
+          <svg-icon icon-class="list" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Votes</div>
-          <count-to :start-val="0" :end-val="11" :duration="1" class="card-panel-num"/>
+          <div class="card-panel-text">Owned Events</div>
+          <count-to :start-val="0" :end-val="owned_events_count" :duration="1" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -40,7 +40,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">Comments</div>
-          <count-to :start-val="0" :end-val="15" :duration="1" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val="comment_count" :duration="1" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -49,14 +49,35 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { getUserInfo } from '@/api/user'
 
 export default {
   components: {
     CountTo
   },
+    data() {
+    return {
+      owned_events_count: null,
+      comment_count: null,
+      follower_count: null,
+      following_count: null
+    }
+  },
+  created() {
+    this.userDetails(this.$store.state.user.user_id)
+  },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    userDetails(user_id) {
+      getUserInfo(user_id).then(response => {
+        console.log(response.data.follower_count)
+        this.owned_events_count = response.data.owned_events_count
+        this.comment_count = response.data.comments.length
+        this.follower_count = response.data.follower_count
+        this.following_count = response.data.following_count
+      })
     }
   }
 }
