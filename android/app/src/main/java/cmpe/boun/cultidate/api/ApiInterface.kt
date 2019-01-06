@@ -1,12 +1,16 @@
 package cmpe.boun.cultidate.api
 
-import cmpe.boun.cultidate.model.AuthResponse
-import cmpe.boun.cultidate.model.User
-import cmpe.boun.cultidate.model.UserProfile
-import cmpe.boun.cultidate.model.UserSignup
+import android.util.EventLog
+import cmpe.boun.cultidate.model.*
 import retrofit2.Call
 import retrofit2.http.*
 
+/**
+ * This Kotlin interface implements the required functionality
+ * in order to interact with API endpoints. Future interface
+ * functionalities should be implemented here.
+ * You can use @GET and @POST methods in order to achieve desired results.
+ */
 interface ApiInterface {
 
     @POST("api/auth/")
@@ -18,4 +22,12 @@ interface ApiInterface {
     @GET("api/user/{userId}")
     fun user(@Path("userId") userId : Int, @Header("Authorization") token : String?) :
             Call<UserProfile>
+
+    @POST("api/events/")
+    fun createEvent(@Body event: EventCreate): Call<EventCreate>
+
+    @GET("api/events/2/")
+    fun event(@Body event: Event): Call<Event>
+
 }
+
