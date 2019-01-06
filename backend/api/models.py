@@ -116,7 +116,7 @@ class User(AbstractUser, AnnotationMixin, CommentMixin, FollowMixin, TagMixin, V
     # or to use abstract tables and user groups doesn't meet the requirements
     # due to extra fields in the db, creating another profile is preferred.
     is_corporate_user = models.BooleanField(default=False)
-    corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.CASCADE,
+    corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.SET_NULL,
                                              null=True, default=None)
 
     class Meta:
@@ -134,7 +134,7 @@ class Event(AnnotationMixin, CommentMixin, FollowMixin, OwnerMixin, TagMixin, Vo
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
                                      related_name='performed_events', blank=True)
-    location = models.OneToOneField('Location', on_delete=models.CASCADE, default=None, null=True)
+    location = models.OneToOneField('Location', on_delete=models.SET_NULL, default=None, null=True)
 
     # Own fields
     featured_image = models.FileField(upload_to=file_upload_path, null=True, blank=True)
