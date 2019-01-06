@@ -2,6 +2,13 @@ package cmpe.boun.cultidate.model
 
 import com.google.gson.annotations.SerializedName
 
+
+/**
+ * UserProfile data class contains Profile constructor
+ * and its data fields.
+ *
+ * @constructor Profile of User
+ */
 data class UserProfile(
 
         @field:SerializedName("id")

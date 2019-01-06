@@ -17,13 +17,38 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
+/**
+ * RegisterActivity class contains the methods
+ * that a user can register to the system
+ * on the page that is created
+ * as activity_register layout by binding the
+ * Sign Up API endpoints.
+ *
+ * @author Zeynep
+ *
+ * Notes: compiling and working
+ */
 class RegisterActivity : AppCompatActivity() {
 
+    /**
+    * onCreate method is generic method that contains
+    * the codes about the main functionality of the
+    * class. Create a request for the API for user to
+    * register according to fields in API.
+    *
+    * All fields are defined.
+    *
+    * Response types and fail messages are defined.
+    *
+    * @param savedInstanceState
+    *
+    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val facebookButton = findViewById<Button>(R.id.facebookButton)
+        //val facebookButton = findViewById<Button>(R.id.facebookButton)
         val singUpButton = findViewById<Button>(R.id.signUpButton)
 
         val username = findViewById<EditText>(R.id.usernameText)
@@ -32,6 +57,7 @@ class RegisterActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.mailText)
         val firstName = findViewById<EditText>(R.id.nameText)
         val lastName = findViewById<EditText>(R.id.lastNameText)
+
         val service = createService()
 
         singUpButton.setOnClickListener {
@@ -76,6 +102,13 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     * createService() method creates a request to API
+     *
+     * @return retrofit.create(ApiInterface::class.java)
+     *
+     */
     private fun createService(): ApiInterface {
         val baseUrl = "http://cultidate.herokuapp.com/"
         val retrofit = Retrofit.Builder()

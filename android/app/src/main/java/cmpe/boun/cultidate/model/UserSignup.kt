@@ -2,9 +2,13 @@ package cmpe.boun.cultidate.model
 
 import com.google.gson.annotations.SerializedName
 
-
+/**
+ * UserSignup data class contains SignUp constructor
+ * and its data fields.
+ *
+ * @constructor Signed Up User
+ */
 data class UserSignup(
-
 
         @field:SerializedName("username")
         var username: String,

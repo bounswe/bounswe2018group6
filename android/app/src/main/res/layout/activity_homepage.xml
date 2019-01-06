@@ -5,6 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <!--
+
+   "activity_homepage" is the Android layout page for
+    home page that is created by referencing the Event List's
+    API endpoints.
+
+    Buttons:
+       -home page
+       -profile
+       -settings
+       -message
+       -create event
+       -map
+       -attend
+
+    Text View:
+       -Introduction
+
+    Recycler View:
+       -Events
+
+-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
