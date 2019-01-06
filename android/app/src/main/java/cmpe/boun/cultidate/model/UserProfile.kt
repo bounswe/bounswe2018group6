@@ -4,6 +4,13 @@ import com.google.gson.annotations.SerializedName
 import org.json.JSONArray
 import org.json.JSONObject
 
+
+/**
+ * UserProfile data class contains Profile constructor
+ * and its data fields.
+ *
+ * @constructor Profile of User
+ */
 data class UserProfile(
 
         @field:SerializedName("id")
