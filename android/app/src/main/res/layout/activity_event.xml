@@ -6,6 +6,30 @@
     android:layout_height="match_parent">
 
 
+    <!--
+
+    "activity_event" is the Android layout page for
+     showing the event details that is created by referencing the Event's
+     API endpoints.
+     It contains Text Views:
+        -title
+        -description
+        -tags
+
+     Buttons:
+        -home page
+        -profile
+        -settings
+        -message
+        -create event
+        -map
+        -attend
+
+     Image View:
+        -images about events
+
+-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -126,13 +150,20 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/tags"
+
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.8"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp"></LinearLayout>
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -182,10 +213,10 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:id="@+id/imageView8"
-                    android:onClick="onClick"
+                    android:id="@+id/img_follow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onClick"
                     app:srcCompat="@drawable/follower" />
             </LinearLayout>
         </LinearLayout>
@@ -198,7 +229,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView" />

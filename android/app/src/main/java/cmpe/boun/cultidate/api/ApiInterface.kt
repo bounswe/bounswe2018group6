@@ -6,6 +6,12 @@ import retrofit2.Call
 import retrofit2.http.*
 import io.reactivex.Observable
 
+/**
+ * This Kotlin interface implements the required functionality
+ * in order to interact with API endpoints. Future interface
+ * functionalities should be implemented here.
+ * You can use @GET and @POST methods in order to achieve desired results.
+ */
 interface ApiInterface {
 
     @POST("api/auth/")
@@ -26,3 +32,4 @@ interface ApiInterface {
             Observable<List<Event>>
 
 }
+

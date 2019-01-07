@@ -13,11 +13,22 @@
     <el-popover v-if="is_corporate_user" :title="corporate_profile.url" placement="left" width="300" trigger="hover">
       <el-tag v-if="is_corporate_user" slot="reference" size="medium" class="corporate">Corporate </el-tag>
     </el-popover>
+    <el-button type="primary" size="mini" class="follow" @click.native.prevent="followUser"> {{ following }} </el-button>
     <el-span style="float: right; margin-top: 100px;"><i class="el-icon-location" style="margin-right:5px;"></i>{{city}}</el-span>
     <div></div>
     <div class="features">
-      <el-button round>{{ follower_count }} followers</el-button>
-      <el-button round style="margin-left: 10px;">{{ following_count }} followings</el-button>
+      <el-button round @click="dialogFollowerVisible = true">{{ follower_count }} followers</el-button>
+      <el-dialog title="Followers" :visible.sync="dialogFollowerVisible">
+          <el-table :data="followers" style="width: 100%">
+            <el-table-column v-for="v in props" :key="v.prop" :prop="v.prop" :label="v.label"/>
+          </el-table>
+      </el-dialog>
+      <el-button round style="margin-left: 10px;" @click="dialogFollowingVisible = true">{{ following_count }} followings</el-button>
+      <el-dialog title="Followings" :visible.sync="dialogFollowingVisible">
+        <el-table :data="followings" style="width: 100%">
+          <el-table-column v-for="v in props" :key="v.prop" :prop="v.prop" :label="v.label"/>
+        </el-table>
+      </el-dialog>
       <el-button round style="margin-left: 10px;">{{ owned_events_count }} events</el-button>
     </div>
     <div class="block">
@@ -28,17 +39,45 @@
         {{ tag.name }}
       </el-tag>
     </div>
+    <div style="margin-top: 20px;">
+      <h3 style="margin-left: 8px;">Shared Events</h3>
+      <el-row :gutter="8">
+        <el-col v-for="event in sharedEvents" :key="event.id" :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
+          <box-card
+            :event-name="event.title"
+            :event-link="'events/show-event/' + event.id"
+            :description="event.description"
+            :date="beautifyDate(event.date)"
+            :owner="event.owner.username"
+            :followers="event.follower_count"
+            :votes="event.vote_count"
+            :price="event.price"
+            :image="event.featured_image" 
+            :owner-id="event.owner.id" 
+            :city="event.location.city"
+            :district="event.location.district"
+            />
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
 import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, follow } from '@/api/user'
+import { unfollow } from '@/api/event'
+import BoxCard from '@/views/dashboard/admin/components/BoxCard'
+import Vue from 'vue'
 
+Vue.component('column', {
+	props: ['prop', 'label'],
+	template:'<el-table-column :prop="prop" :label="label" min-width="180"></el-table-column>'
+})
 export default {
   name: 'Profile',
-  components: { ImageCropper, PanThumb },
+  components: { ImageCropper, PanThumb, BoxCard },
   data() {
     return {
       name: '',
@@ -52,9 +91,26 @@ export default {
       corporate_profile: null,
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191',
+      image: null,
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      following: null,
+      follow_id: null,
+      followers: null,
+      dialogFollowerVisible: false,
+      followings: null,
+      dialogFollowingVisible: false,
+      props: [{
+        prop:'username',
+        label:'Username'
+      },{
+        prop:'first_name',
+        label:'First name'
+      },{
+        prop:'last_name',
+        label:'Last name'
+      }],
+      sharedEvents: null
     }
   },
   created() {
@@ -62,19 +118,52 @@ export default {
   },
   methods: {
     getUser() {
-      getUserInfo(this.$route.params.id).then(response => {
+      getUserInfo(parseFloat(this.$route.params.id)).then(response => {
         this.name = response.data.first_name + ' ' + response.data.last_name
         this.follower_count = response.data.follower_count
-        this.following_count = response.data.following_count
+        this.following_count = response.data.followings.users.length
         this.owned_events_count = response.data.owned_events_count
         this.tags = response.data.tags
         this.city = response.data.city
         this.bio = response.data.bio
         this.is_corporate_user = response.data.is_corporate_user
         this.corporate_profile = response.data.corporate_profile
-        
+        this.image = response.data.profile_photo
+        this.sharedEvents = response.data.shared_events
+        if(response.data.own_follow_status == null) {
+          this.following = "follow" 
+        } else {
+          this.following = "unfollow"
+          this.follow_id = response.data.own_follow_status.id
+        }
+        this.followers = response.data.followers.users
+        this.followings = response.data.followings.users
+        for(var i = 0; i < this.followers.length; i++) {
+          this.followers[i] = this.followers[i].user
+        }
+        for(var i = 0; i < this.followings.length; i++) {
+          this.followings[i] = this.followings[i].user
+        }
       })
     },
+    followUser() {
+      if(this.following == "follow") {
+        follow(parseInt(this.$route.params.id)).then(response => {
+          this.follow_id = response.data.id
+          this.following = "unfollow"
+        })
+      } else {
+        unfollow(this.follow_id).then(response => {
+          this.follow_id = null
+          this.following = "follow"
+        })
+      }
+    },   
+    beautifyDate(date) {
+      var d = new Date(date)
+      date = (d.getDate()<10?'0':'') + d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear() + " - " + (d.getHours()<10?'0':'')+  d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes()
+      return date
+    }
   }
 }
 </script>
@@ -117,7 +206,7 @@ export default {
   left: 190px;
 }
 
-.edit{
+.follow{
   position: absolute;
   top: 16px;
   right: 0px;

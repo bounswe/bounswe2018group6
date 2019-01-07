@@ -1,6 +1,5 @@
 <template>
   <div class="login-container">
-
     <el-form ref="signupForm" :model="signupForm" :rules="signupRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -84,7 +83,6 @@
       <br>
       <social-sign />
     </el-dialog>
-
   </div>
 </template>
 
@@ -170,6 +168,9 @@ export default {
           this.loading = true
           this.$store.dispatch('signupDate', this.signupForm).then(() => {
             this.loading = false
+            this.$alert("Please check your mailbox to confirm your e-mail address.", "Congrats!", {
+              confirmButtonText: "I promise, I will."
+            });
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
             this.loading = false
@@ -255,10 +256,11 @@ $dark_gray:#889aa4;
 $light_gray:#eee;
 
 .login-container {
-  position: fixed;
-  height: 100%;
+  position: relative;
+  height: 300%; // little hacking here to prevent shortage of background in different screens
   width: 100%;
   background-color: $bg;
+  background-size: cover;
   .login-form {
     position: absolute;
     left: 0;

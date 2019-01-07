@@ -19,8 +19,34 @@ import retrofit2.converter.gson.GsonConverterFactory
 import com.squareup.picasso.Picasso
 
 
+
+/**
+ * ProfileActivity class contains the methods
+ * that a user can visit her/his profile page
+ * on the page that is created
+ * as activity_profile_page layout by binding the
+ * Login API endpoints.
+ *
+ * @author Anıl
+ *
+ * Notes: compiling and working
+ */
 class ProfileActivity : AppCompatActivity() {
 
+
+    /**
+     * onCreate method is generic method that contains
+     * the codes about the main functionality of the
+     * class. Create a request for the API for user to
+     * visit his/her profile page according to fields in API.
+     *
+     * All fields are defined.
+     *
+     * Response types and fail messages are defined.
+     *
+     * @param savedInstanceState
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profil)
@@ -80,6 +106,13 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     * createService() method creates a request to API
+     *
+     * @return retrofit.create(ApiInterface::class.java)
+     *
+     */
     fun createService(): ApiInterface {
         val BASE_URL = "http://cultidate.herokuapp.com/"
         val retrofit = Retrofit.Builder()

@@ -4,7 +4,16 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import org.json.JSONArray
+import org.json.JSONObject
 
+
+/**
+ * UserProfile data class contains Profile constructor
+ * and its data fields.
+ *
+ * @constructor Profile of User
+ */
 data class UserProfile(
 
         @field:SerializedName("id")
@@ -45,19 +54,6 @@ data class UserProfile(
 
         @field:SerializedName("tags")
         var tags: List<UserTag>?
-
-        //@field:SerializedName("tags")
-        //var tags: Observable<List<UserTag>>?,
-
-        //data class ()
-
-
-        //@field:JsonAdapter("tags")
-
-        //var tags = JS
-
-//        @field:SerializedName("tags")
-  //      var tags: String?//,
 
         /*
         @field:SerializedName("tags")

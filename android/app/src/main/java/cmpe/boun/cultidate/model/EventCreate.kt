@@ -3,6 +3,13 @@ package cmpe.boun.cultidate.model
 import android.accounts.AuthenticatorDescription
 import com.google.gson.annotations.SerializedName
 
+/**
+ * EventCreate data class contains EventCreate constructor
+ * and its data fields.
+ *
+ * @constructor Created Event
+ */
+
 data class EventCreate(
 
 

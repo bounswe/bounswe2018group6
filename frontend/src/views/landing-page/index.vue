@@ -8,7 +8,9 @@
              your own profile, add other users as friends and message them privately.</h3>
         <el-row class="center-button">
             <router-link to="/signup"><el-button round class="button-margin">Sign up</el-button></router-link>
-            <router-link to="/login?redirect=%2Fdashboard"><el-button round class="button-margin">Login</el-button></router-link>
+            <router-link v-if="token===''" to="/login?redirect=%2Fdashboard"><el-button round class="button-margin">Login</el-button></router-link>
+            <router-link v-else to="/dashboard"><el-button round class="button-margin">Login</el-button></router-link>
+            <router-link to="/guest"><el-button round class="button-margin">Guest view</el-button></router-link>
         </el-row>
         </div>
     </video-bg>
@@ -17,6 +19,7 @@
 <script>
 import VideoBg from 'vue-videobg'
 import GithubCorner from '@/components/GithubCorner'
+import { getToken } from "@/utils/auth"; // getToken from cookie
 
 
 export default {
@@ -25,6 +28,11 @@ export default {
     GithubCorner,
     VideoBg
   },
+  data(){
+    return{
+      token: getToken(),
+    }
+  }
 }
 </script>
 
