@@ -1,3 +1,9 @@
+"""
+.. module:: serializaers
+   :platform: Unix, Windows
+   :synopsis: Serializers
+
+"""
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
@@ -115,6 +121,11 @@ class CommentCreateSerializer(GenericModelValidatorMixin, serializers.ModelSeria
         fields = ('id', 'owner', 'content', 'content_type', 'object_id', 'created', 'updated')
 
     def create(self, validated_data):
+        """
+        :param self: self object
+        :param validated_data: validated comment data
+        :returns: a comment
+        """
         owner = self.context.get("request").user
         comment = Comment.objects.create(
             owner=owner, content_object=validated_data.pop('content_object'),

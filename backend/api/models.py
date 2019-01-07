@@ -1,3 +1,9 @@
+"""
+.. module:: model
+   :platform: Unix, Windows
+   :synopsis: Permission
+
+"""
 from datetime import datetime
 
 from django.conf import settings
@@ -102,7 +108,8 @@ class GenericModelMixin(models.Model):
 ## User & Related Models
 
 class User(AbstractUser, AnnotationMixin, CommentMixin, FollowMixin, TagMixin, VoteMixin):
-    # Related fields
+   
+   # Related fields
     blocked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False,
                                            related_name='user_blocked_users')
 
@@ -110,11 +117,12 @@ class User(AbstractUser, AnnotationMixin, CommentMixin, FollowMixin, TagMixin, V
     profile_photo = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
-
-    # Corporate users have their profiles having their corporate data.
-    # Since it's not feasible to create different tables for both
-    # or to use abstract tables and user groups doesn't meet the requirements
-    # due to extra fields in the db, creating another profile is preferred.
+    """
+    Corporate users have their profiles having their corporate data.
+    Since it's not feasible to create different tables for both
+    or to use abstract tables and user groups doesn't meet the requirements
+    due to extra fields in the db, creating another profile is preferred.
+    """
     is_corporate_user = models.BooleanField(default=False)
     corporate_profile = models.OneToOneField('CorporateUserProfile', on_delete=models.SET_NULL,
                                              null=True, default=None)
@@ -130,6 +138,13 @@ class CorporateUserProfile(models.Model):
 ## Event & Related Models
 
 class Event(AnnotationMixin, CommentMixin, FollowMixin, OwnerMixin, TagMixin, VoteMixin):
+    """
+    :class:`FollowStatus` uses owner mixin and GenericModel Mixin.
+    .. note:: 
+       Related fields: artists, location
+    .. note::
+        Own fiels: featured_image, title, description, date, price, organizer_url, created, updated
+    """
     # Related fields
     # TODO Decide if an artist must be a User in our system.
     artists = models.ManyToManyField(settings.AUTH_USER_MODEL, db_table='event_artists',
@@ -154,6 +169,11 @@ class Annotation(GenericModelMixin, OwnerMixin):
 
 
 class AttendanceStatus(OwnerMixin):
+    """
+    :class:`AttendanceStatus` uses owner mixin.
+    .. note:: 
+       There can be only one attendance status between User and Event.
+    """
     ATTENDANCE_STATUS = (
         ('Y', 'Yes'),
         ('N', 'No'),
@@ -164,18 +184,24 @@ class AttendanceStatus(OwnerMixin):
     event = models.ForeignKey(Event, related_name='attendance_status', on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices=ATTENDANCE_STATUS)
 
-    class Meta:
-        # There can be only one attendance status between User and Event.
+    class Meta:    
+        # There can be only one attendance status between User and Event.     
         unique_together = ('owner', 'event')
 
 
 class Comment(GenericModelMixin, OwnerMixin):
+    """
+    :class:`Comment` uses owner mixin and GenericModel Mixin. It has content(string), created and updated(datetime) properties.
+    """
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
 
 class Conversation(OwnerMixin):
+    """
+    :class:`Conversation` uses owner mixin and it participant, created and updated properties.
+    """
     participant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participated_conversation_set',
                                     on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
@@ -183,7 +209,12 @@ class Conversation(OwnerMixin):
 
 
 class FollowStatus(GenericModelMixin, OwnerMixin):
-    class Meta:
+    """
+    :class:`FollowStatus` uses owner mixin and GenericModel Mixin.
+    .. note:: 
+       A user cannot follow the same item more than once
+    """
+    class Meta:  
         # A user cannot follow the same item more than once
         unique_together = ('owner', 'content_type', 'object_id')
 
@@ -205,29 +236,47 @@ class Media(OwnerMixin):
 
 
 class Message(OwnerMixin):
-    # Related fields
+    """
+    :class:`Message` uses owner mixin.
+    .. note:: 
+        Related fields : receiver, conversation
+    .. note::
+        Own fields: content, created    
+    """
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received_message_set',
                                  on_delete=models.CASCADE)
     conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)
 
-    # Own fields
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
 
 class ShareStatus(OwnerMixin):
+    """
+    :class:`ShareStatus` uses owner mixin.
+    .. note:: 
+        There can be only one share status between User and Event.
+    """
     event = models.ForeignKey(Event, related_name='share_status', on_delete=models.CASCADE)
 
     class Meta:
-        # There can be only one share status between User and Event.
+        # 
         unique_together = ('owner', 'event')
 
 
 class Tag(models.Model):
+    """
+    :class:`Tag` has only name property.
+    """
     name = models.CharField(max_length=20)
 
 
 class VoteStatus(GenericModelMixin, OwnerMixin):
+    """
+    :class:`VoteStatus` uses owner mixin and GenericModelMixin
+    .. note:: 
+        A user cannot vote for the same item more than once
+    """
     VOTE_CHOICES = (
         ('U', 'Up'),
         ('D', 'Down'),

@@ -1,3 +1,9 @@
+"""
+.. module:: permission
+   :platform: Unix, Windows
+   :synopsis: Permission
+
+"""
 from rest_framework import permissions
 
 

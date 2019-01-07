@@ -1,3 +1,9 @@
+"""
+.. module:: views
+   :platform: Unix, Windows
+   :synopsis: Views
+
+"""
 from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from notifications.models import Notification, NotificationQuerySet
@@ -30,6 +36,10 @@ from api.serializers import (AnnotationCreate, AnnotationDetailsSerializer,
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def all_notifications_list(request):
+    """
+    :param request: request for notifications   
+    :returns: all notifications data with id, data, timestamp in json data
+    """
     all_list = []
     for notification in request.user.notifications.all():
         all_list.append({
@@ -46,6 +56,10 @@ def all_notifications_list(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def unread_notifications_list(request):
+    """
+    :param request: request for notifications   
+    :returns: only unreaded notifications data with id, data, timestamp in json data
+    """
     unread_list = []
     for notification in request.user.notifications.unread():
         unread_list.append({
@@ -62,12 +76,20 @@ def unread_notifications_list(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def mark_all_as_read(request):
+    """
+    :param request: request for notifications   
+    :returns: marks all notifications read and returns success
+    """
     request.user.notifications.mark_all_as_read()
     return HttpResponse(status=200)
 
 class MultiSerializerViewMixin(object):
 
     def get_serializer_class(self):
+        """
+        :param self: self object
+        :returns: serializers class
+        """
         try:
             return self.method_serializer_classes[self.request.method]
         except:
@@ -87,6 +109,13 @@ class AnnotationView(MultiSerializerViewMixin,
     }
 
     def put(self, request, *args, **kwargs):
+        """
+        :param self: self object
+        :param request: request object
+        :param *args: args
+        :param **kwargs: **kwargs 
+        :returns: annotations of image
+        """
         return self.partial_update(request, *args, **kwargs)
 
 
@@ -110,6 +139,13 @@ class CommentView(MultiSerializerViewMixin,
     }
 
     def put(self, request, *args, **kwargs):
+        """
+        :param self: self object
+        :param request: request object
+        :param *args: args
+        :param **kwargs: **kwargs 
+        :returns: comment
+        """
         return self.partial_update(request, *args, **kwargs)
 
 
@@ -138,10 +174,17 @@ class EventRecommendedListView(generics.ListAPIView):
     serializer_class = EventSummarySerializer
 
     def get_queryset(self):
+        """
+        :param self: self object
+        :returns: recomended events for the user
+        """
         return sorted(Event.objects.annotate(num_tags=Count('tags')).filter(num_tags__gt=0), reverse=True, key=lambda x: sum(tag in x.tags.all() for tag in self.request.user.tags.all()))
 
 
 class EventListView(generics.ListAPIView):
+    """
+        Creates events list as searchable according title and description fields
+    """
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
     filter_backends = (filters.SearchFilter,)
@@ -149,6 +192,9 @@ class EventListView(generics.ListAPIView):
 
 
 class EventLocationSearchView(generics.ListAPIView):
+    """
+        Creates events list as searchable according city and disrtrict fields
+    """
     queryset = Event.objects.all()
     serializer_class = EventSummarySerializer
     filter_backends = (filters.SearchFilter,)
@@ -169,6 +215,13 @@ class EventView(MultiSerializerViewMixin,
     }
 
     def put(self, request, *args, **kwargs):
+        """
+        :param self: self object
+        :param request: request object
+        :param *args: args
+        :param **kwargs: **kwargs 
+        :returns: an event
+        """
         return self.partial_update(request, *args, **kwargs)
 
 
@@ -184,6 +237,13 @@ class LoginView(views.APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
+        """
+        :param self: self object
+        :param request: request object
+        :param *args: args
+        :param **kwargs: **kwargs 
+        :returns: response of login
+        """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -233,6 +293,13 @@ class UserView(MultiSerializerViewMixin,
     }
 
     def put(self, request, *args, **kwargs):
+        """
+        :param self: self object
+        :param request: request object
+        :param *args: args
+        :param **kwargs: **kwargs 
+        :returns: a user
+        """
         return self.partial_update(request, *args, **kwargs)
 
 
