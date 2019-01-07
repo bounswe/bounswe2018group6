@@ -34,6 +34,8 @@ Run local development server:
 
 `./manage.py runserver 8000`
 
+## Additional Settings
+
 Make migration files:
 
 `./manage.py makemigrations`
@@ -45,3 +47,11 @@ Migrate models to defined db:
 Use Django Shell:
 
 `./manage.py shell`
+
+Dump db to json:
+
+`./manage.py dumpdata dumped.json`
+
+Load data to db:
+
+`./manage.py loaddata dumped.json`
