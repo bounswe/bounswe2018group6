@@ -3,6 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
+
+        "activity_create_event" is the Android layout page for
+         event creation that is created by referencing the Create Event's
+         API endpoints.
+         It contains Edit Texts:
+            -title
+            -description
+            -date
+            -price
+            -url
+            -location
+            -tags
+
+         And Button:
+            -create event
+
+    -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

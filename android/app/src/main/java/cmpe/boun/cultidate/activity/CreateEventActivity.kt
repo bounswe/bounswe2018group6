@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import cmpe.boun.culdidate.R
+import cmpe.boun.cultidate.R
 import cmpe.boun.cultidate.api.ApiInterface
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,9 +16,32 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-
+/**
+ * CreateEventActivity class contains the methods
+ * that can create an event on the page that is created
+ * as activity_create_event layout by binding the
+ * Create Event API endpoints.
+ *
+ * @author Zeynep
+ *
+ * Notes: compiling but not working
+ */
 class CreateEventActivity : AppCompatActivity() {
 
+
+    /**
+     * onCreate method is generic method that contains
+     * the codes about the main functionality of the
+     * class. Create a request for the API to create
+     * an event according to fields in API.
+     *
+     * All fields are defined.
+     *
+     * Response types and fail messages are defined.
+     *
+     * @param savedInstanceState
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_event)
@@ -56,8 +79,8 @@ class CreateEventActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.code() == 201) {
                         Toast.makeText(applicationContext, "Event is created", Toast.LENGTH_SHORT).show()
                         finish()
-                        val intent = Intent(applicationContext, EventActivity::class.java)
-                        startActivity(intent)
+                        //val intent = Intent(applicationContext, EventActivity::class.java)
+                        //startActivity(intent)
                     } else {
                         Toast.makeText(applicationContext, "Event creation failed", Toast.LENGTH_SHORT).show()
                     }
@@ -67,6 +90,13 @@ class CreateEventActivity : AppCompatActivity() {
         }
     }
 
+
+    /**
+     * createService() method creates a request to API
+     *
+     * @return retrofit.create(ApiInterface::class.java)
+     *
+     */
     private fun createService(): ApiInterface {
         val baseUrl = "http://cultidate.herokuapp.com/"
         val retrofit = Retrofit.Builder()

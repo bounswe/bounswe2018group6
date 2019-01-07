@@ -26,6 +26,10 @@ Check if Django configured correctly:
 
 `./manage.py check`
 
+Run tests:
+
+`./manage.py test`
+
 Run local development server:
 
 `./manage.py runserver 8000`

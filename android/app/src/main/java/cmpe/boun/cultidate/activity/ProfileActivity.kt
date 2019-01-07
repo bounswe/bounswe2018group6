@@ -1,6 +1,5 @@
 package cmpe.boun.cultidate.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -17,9 +16,37 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.squareup.picasso.Picasso
 
+
+
+/**
+ * ProfileActivity class contains the methods
+ * that a user can visit her/his profile page
+ * on the page that is created
+ * as activity_profile_page layout by binding the
+ * Login API endpoints.
+ *
+ * @author Anıl
+ *
+ * Notes: compiling and working
+ */
 class ProfileActivity : AppCompatActivity() {
 
+
+    /**
+     * onCreate method is generic method that contains
+     * the codes about the main functionality of the
+     * class. Create a request for the API for user to
+     * visit his/her profile page according to fields in API.
+     *
+     * All fields are defined.
+     *
+     * Response types and fail messages are defined.
+     *
+     * @param savedInstanceState
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profil)
@@ -31,7 +58,7 @@ class ProfileActivity : AppCompatActivity() {
         val followingsButton = findViewById<Button>(R.id.followings_button)
 
         val nameText = findViewById<TextView>(R.id.name_text)
-        val bioText = findViewById<TextView>(R.id.place_text)
+        val placeText = findViewById<TextView>(R.id.place_text)
         val interestsText = findViewById<TextView>(R.id.interests_text)
 
         val profileImage = findViewById<ImageView>(R.id.profile_image)
@@ -55,6 +82,19 @@ class ProfileActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserProfile>, response: Response<UserProfile>) {
                 if (response.code() == 200) {
                     nameText.text = String.format("%s %s", response.body()!!.firstName, response.body()!!.lastName)
+                    placeText.text = String.format("%s ",response.body()!!.city) // String.format("%s %s", response.body()!!.firstName, response.body()!!.lastName)
+                    //bioText.text = String.format("%s ",response.body()!!.bio)
+                    var interests = "Interests: "
+                    response.body()!!.tags!!.forEach { e -> interests += e.name + "; "}
+                    interestsText.text = interests
+
+
+                    Picasso.get().load(String.format("%s ",response.body()!!.profile_photo)).into(profileImage)
+
+                    eventsButton.text = String.format("%d \n events ",response.body()!!.owned_events_count)
+                    followersButton.text = String.format("%d \n followers",response.body()!!.follower_count)
+                    followingsButton.text = String.format("%d \n followings",response.body()!!.following_count)
+
                 } else {
                     Toast.makeText(this@ProfileActivity, "Can not access to profile", Toast.LENGTH_SHORT).show()
                 }
@@ -66,6 +106,13 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     * createService() method creates a request to API
+     *
+     * @return retrofit.create(ApiInterface::class.java)
+     *
+     */
     fun createService(): ApiInterface {
         val BASE_URL = "http://cultidate.herokuapp.com/"
         val retrofit = Retrofit.Builder()
@@ -75,4 +122,5 @@ class ProfileActivity : AppCompatActivity() {
 
         return retrofit.create(ApiInterface::class.java)
     }
+
 }
