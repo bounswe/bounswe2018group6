@@ -1,5 +1,8 @@
 package cmpe.boun.cultidate.model
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import org.json.JSONArray
 import org.json.JSONObject
@@ -25,11 +28,11 @@ data class UserProfile(
         @field:SerializedName("username")
         var username: String?,
 
-        @field:SerializedName("password")
-        var password: String?,
-
         @field:SerializedName("bio")
         var bio: String?,
+
+        @field:SerializedName("profile_photo")
+        var profile_photo: String?,
 
         @field:SerializedName("city")
         var city: String?,
@@ -50,7 +53,11 @@ data class UserProfile(
         var is_corporate_user: Boolean?,
 
         @field:SerializedName("tags")
-        var tags: JSONArray?,
+        var tags: List<UserTag>?
+
+        /*
+        @field:SerializedName("tags")
+        var tags: JSONArray?//,
 
         @field:SerializedName("followers")
         var followers: JSONArray?,
@@ -66,7 +73,15 @@ data class UserProfile(
 
         @field:SerializedName("corporate_profile")
         var corporate_profile: JSONObject?
-
-
+*/
 )
 
+data class UserTag(
+
+        @field:SerializedName("id")
+        var id: Int?,
+
+        @field:SerializedName("name")
+        var name: String?
+
+)

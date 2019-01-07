@@ -4,6 +4,7 @@ import android.util.EventLog
 import cmpe.boun.cultidate.model.*
 import retrofit2.Call
 import retrofit2.http.*
+import io.reactivex.Observable
 
 /**
  * This Kotlin interface implements the required functionality
@@ -26,8 +27,9 @@ interface ApiInterface {
     @POST("api/events/")
     fun createEvent(@Body event: EventCreate): Call<EventCreate>
 
+    @GET("api/events_list/")
+    fun getEvents(@Header("Authorization") token : String?) :
+            Observable<List<Event>>
 
-    @GET("api/events/2/")
-    fun event(@Body event: Event): Call<Event>
 }
 

@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("cmpe.boun.culdidate", appContext.packageName)
+        assertEquals("cmpe.boun.cultidate", appContext.packageName)
     }
 }

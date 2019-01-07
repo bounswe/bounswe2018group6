@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName
  * @constructor Event
  */
 data class Event(
+    @field:SerializedName("id")
+    var id: Int?,
+  
     @field:SerializedName("title")
     var title: String?,
 
@@ -32,5 +35,4 @@ data class Event(
 
     @field:SerializedName("tags")
     var tags : String?)
-
 
