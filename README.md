@@ -23,6 +23,9 @@
 
 Cultidate is a social platform for cultural activities. You can create events, join other events, interact with the others, get event recommendations, create your own profile, add other users as friends and message them privately.
 
+Website is available at [http://cultidate.ml/](http://cultidate.ml/)
+
+
 ## Team
 This project is being maintained by **Group 6 in CmpE 352/451 course** offered at [Boğaziçi University](http://www.boun.edu.tr/en_US) in Spring 2018 semester, continued on Fall 2018 semester. You can view [project description](https://github.com/bounswe/bounswe2018group6/blob/master/ProjectDescription.pdf) and our [Wiki Page](https://github.com/bounswe/bounswe2018group6/wiki) as it's a thorough resource for details.
 
