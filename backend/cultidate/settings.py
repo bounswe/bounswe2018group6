@@ -113,9 +113,20 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
 if DJANGO_ENV == 'production':
     db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=True)
     DATABASES['default'].update(db_from_env)
+elif DJANGO_ENV == 'production-customdb':
+    pg_config = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
+    DATABASES['default'].update(pg_config)
 
 AUTH_USER_MODEL = "api.User" 
 
