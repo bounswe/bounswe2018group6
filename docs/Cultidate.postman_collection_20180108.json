@@ -1,0 +1,5223 @@
+{
+	"info": {
+		"_postman_id": "c132c295-5f3e-45a3-add5-383af88bea9a",
+		"name": "Cultidate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign Up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "cultidate@cultidate.com",
+							"description": "Unique email address",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "cultidate",
+							"description": "Unique username",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678",
+							"description": "At least 8-characters long password",
+							"type": "text"
+						},
+						{
+							"key": "first_name",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "User",
+							"type": "text"
+						},
+						{
+							"key": "profile_photo",
+							"type": "file",
+							"src": ""
+						},
+						{
+							"key": "bio",
+							"value": "History of me",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Istanbul",
+							"type": "text"
+						},
+						{
+							"key": "is_corporate_user",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "corporate_profile",
+							"value": "null",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/signup/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"signup",
+						""
+					]
+				},
+				"description": "Signs up a user. `email` and `username` must be unique.\n\n__TODO:__ After the creation of a user, the system sends an email for activation. After the activation, user can login.\n\n__TODO:__ `tags` can also be sent, however I couldn't find the way to send array as form_data at this moment."
+			},
+			"response": [
+				{
+					"name": "Sign Up",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "cultidate@cultidate.com",
+									"description": "Unique email address",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "cultidate",
+									"description": "Unique username",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "At least 8-characters long password",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Test",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "User",
+									"type": "text"
+								},
+								{
+									"key": "profile_photo",
+									"type": "file"
+								},
+								{
+									"key": "bio",
+									"value": "History of me",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Istanbul",
+									"type": "text"
+								},
+								{
+									"key": "is_corporate_user",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "corporate_profile",
+									"value": "null",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/signup/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"signup",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 01 Dec 2018 12:58:22 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "294"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"username\": \"cultidate\",\n    \"email\": \"cultidate@cultidate.com\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543669101.862527_profile.jpeg\",\n    \"bio\": \"History of me\",\n    \"city\": \"Istanbul\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Activate User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/e/activate/29/51o-733e257826981e3f4d0d/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"e",
+						"activate",
+						"29",
+						"51o-733e257826981e3f4d0d",
+						""
+					]
+				},
+				"description": "A sample request of user activation url. Note that the request goes to the backend and after the activation, the request is redirected to frontend login page with status code `301`. If the activation is not successful, `HTTP 406` error is returned. Frontend do not have to take any action but clarifying login url."
+			},
+			"response": [
+				{
+					"name": "Redirect to Frontend Login Page",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/e/activate/29/51o-733e257826981e3f4d0d/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"e",
+								"activate",
+								"29",
+								"51o-733e257826981e3f4d0d",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 28 Nov 2018 06:46:59 GMT"
+						},
+						{
+							"key": "Expires",
+							"value": "-1"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "private, max-age=0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=EUC-KR"
+						},
+						{
+							"key": "P3P",
+							"value": "CP=\"This is not a P3P policy! See g.co/p3phelp for more info.\""
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "Server",
+							"value": "gws"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "1P_JAR=2018-11-28-06; expires=Fri, 28-Dec-2018 06:46:59 GMT; path=/; domain=.google.co.kr"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "NID=148=JzN_zVsU7PQTmNXsuQnSTjjD6bStbGPq9tYTKbqOtepSWKYhk0RKp4b1BQXWFCn3bsB3AftHYh2bbHXje51KtO9CxX5bnP6ZDxEqkcoYEf5snJKtFVzXJxjAmGONm5OcYeP9dHp1Pk1nmhkaQYqTJecxbB887VtBjb1MSkhHsXE; expires=Thu, 30-May-2019 06:46:59 GMT; path=/; domain=.google.co.kr; HttpOnly"
+						},
+						{
+							"key": "Alt-Svc",
+							"value": "quic=\":443\"; ma=2592000; v=\"44,43,39,35\""
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "<!doctype html><html itemscope=\"\" itemtype=\"http://schema.org/WebPage\" lang=\"de-AT\"><head><meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\"><meta content=\"/images/branding/googleg/1x/googleg_standard_color_128dp.png\" itemprop=\"image\"><title>Google</title><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\">(function(){window.google={kEI:'4zn-W62hGZLZwQKtuKBQ',kEXPI:'0,1353747,57,1201,756,1017,1406,698,527,730,326,293,132,278,420,350,30,524,28,274,401,565,171,157,2,219,2335964,216,32,45,23,6,1,329219,1294,12383,4855,32692,15247,867,316,5741,6106,14329,2192,364,529,688,2102,4133,1372,1241,1195,266,1466,2197,1444,575,835,284,2,578,728,2432,1361,1712,2611,2096,1295,7,1569,223,551,1506,609,137,2819,1923,525,22,604,2,1965,528,3,2064,182,283,3035,770,536,514,334,130,1344,386,8,1003,81,7,28,463,620,29,993,386,16,458,3204,14,630,4290,313,876,412,2,553,34,43,1483,700,56,319,273,108,1234,1220,38,363,557,439,134,145,155,498,718,384,944,34,487,47,1080,59,842,387,420,661,359,8,1,90,416,307,197,2,46,262,1,180,56,403,265,429,99,58,158,91,2,366,122,143,217,660,1385,141,124,30,5,2,145,575,172,71,9,2,118,163,24,494,460,266,52,276,278,55,96,249,247,109,1821,313,8,22,261,1277,538,641,273,69,5976212,12,2542,5997601,90,2800095,4,1572,881,445,1,2,31,49,1,510,390,575,17,304,1,8,1,2,2132,1,1,1,1,1,414,1,889,301,478,10,2,4,2,100,50,2,47,42,4,8,2300298',authuser:0,kscs:'c9c918f0_4zn-W62hGZLZwQKtuKBQ',kGL:'AT'};google.kHL='de-AT';})();google.time=function(){return(new Date).getTime()};(function(){google.lc=[];google.li=0;google.getEI=function(a){for(var b;a&&(!a.getAttribute||!(b=a.getAttribute(\"eid\")));)a=a.parentNode;return b||google.kEI};google.getLEI=function(a){for(var b=null;a&&(!a.getAttribute||!(b=a.getAttribute(\"leid\")));)a=a.parentNode;return b};google.https=function(){return\"https:\"==window.location.protocol};google.ml=function(){return null};google.log=function(a,b,e,c,g){if(a=google.logUrl(a,b,e,c,g)){b=new Image;var d=google.lc,f=google.li;d[f]=b;b.onerror=b.onload=b.onabort=function(){delete d[f]};google.vel&&google.vel.lu&&google.vel.lu(a);b.src=a;google.li=f+1}};google.logUrl=function(a,b,e,c,g){var d=\"\",f=google.ls||\"\";e||-1!=b.search(\"&ei=\")||(d=\"&ei=\"+google.getEI(c),-1==b.search(\"&lei=\")&&(c=google.getLEI(c))&&(d+=\"&lei=\"+c));c=\"\";!e&&google.cshid&&-1==b.search(\"&cshid=\")&&\"slh\"!=a&&(c=\"&cshid=\"+google.cshid);a=e||\"/\"+(g||\"gen_204\")+\"?atyp=i&ct=\"+a+\"&cad=\"+b+d+f+\"&zx=\"+google.time()+c;/^http:/i.test(a)&&google.https()&&(google.ml(Error(\"a\"),!1,{src:a,glmm:1}),a=\"\");return a};}).call(this);(function(){google.y={};google.x=function(a,b){if(a)var c=a.id;else{do c=Math.random();while(google.y[c])}google.y[c]=[a,b];return!1};google.lm=[];google.plm=function(a){google.lm.push.apply(google.lm,a)};google.lq=[];google.load=function(a,b,c){google.lq.push([[a],b,c])};google.loadAll=function(a,b){google.lq.push([a,b])};}).call(this);google.f={};</script><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\">var a=window.location,b=a.href.indexOf(\"#\");if(0<=b){var c=a.href.substring(b+1);/(^|&)q=/.test(c)&&-1==c.indexOf(\"#\")&&a.replace(\"/search?\"+c.replace(/(^|&)fp=[^&]*/g,\"\")+\"&cad=h\")};</script><style>#gbar,#guser{font-size:13px;padding-top:1px !important;}#gbar{height:22px}#guser{padding-bottom:7px !important;text-align:right}.gbh,.gbd{border-top:1px solid #c9d7f1;font-size:1px}.gbh{height:0;position:absolute;top:24px;width:100%}@media all{.gb1{height:22px;margin-right:.5em;vertical-align:top}#gbar{float:left}}a.gb1,a.gb4{text-decoration:underline !important}a.gb1,a.gb4{color:#00c !important}.gbi .gb4{color:#dd8e27 !important}.gbf .gb4{color:#900 !important}\n</style><style>body,td,a,p,.h{font-family:arial,sans-serif}body{margin:0;overflow-y:scroll}#gog{padding:3px 8px 0}td{line-height:.8em}.gac_m td{line-height:17px}form{margin-bottom:20px}.h{color:#36c}.q{color:#00c}.ts td{padding:0}.ts{border-collapse:collapse}em{font-weight:bold;font-style:normal}.lst{height:25px;width:496px}.gsfi,.lst{font:18px arial,sans-serif}.gsfs{font:17px arial,sans-serif}.ds{display:inline-box;display:inline-block;margin:3px 0 4px;margin-left:4px}input{font-family:inherit}a.gb1,a.gb2,a.gb3,a.gb4{color:#11c !important}body{background:#fff;color:black}a{color:#11c;text-decoration:none}a:hover,a:active{text-decoration:underline}.fl a{color:#36c}a:visited{color:#551a8b}a.gb1,a.gb4{text-decoration:underline}a.gb3:hover{text-decoration:none}#ghead a.gb2:hover{color:#fff !important}.sblc{padding-top:5px}.sblc a{display:block;margin:2px 0;margin-left:13px;font-size:11px}.lsbb{background:#eee;border:solid 1px;border-color:#ccc #999 #999 #ccc;height:30px}.lsbb{display:block}.ftl,#fll a{display:inline-block;margin:0 12px}.lsb{background:url(/images/nav_logo229.png) 0 -261px repeat-x;border:none;color:#000;cursor:pointer;height:30px;margin:0;outline:0;font:15px arial,sans-serif;vertical-align:top}.lsb:active{background:#ccc}.lst:focus{outline:none}</style><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\"></script></head><body bgcolor=\"#fff\"><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\">(function(){var src='/images/nav_logo229.png';var iesg=false;document.body.onload = function(){window.n && window.n();if (document.images){new Image().src=src;}\nif (!iesg){document.f&&document.f.q.focus();document.gbqf&&document.gbqf.q.focus();}\n}\n})();</script><div id=\"mngb\"><div id=gbar><nobr><b class=gb1>Suche</b><a class=gb1 href=\"https://www.google.at/imghp?hl=de&tab=wi\">Bilder</a><a class=gb1 href=\"https://maps.google.at/maps?hl=de&tab=wl\">Maps</a><a class=gb1 href=\"https://play.google.com/?hl=de&tab=w8\">Play</a><a class=gb1 href=\"https://www.youtube.com/?gl=AT&tab=w1\">YouTube</a><a class=gb1 href=\"https://news.google.at/nwshp?hl=de&tab=wn\">News</a><a class=gb1 href=\"https://mail.google.com/mail/?tab=wm\">Gmail</a><a class=gb1 href=\"https://drive.google.com/?tab=wo\">Drive</a><a class=gb1 style=\"text-decoration:none\" href=\"https://www.google.at/intl/de/options/\"><u>Mehr</u> &raquo;</a></nobr></div><div id=guser width=100%><nobr><span id=gbn class=gbi></span><span id=gbf class=gbf></span><span id=gbe></span><a href=\"http://www.google.at/history/optout?hl=de\" class=gb4>Webprotokoll</a> |<a  href=\"/preferences?hl=de\" class=gb4>Einstellungen</a> |<a target=_top id=gb_70 href=\"https://accounts.google.com/ServiceLogin?hl=de&passive=true&continue=https://www.google.co.kr/\" class=gb4>Anmelden</a></nobr></div><div class=gbh style=left:0></div><div class=gbh style=right:0></div></div><center><br clear=\"all\" id=\"lgpd\"><div id=\"lga\"><img alt=\"Google\" height=\"92\" src=\"/images/branding/googlelogo/1x/googlelogo_white_background_color_272x92dp.png\" style=\"padding:28px 0 14px\" width=\"272\" id=\"hplogo\" onload=\"window.lol&&lol()\"><br><br></div><form action=\"/search\" name=\"f\"><table cellpadding=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td width=\"25%\">&nbsp;</td><td align=\"center\" nowrap=\"\"><input name=\"ie\" value=\"EUC-KR\" type=\"hidden\"><input value=\"de-AT\" name=\"hl\" type=\"hidden\"><input name=\"source\" type=\"hidden\" value=\"hp\"><input name=\"biw\" type=\"hidden\"><input name=\"bih\" type=\"hidden\"><div class=\"ds\" style=\"height:32px;margin:4px 0\"><input style=\"color:#000;margin:0;padding:5px 8px 0 6px;vertical-align:top\" autocomplete=\"off\" class=\"lst\" value=\"\" title=\"Google-Suche\" maxlength=\"2048\" name=\"q\" size=\"57\"></div><br style=\"line-height:0\"><span class=\"ds\"><span class=\"lsbb\"><input class=\"lsb\" value=\"Google-Suche\" name=\"btnG\" type=\"submit\"></span></span><span class=\"ds\"><span class=\"lsbb\"><input class=\"lsb\" value=\"Auf gut Gl&#252;ck!\" name=\"btnI\" onclick=\"if(this.form.q.value)this.checked=1; else top.location='/doodles/'\" type=\"submit\"></span></span></td><td class=\"fl sblc\" align=\"left\" nowrap=\"\" width=\"25%\"><a href=\"/advanced_search?hl=de-AT&amp;authuser=0\">Erweiterte Suche</a><a href=\"/language_tools?hl=de-AT&amp;authuser=0\">Sprachoptionen</a></td></tr></table><input id=\"gbv\" name=\"gbv\" type=\"hidden\" value=\"1\"><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\">(function(){var a,b=\"1\";if(document&&document.getElementById)if(\"undefined\"!=typeof XMLHttpRequest)b=\"2\";else if(\"undefined\"!=typeof ActiveXObject){var c,d,e=[\"MSXML2.XMLHTTP.6.0\",\"MSXML2.XMLHTTP.3.0\",\"MSXML2.XMLHTTP\",\"Microsoft.XMLHTTP\"];for(c=0;d=e[c++];)try{new ActiveXObject(d),b=\"2\"}catch(h){}}a=b;if(\"2\"==a&&-1==location.search.indexOf(\"&gbv=2\")){var f=google.gbvu,g=document.getElementById(\"gbv\");g&&(g.value=a);f&&window.setTimeout(function(){location.href=f},0)};}).call(this);</script></form><div id=\"gac_scont\"></div><div style=\"font-size:83%;min-height:3.5em\"><br><div id=\"gws-output-pages-elements-homepage_additional_languages__als\"><style>#gws-output-pages-elements-homepage_additional_languages__als{font-size:small;margin-bottom:24px}#SIvCob{display:inline-block;line-height:28px;}#SIvCob a{padding:0 3px;}.H6sW5{display:inline-block;margin:0 2px;white-space:nowrap}.z4hgWe{display:inline-block;margin:0 2px}</style><div id=\"SIvCob\">Google angeboten auf:  <a href=\"https://www.google.co.kr/setprefs?sig=0_ffHgDW26J_iftxG5j0VWmX3rnMI%3D&amp;hl=ko&amp;source=homepage&amp;sa=X&amp;ved=0ahUKEwjtnrn2vvbeAhWSbFAKHS0cCAoQ2ZgBCAU\">한국어</a></div></div></div><span id=\"footer\"><div style=\"font-size:10pt\"><div style=\"margin:19px auto;text-align:center\" id=\"fll\"><a href=\"/intl/de/ads/\">Werben mit Google</a><a href=\"http://www.google.at/intl/de/services/\">L&#246;sungen f&#252;r Unternehmen</a><a href=\"/intl/de/about.html\">&#220;ber Google</a><a href=\"https://www.google.co.kr/setprefdomain?prefdom=US&amp;sig=K_0dbDXDqsXGq52XlJXcxagjakHyw%3D\" id=\"fehl\">Google.com</a></div></div><p style=\"color:#767676;font-size:8pt\">&copy; 2018 - <a href=\"/intl/de/policies/privacy/\">Datenschutzerkl&#228;rung</a> -<a href=\"/intl/de/policies/terms/\">Nutzungsbedingungen</a></p></span></center><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\">(function(){window.google.cdo={height:0,width:0};(function(){var a=window.innerWidth,b=window.innerHeight;if(!a||!b){var c=window.document,d=\"CSS1Compat\"==c.compatMode?c.documentElement:c.body;a=d.clientWidth;b=d.clientHeight}a&&b&&(a!=google.cdo.width||b!=google.cdo.height)&&google.log(\"\",\"\",\"/client_204?&atyp=i&biw=\"+a+\"&bih=\"+b+\"&ei=\"+google.kEI);}).call(this);})();</script><div id=\"xjsd\"></div><div id=\"xjsi\"><script nonce=\"pFU7O++rJD7cTD8RdZ0Qig==\">(function(){google.ldi={};google.pim={};})();(function(){function c(b){window.setTimeout(function(){var a=document.createElement(\"script\");a.src=b;google.timers&&google.timers.load.t&&google.tick&&google.tick(\"load\",{gen204:\"xjsls\",clearcut:31});document.getElementById(\"xjsd\").appendChild(a)},0)}google.dljp=function(b,a){google.xjsu=b;c(a)};google.dlj=c;}).call(this);if(!google.xjs){window._=window._||{};window._DumpException=window._._DumpException=function(e){throw e};window._F_installCss=window._._F_installCss=function(c){};google.dljp('/xjs/_/js/k\\x3dxjs.hp.en.5LrXty7tLds.O/m\\x3dsb_he,d/am\\x3dYsAs/rt\\x3dj/d\\x3d1/rs\\x3dACT90oEgmKTJpJXV88Q715FsVyLLA9gg7g','/xjs/_/js/k\\x3dxjs.hp.en.5LrXty7tLds.O/m\\x3dsb_he,d/am\\x3dYsAs/rt\\x3dj/d\\x3d1/rs\\x3dACT90oEgmKTJpJXV88Q715FsVyLLA9gg7g');google.xjs=1;}google.pmc={\"sb_he\":{\"agen\":true,\"cgen\":true,\"client\":\"heirloom-hp\",\"dh\":true,\"dhqt\":true,\"ds\":\"\",\"ffql\":\"de\",\"fl\":true,\"host\":\"google.co.kr\",\"isbh\":28,\"jsonp\":true,\"msgs\":{\"cibl\":\"Suche l&#246;schen\",\"dym\":\"Meintest du:\",\"lcky\":\"Auf gut Gl&#252;ck!\",\"lml\":\"Weitere Informationen\",\"oskt\":\"Eingabetools\",\"psrc\":\"Diese Suchanfrage wurde aus deinem \\u003Ca href=\\\"/history\\\"\\u003EWebprotokoll\\u003C/a\\u003E entfernt.\",\"psrl\":\"Entfernen\",\"sbit\":\"Bildersuche\",\"srch\":\"Google-Suche\"},\"ovr\":{},\"pq\":\"\",\"refpd\":true,\"rfs\":[],\"sbpl\":24,\"sbpr\":24,\"scd\":10,\"sce\":5,\"stok\":\"bJyfRFxhzEf9qgwXFFtkBUzm_4s\",\"uhde\":false},\"d\":{},\"ZI/YVQ\":{},\"Qnk92g\":{},\"U5B21g\":{},\"YFCs/g\":{}};google.x(null,function(){});(function(){var r=[];google.plm(r);})();(function(){var m=[]\n;m.length && google.jsc && google.jsc.m(m);})();</script></div></body></html>"
+				},
+				{
+					"name": "Unsuccessful Activation",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/e/activate/29/51o-733e257826981e3f4d0/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"e",
+								"activate",
+								"29",
+								"51o-733e257826981e3f4d0",
+								""
+							]
+						}
+					},
+					"status": "Not Acceptable",
+					"code": 406,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 28 Nov 2018 06:52:04 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "24"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						}
+					],
+					"cookie": [],
+					"body": "Activation unsuccessful."
+				}
+			]
+		},
+		{
+			"name": "Sign In",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c660f55f-0543-4b31-b397-f2f407ef62d6",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"pm.environment.set(\"token\", jsonData['token']);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "cultidate",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/auth/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						""
+					]
+				},
+				"description": "Signs in the user returning `token` and `user_id`."
+			},
+			"response": [
+				{
+					"name": "Sign In (Active User)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "cultidate",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 01 Dec 2018 13:02:07 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "64"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"1e4b72af04d90b00d74ac83cd18da2d6d511e394\",\n    \"user_id\": 1\n}"
+				},
+				{
+					"name": "Sign In (Passive User)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								""
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 28 Nov 2018 07:06:15 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "46"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"non_field_errors\": [\n        \"Incorrect credentials\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get User Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/user/3/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"3",
+						""
+					]
+				},
+				"description": "Gets user details.\n\n**TODO**: If the user is not active, return `HTTP 404`."
+			},
+			"response": [
+				{
+					"name": "Get User Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/user/3/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"3",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 01 Jan 2019 16:54:31 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "6049"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 3,\n    \"username\": \"mert\",\n    \"first_name\": \"Mert\",\n    \"last_name\": \"Akozcan\",\n    \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\",\n    \"bio\": \"King of the art\",\n    \"city\": \"Istanbul\",\n    \"tags\": [\n        {\n            \"id\": 1,\n            \"name\": \"Music\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Party\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Theatre\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Local Event\"\n        }\n    ],\n    \"annotations\": [],\n    \"comments\": [],\n    \"votes\": [],\n    \"follower_count\": 1,\n    \"followers\": {\n        \"users\": [\n            {\n                \"follow_status_id\": 54,\n                \"user\": {\n                    \"id\": 59,\n                    \"username\": \"deneme12\",\n                    \"first_name\": \"atif\",\n                    \"last_name\": \"drogba\",\n                    \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n                }\n            }\n        ]\n    },\n    \"following_count\": 4,\n    \"followings\": {\n        \"events\": [\n            {\n                \"follow_status_id\": 45,\n                \"event\": {\n                    \"id\": 25,\n                    \"owner\": {\n                        \"id\": 59,\n                        \"username\": \"deneme12\",\n                        \"first_name\": \"atif\",\n                        \"last_name\": \"drogba\",\n                        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n                    },\n                    \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543918875.629745_araguler.jpg\",\n                    \"title\": \"Ara Güler Anma Sergisi\",\n                    \"description\": \"Taksim Meydanı'nda buluşup Şişhane'deki etkinliğe geçiyoruz.\",\n                    \"date\": \"2018-12-01T13:16:43Z\",\n                    \"price\": \"12.00\",\n                    \"location\": {\n                        \"id\": 3,\n                        \"city\": \"Gaziantep\",\n                        \"district\": \"Nizip\",\n                        \"google_place_id\": \"\",\n                        \"name\": \"\",\n                        \"lat\": \"0.000000\",\n                        \"lng\": \"0.000000\"\n                    },\n                    \"created\": \"2018-12-01T13:17:14.268246Z\",\n                    \"updated\": \"2018-12-31T11:30:28.716991Z\",\n                    \"own_attendance_status\": null,\n                    \"follower_count\": 1,\n                    \"own_follow_status\": null,\n                    \"own_share_status\": null,\n                    \"vote_count\": 0,\n                    \"own_vote\": null,\n                    \"tags\": []\n                }\n            },\n            {\n                \"follow_status_id\": 49,\n                \"event\": {\n                    \"id\": 27,\n                    \"owner\": {\n                        \"id\": 87,\n                        \"username\": \"incisaglam\",\n                        \"first_name\": \"İnci\",\n                        \"last_name\": \"Sağlam\",\n                        \"profile_photo\": null\n                    },\n                    \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543918544.811195_mehtap.jpeg\",\n                    \"title\": \"Mehtap Turunda Fotoğraf Çekimi\",\n                    \"description\": \"Mehtap gezileri, yaz tarifesi döneminde yapılmakta olan Şehir Hatları’nın gelenekselleşen bir boğaz turudur. Yaz tarifesinde cumartesi geceleri Bostancı’dan başlayarak Anadolukavağı’na uzanan gezilerimiz, müzik eşliğinde mehtabın unutulmaz keyfini sunmaktadır.\",\n                    \"date\": \"2019-06-27T21:00:00Z\",\n                    \"price\": \"20.00\",\n                    \"location\": {\n                        \"id\": 5,\n                        \"city\": \"İstanbul\",\n                        \"district\": \"Sarıyer\",\n                        \"google_place_id\": \"\",\n                        \"name\": \"\",\n                        \"lat\": \"0.000000\",\n                        \"lng\": \"0.000000\"\n                    },\n                    \"created\": \"2018-12-04T10:15:07.465300Z\",\n                    \"updated\": \"2019-01-01T13:04:51.995896Z\",\n                    \"own_attendance_status\": null,\n                    \"follower_count\": 1,\n                    \"own_follow_status\": null,\n                    \"own_share_status\": null,\n                    \"vote_count\": 3,\n                    \"own_vote\": null,\n                    \"tags\": [\n                        {\n                            \"id\": 3,\n                            \"name\": \"Local Event\"\n                        },\n                        {\n                            \"id\": 5,\n                            \"name\": \"Cultural\"\n                        },\n                        {\n                            \"id\": 6,\n                            \"name\": \"Contemporary Art\"\n                        }\n                    ]\n                }\n            },\n            {\n                \"follow_status_id\": 51,\n                \"event\": {\n                    \"id\": 39,\n                    \"owner\": {\n                        \"id\": 33,\n                        \"username\": \"cerob\",\n                        \"first_name\": \"Cero\",\n                        \"last_name\": \"Mero\",\n                        \"profile_photo\": null\n                    },\n                    \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1544531873.526484_IMG_9982.JPG\",\n                    \"title\": \"Social Life in Ottoman History Conference\",\n                    \"description\": \"Conference\",\n                    \"date\": \"2018-12-19T11:00:00Z\",\n                    \"price\": \"-5.00\",\n                    \"location\": {\n                        \"id\": 31,\n                        \"city\": \"İstanbul\",\n                        \"district\": \"Fatih\",\n                        \"google_place_id\": \"9436c0f786788ece6bc381b99846712edbb37ff5\",\n                        \"name\": \"İstanbul Üniversitesi\",\n                        \"lat\": \"41.012180\",\n                        \"lng\": \"28.962546\"\n                    },\n                    \"created\": \"2018-12-11T12:00:37.640943Z\",\n                    \"updated\": \"2018-12-11T14:54:57.832733Z\",\n                    \"own_attendance_status\": null,\n                    \"follower_count\": 2,\n                    \"own_follow_status\": null,\n                    \"own_share_status\": null,\n                    \"vote_count\": 2,\n                    \"own_vote\": null,\n                    \"tags\": [\n                        {\n                            \"id\": 3,\n                            \"name\": \"Local Event\"\n                        },\n                        {\n                            \"id\": 5,\n                            \"name\": \"Cultural\"\n                        }\n                    ]\n                }\n            }\n        ],\n        \"users\": [\n            {\n                \"follow_status_id\": 4,\n                \"user\": {\n                    \"id\": 1,\n                    \"username\": \"cultidate\",\n                    \"first_name\": \"\",\n                    \"last_name\": \"\",\n                    \"profile_photo\": null\n                }\n            }\n        ]\n    },\n    \"own_follow_status\": null,\n    \"owned_events_count\": 2,\n    \"owned_events\": [\n        {\n            \"id\": 24,\n            \"owner\": {\n                \"id\": 3,\n                \"username\": \"mert\",\n                \"first_name\": \"Mert\",\n                \"last_name\": \"Akozcan\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n            },\n            \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543315945.123539_artf.jpeg\",\n            \"title\": \"My Paintings at Bogazici University\",\n            \"description\": \"Hi I'm an amateur wannabe artist Mert. I have some paintings and want you guys to check it out.\",\n            \"date\": \"2018-12-02T07:34:00Z\",\n            \"price\": \"0.00\",\n            \"location\": {\n                \"id\": 2,\n                \"city\": \"Istanbul\",\n                \"district\": \"Besiktas\",\n                \"google_place_id\": \"\",\n                \"name\": \"\",\n                \"lat\": \"0.000000\",\n                \"lng\": \"0.000000\"\n            },\n            \"created\": \"2018-11-27T10:49:12.876949Z\",\n            \"updated\": \"2018-12-11T13:15:24.897318Z\",\n            \"own_attendance_status\": null,\n            \"follower_count\": 2,\n            \"own_follow_status\": null,\n            \"own_share_status\": null,\n            \"vote_count\": 0,\n            \"own_vote\": null,\n            \"tags\": []\n        },\n        {\n            \"id\": 37,\n            \"owner\": {\n                \"id\": 3,\n                \"username\": \"mert\",\n                \"first_name\": \"Mert\",\n                \"last_name\": \"Akozcan\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n            },\n            \"featured_image\": null,\n            \"title\": \"Cultidate testing\",\n            \"description\": \"testing\",\n            \"date\": \"2018-12-11T11:56:09Z\",\n            \"price\": \"23.00\",\n            \"location\": {\n                \"id\": 29,\n                \"city\": \"İstanbul\",\n                \"district\": \"Beşiktaş\",\n                \"google_place_id\": \"fc3ebb6e72cc6e389452928c72669aa6fc12561b\",\n                \"name\": \"Boğaziçi Üniversitesi\",\n                \"lat\": \"41.079910\",\n                \"lng\": \"29.050471\"\n            },\n            \"created\": \"2018-12-11T11:57:36.213504Z\",\n            \"updated\": \"2018-12-11T11:57:36.213542Z\",\n            \"own_attendance_status\": null,\n            \"follower_count\": 0,\n            \"own_follow_status\": null,\n            \"own_share_status\": null,\n            \"vote_count\": 0,\n            \"own_vote\": null,\n            \"tags\": [\n                {\n                    \"id\": 1,\n                    \"name\": \"Music\"\n                },\n                {\n                    \"id\": 5,\n                    \"name\": \"Cultural\"\n                },\n                {\n                    \"id\": 6,\n                    \"name\": \"Contemporary Art\"\n                }\n            ]\n        }\n    ],\n    \"shared_events_count\": 1,\n    \"shared_events\": [\n        {\n            \"id\": 29,\n            \"owner\": {\n                \"id\": 88,\n                \"username\": \"atifemre1\",\n                \"first_name\": \"Atıf\",\n                \"last_name\": \"Yüksel\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543922587.552814_atif.jpg\"\n            },\n            \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543923041.598157_hisar1.jpeg\",\n            \"title\": \"Rumelihisari Gezisi\",\n            \"description\": \"let's meet at university. then go together\",\n            \"date\": \"2018-12-07T08:00:00Z\",\n            \"price\": \"0.00\",\n            \"location\": {\n                \"id\": 7,\n                \"city\": \"Istanbul\",\n                \"district\": \"Hisarustu\",\n                \"google_place_id\": \"\",\n                \"name\": \"\",\n                \"lat\": \"0.000000\",\n                \"lng\": \"0.000000\"\n            },\n            \"created\": \"2018-12-04T11:27:18.192675Z\",\n            \"updated\": \"2018-12-07T13:52:08.086014Z\",\n            \"own_attendance_status\": null,\n            \"follower_count\": 1,\n            \"own_follow_status\": null,\n            \"own_share_status\": null,\n            \"vote_count\": 0,\n            \"own_vote\": null,\n            \"tags\": [\n                {\n                    \"id\": 3,\n                    \"name\": \"Local Event\"\n                },\n                {\n                    \"id\": 5,\n                    \"name\": \"Cultural\"\n                }\n            ]\n        }\n    ],\n    \"blocked_users_count\": 0,\n    \"is_corporate_user\": true,\n    \"corporate_profile\": {\n        \"url\": \"https://www.akozcan.com\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Edit User Details",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "profile_photo",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/user/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"1",
+						""
+					]
+				},
+				"description": "User's new data fields should be put into JSON body. Multiple field update is possible. Note that `username` can't be changed, yet `email` can be. However, a unique email should be given.\n\n__Updatable fields__: `email`, `password`, `first_name`, `last_name`, `bio`, `city`, `is_corporate_user`, `corporate_profile`, `tags`\n\n__Readonly fields__: `id`, `username`, `comments`, `votes`, `follower_count`, `following_count`, `owned_events_count`, `blocked_users_count`\n\nNote that readonly fields are not returning error status, but `200 OK` with user details only."
+			},
+			"response": [
+				{
+					"name": "Change Username (Not Allowed)",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"blackSwan\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 17:30:48 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "30"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    \"Username can't be changed.\"\n]"
+				},
+				{
+					"name": "Change First & Last Name",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"Mike\",\n\t\"last_name\": \"Swan\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:12:20 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "235"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"my biography is here.\",\n    \"city\": \"Ankara\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change City",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"city\": \"Seoul\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:14:04 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "270"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"Came from the other galaxy, why chose the Earth though...\",\n    \"city\": \"Seoul\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Disable Corporate User Profile",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_corporate_user\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:17:57 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "270"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"Came from the other galaxy, why chose the Earth though...\",\n    \"city\": \"Seoul\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change Corporate User Profile",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corporate_profile\": {\n    \t\"url\": \"https://www.istanbulmodern.org/en\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:17:12 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "308"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"Came from the other galaxy, why chose the Earth though...\",\n    \"city\": \"Seoul\",\n    \"is_corporate_user\": true,\n    \"corporate_profile\": {\n        \"url\": \"https://www.istanbulmodern.org/en\"\n    },\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change Password",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"current_password\": \"wolololo\",\n\t\"new_password\": \"lolololo\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:08:03 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "242"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Cultidate\",\n    \"last_name\": \"Master\",\n    \"profile_photo\": null,\n    \"bio\": \"my biography is here.\",\n    \"city\": \"Ankara\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change Email",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"blackSwan@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 17:33:35 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "242"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Cultidate\",\n    \"last_name\": \"Master\",\n    \"profile_photo\": null,\n    \"bio\": \"my biography is here.\",\n    \"city\": \"Ankara\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change Bio",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"bio\": \"Came from the other galaxy, why chose the Earth though...\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:13:37 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "271"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"Came from the other galaxy, why chose the Earth though...\",\n    \"city\": \"Ankara\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change Profile Photo",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profile_photo",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/user/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"1",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 01 Dec 2018 13:27:36 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "289"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"username\": \"cultidate\",\n    \"email\": \"cultidate@cultidate.com\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\",\n    \"bio\": \"History of me\",\n    \"city\": \"Istanbul\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": []\n}"
+				},
+				{
+					"name": "Change Tags",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tags\": [2, 3]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:23:53 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "273"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"Came from the other galaxy, why chose the Earth though...\",\n    \"city\": \"Seoul\",\n    \"is_corporate_user\": false,\n    \"corporate_profile\": null,\n    \"tags\": [\n        2,\n        3\n    ]\n}"
+				},
+				{
+					"name": "Add Corporate User Profile",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_corporate_user\": true,\n    \"corporate_profile\": {\n    \t\"url\": \"https://www.much.go.kr/\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/user/16/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"16",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 26 Nov 2018 18:16:11 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, PUT, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "298"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 16,\n    \"username\": \"cultidate-user3\",\n    \"email\": \"blackSwan@gmail.com\",\n    \"first_name\": \"Mike\",\n    \"last_name\": \"Swan\",\n    \"profile_photo\": null,\n    \"bio\": \"Came from the other galaxy, why chose the Earth though...\",\n    \"city\": \"Seoul\",\n    \"is_corporate_user\": true,\n    \"corporate_profile\": {\n        \"url\": \"https://www.much.go.kr/\"\n    },\n    \"tags\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Annotation Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/annotations/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"annotations",
+						"1",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Annotation Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/annotations/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"annotations",
+								"1",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 Dec 2018 17:26:02 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "467"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"id\": 59,\n        \"username\": \"deneme12\",\n        \"first_name\": \"atif\",\n        \"last_name\": \"drogba\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n    },\n    \"data\": {\n        \"id\": \"http://example.org/anno1\",\n        \"body\": \"http://example.org/post1\",\n        \"type\": \"Annotation\",\n        \"target\": \"http://example.com/page1\",\n        \"@context\": \"http://www.w3.org/ns/anno.jsonld\"\n    },\n    \"content_type\": \"event\",\n    \"object_id\": 25,\n    \"created\": \"2018-12-28T17:25:38.019702Z\",\n    \"updated\": \"2018-12-28T17:25:38.019763Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Annotation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"content_type\": \"event\",\n\t\"object_id\": 25,\n\t\"data\": {\n\t\t\"@context\": \"http://www.w3.org/ns/anno.jsonld\",\n\t\t\"id\": \"http://example.org/anno1\",\n\t\t\"type\": \"Annotation\",\n\t\t\"body\": \"http://example.org/post1\",\n\t\t\"target\": \"http://example.com/page1\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/annotations/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"annotations",
+						""
+					]
+				},
+				"description": "Create annotations for users and events."
+			},
+			"response": [
+				{
+					"name": "Create Annotation",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"content_type\": \"event\",\n\t\"object_id\": 25,\n\t\"data\": {\n\t\t\"@context\": \"http://www.w3.org/ns/anno.jsonld\",\n\t\t\"id\": \"http://example.org/anno1\",\n\t\t\"type\": \"Annotation\",\n\t\t\"body\": \"http://example.org/post1\",\n\t\t\"target\": \"http://example.com/page1\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/annotations/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"annotations",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 Dec 2018 17:25:38 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "467"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"id\": 59,\n        \"username\": \"deneme12\",\n        \"first_name\": \"atif\",\n        \"last_name\": \"drogba\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n    },\n    \"data\": {\n        \"@context\": \"http://www.w3.org/ns/anno.jsonld\",\n        \"id\": \"http://example.org/anno1\",\n        \"type\": \"Annotation\",\n        \"body\": \"http://example.org/post1\",\n        \"target\": \"http://example.com/page1\"\n    },\n    \"content_type\": \"event\",\n    \"object_id\": 25,\n    \"created\": \"2018-12-28T17:25:38.019702Z\",\n    \"updated\": \"2018-12-28T17:25:38.019763Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Edit Annotation",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\": {\n\t\t\"foo\": \"bar\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/annotations/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"annotations",
+						"1",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Edit Annotation",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": {\n\t\t\"foo\": \"bar\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/annotations/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"annotations",
+								"1",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 Dec 2018 17:26:24 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "311"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"id\": 59,\n        \"username\": \"deneme12\",\n        \"first_name\": \"atif\",\n        \"last_name\": \"drogba\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n    },\n    \"data\": {\n        \"foo\": \"bar\"\n    },\n    \"content_type\": \"event\",\n    \"object_id\": 25,\n    \"created\": \"2018-12-28T17:25:38.019702Z\",\n    \"updated\": \"2018-12-28T17:26:24.486360Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Annotation",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/annotations/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"annotations",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Attendance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "event",
+							"value": "1",
+							"description": "Id of the event",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "Y",
+							"description": "**Y**(es), **N**(o), **M**(aybe), **A**(ttended), **B**(locked)",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/attendance/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"attendance",
+						""
+					]
+				},
+				"description": "Save attendance status of a user for an event."
+			},
+			"response": [
+				{
+					"name": "Create Attendance",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "event",
+									"value": "1",
+									"description": "Id of the event",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "Y",
+									"description": "**Y**(es), **N**(o), **M**(aybe), **A**(ttended), **B**(locked)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/attendance/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"attendance",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:52:00 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, DELETE, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "115"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"event\": 1,\n    \"status\": \"Y\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Attendance",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/attendance/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"attendance",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Comment Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/comments/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"comments",
+						"1",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Comment Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/comments/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"1",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 06 Nov 2018 20:44:53 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "214"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"username\": \"mert\",\n        \"first_name\": \"\",\n        \"last_name\": \"\"\n    },\n    \"content_type\": \"event\",\n    \"object_id\": 1,\n    \"content\": \"A comment here...\",\n    \"created\": \"2018-10-29T22:18:33.793746Z\",\n    \"updated\": \"2018-10-29T22:18:33.793810Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Comment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "A comment",
+							"description": "Text of the comment",
+							"type": "text"
+						},
+						{
+							"key": "content_type",
+							"value": "event",
+							"description": "Type of the item to be commented (**event** or **user**)",
+							"type": "text"
+						},
+						{
+							"key": "object_id",
+							"value": "1",
+							"description": "Id of the item to be commented",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/comments/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"comments",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add Comment To Event",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "A comment",
+									"description": "Text of the comment",
+									"type": "text"
+								},
+								{
+									"key": "content_type",
+									"value": "event",
+									"description": "Type of the item to be commented (**event** or **user**)",
+									"type": "text"
+								},
+								{
+									"key": "object_id",
+									"value": "1",
+									"description": "Id of the item to be commented",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/comments/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:52:32 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "231"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"content\": \"A comment\",\n    \"content_type\": \"event\",\n    \"object_id\": 1,\n    \"created\": \"2018-11-23T15:52:32.044046Z\",\n    \"updated\": \"2018-11-23T15:52:32.044081Z\"\n}"
+				},
+				{
+					"name": "Add Comment To User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "A comment",
+									"description": "Text of the comment",
+									"type": "text"
+								},
+								{
+									"key": "content_type",
+									"value": "user",
+									"description": "Type of the item to be commented (**event** or **user**)",
+									"type": "text"
+								},
+								{
+									"key": "object_id",
+									"value": "2",
+									"description": "Id of the item to be commented",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/comments/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:57:04 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "230"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"content\": \"A comment\",\n    \"content_type\": \"user\",\n    \"object_id\": 2,\n    \"created\": \"2018-11-23T15:57:04.705823Z\",\n    \"updated\": \"2018-11-23T15:57:04.705858Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Edit Comment",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "Nice comment",
+							"description": "Text of the comment",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/comments/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"comments",
+						"1",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Edit Comment",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "Nice comment",
+									"description": "Text of the comment",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/comments/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"1",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:53:15 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "234"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"content\": \"Nice comment\",\n    \"content_type\": \"event\",\n    \"object_id\": 1,\n    \"created\": \"2018-11-23T15:52:32.044046Z\",\n    \"updated\": \"2018-11-23T15:53:15.068137Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Comment",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/comments/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"comments",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Follow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content_type",
+							"value": "event",
+							"description": "Type of the item to follow (**event** or **user**)",
+							"type": "text"
+						},
+						{
+							"key": "object_id",
+							"value": "1",
+							"description": "Id of the item to follow",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/follow/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"follow",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Follow Event",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content_type",
+									"value": "event",
+									"description": "Type of the item to follow (**event** or **user**)",
+									"type": "text"
+								},
+								{
+									"key": "object_id",
+									"value": "1",
+									"description": "Id of the item to follow",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/follow/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"follow",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:54:51 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, DELETE, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "45"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"content_type\": \"event\",\n    \"object_id\": 1\n}"
+				},
+				{
+					"name": "Follow User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content_type",
+									"value": "user",
+									"description": "Type of the item to follow (**event** or **user**)",
+									"type": "text"
+								},
+								{
+									"key": "object_id",
+									"value": "2",
+									"description": "Id of the item to follow",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/follow/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"follow",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:53:43 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, DELETE, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "44"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"content_type\": \"user\",\n    \"object_id\": 2\n}"
+				}
+			]
+		},
+		{
+			"name": "Unfollow",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/follow/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"follow",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Media Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/medias/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"medias",
+						"1",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Media Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/medias/7/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"medias",
+								"7",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:33:44 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "263"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 7,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"event\": 11,\n    \"file\": \"https://cultidate.s3.amazonaws.com/file_1542987072.831111_profile.jpeg\",\n    \"created\": \"2018-11-23T15:31:14.076622Z\",\n    \"updated\": \"2018-11-23T15:31:14.076701Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Media",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"description": "Image file",
+							"type": "file",
+							"src": ""
+						},
+						{
+							"key": "event",
+							"value": "1",
+							"description": "Id of the event",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/medias/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"medias",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Media",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"description": "Image file",
+									"type": "file"
+								},
+								{
+									"key": "event",
+									"value": "11",
+									"description": "Id of the event",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/medias/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"medias",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:31:14 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "263"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 7,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"event\": 11,\n    \"file\": \"https://cultidate.s3.amazonaws.com/file_1542987072.831111_profile.jpeg\",\n    \"created\": \"2018-11-23T15:31:14.076622Z\",\n    \"updated\": \"2018-11-23T15:31:14.076701Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Media",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/medias/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"medias",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Share",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "event",
+							"value": "2",
+							"description": "Id of the event",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/share/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"share",
+						""
+					]
+				},
+				"description": "Save share status of a user for an event."
+			},
+			"response": [
+				{
+					"name": "Create Share",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "event",
+									"value": "2",
+									"description": "Id of the event",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/share/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"share",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Dec 2018 16:26:49 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, DELETE, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "106"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"id\": 2,\n        \"username\": \"burak\",\n        \"first_name\": \"\",\n        \"last_name\": \"\",\n        \"profile_photo\": null\n    },\n    \"event\": 2\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Share",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/share/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"share",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tag List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/tags/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tags",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Tag List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tags/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 07 Nov 2018 20:52:12 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "51"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Music\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Theatre\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Create Vote",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "vote",
+							"value": "U",
+							"description": "**U**(pvote), **D**(ownvote)",
+							"type": "text"
+						},
+						{
+							"key": "content_type",
+							"value": "event",
+							"description": "Type of the item to vote (**comment**, **event** or **user**)",
+							"type": "text"
+						},
+						{
+							"key": "object_id",
+							"value": "1",
+							"description": "Id of the item to vote",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/vote/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"vote",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Vote Event",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "vote",
+									"value": "U",
+									"description": "**U**(pvote), **D**(ownvote)",
+									"type": "text"
+								},
+								{
+									"key": "content_type",
+									"value": "event",
+									"description": "Type of the item to vote (**comment**, **event** or **user**)",
+									"type": "text"
+								},
+								{
+									"key": "object_id",
+									"value": "1",
+									"description": "Id of the item to vote",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/vote/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"vote",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:54:14 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, DELETE, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "56"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"content_type\": \"event\",\n    \"object_id\": 1,\n    \"vote\": \"U\"\n}"
+				},
+				{
+					"name": "Vote User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "vote",
+									"value": "D",
+									"description": "**U**(pvote), **D**(ownvote)",
+									"type": "text"
+								},
+								{
+									"key": "content_type",
+									"value": "user",
+									"description": "Type of the item to vote (**comment**, **event** or **user**)",
+									"type": "text"
+								},
+								{
+									"key": "object_id",
+									"value": "2",
+									"description": "Id of the item to vote",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/vote/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"vote",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:58:14 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, DELETE, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"content_type\": \"user\",\n    \"object_id\": 2,\n    \"vote\": \"D\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Vote",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/vote/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"vote",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Event List",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/events_list/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events_list",
+						""
+					]
+				},
+				"description": "Get list of events with their summarized information."
+			},
+			"response": [
+				{
+					"name": "Get Event List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events_list/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events_list",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 18 Dec 2018 12:05:22 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1901"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 2,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Sanat Art\",\n        \"description\": \"Tüm sanatseverler burada\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 3,\n            \"city\": \"Ankara\",\n            \"district\": \"Ulus\",\n            \"google_place_id\": \"0\",\n            \"name\": \"Müze\",\n            \"lat\": \"41.054636\",\n            \"lng\": \"32.645321\"\n        },\n        \"created\": \"2018-12-18T11:42:37.975193Z\",\n        \"updated\": \"2018-12-18T11:42:37.975530Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 1,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    },\n    {\n        \"id\": 3,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 6,\n            \"city\": \"Istanbul\",\n            \"district\": \"Ulus\",\n            \"google_place_id\": \"0\",\n            \"name\": \"Museum\",\n            \"lat\": \"41.054636\",\n            \"lng\": \"32.645321\"\n        },\n        \"created\": \"2018-12-18T11:47:58.510525Z\",\n        \"updated\": \"2018-12-18T11:47:58.510656Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    },\n    {\n        \"id\": 4,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 7,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"0\",\n            \"name\": \"Reina\",\n            \"lat\": \"41.763245\",\n            \"lng\": \"42.763245\"\n        },\n        \"created\": \"2018-12-18T11:59:09.575290Z\",\n        \"updated\": \"2018-12-18T11:59:09.575315Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Music\"\n            }\n        ]\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get Recommended Event List",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/events_recommended_list/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events_recommended_list",
+						""
+					]
+				},
+				"description": "Get list of events with their summarized information."
+			},
+			"response": [
+				{
+					"name": "Get Recommended Event List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events_recommended_list/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events_recommended_list",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 01 Jan 2019 08:40:17 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1884"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"owner\": {\n            \"id\": 15,\n            \"username\": \"cultidate-user2\",\n            \"first_name\": \"Robot\",\n            \"last_name\": \"Culto\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 1,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-11-26T11:22:36.945986Z\",\n        \"updated\": \"2018-11-26T11:24:18.072134Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Art Gallery\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Festival\"\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"owner\": {\n            \"id\": 16,\n            \"username\": \"cultidate-user3\",\n            \"first_name\": \"Mike\",\n            \"last_name\": \"Swan\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 2,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-11-26T13:50:25.345990Z\",\n        \"updated\": \"2018-11-26T13:50:25.345990Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Art Gallery\"\n            }\n        ]\n    },\n    {\n        \"id\": 3,\n        \"owner\": {\n            \"id\": 16,\n            \"username\": \"cultidate-user3\",\n            \"first_name\": \"Mike\",\n            \"last_name\": \"Swan\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 3,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-11-26T18:26:35.215748Z\",\n        \"updated\": \"2018-11-26T18:26:35.215748Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Art Gallery\"\n            }\n        ]\n    }\n]"
+				},
+				{
+					"name": "Get Recommended Event List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events_recommended_list/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events_recommended_list",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 01 Jan 2019 18:22:22 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "8253"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 24,\n        \"owner\": {\n            \"id\": 3,\n            \"username\": \"mert\",\n            \"first_name\": \"Mert\",\n            \"last_name\": \"Akozcan\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543315945.123539_artf.jpeg\",\n        \"title\": \"My Paintings at Bogazici University\",\n        \"description\": \"Hi I'm an amateur wannabe artist Mert. I have some paintings and want you guys to check it out.\",\n        \"date\": \"2018-12-02T07:34:00Z\",\n        \"price\": \"0.00\",\n        \"location\": {\n            \"id\": 2,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-11-27T10:49:12.876949Z\",\n        \"updated\": \"2019-01-01T18:15:15.753647Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 2,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Music\"\n            },\n            {\n                \"id\": 3,\n                \"name\": \"Local Event\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Theatre\"\n            },\n            {\n                \"id\": 4,\n                \"name\": \"Party\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            },\n            {\n                \"id\": 6,\n                \"name\": \"Contemporary Art\"\n            },\n            {\n                \"id\": 7,\n                \"name\": \"Digital Art\"\n            }\n        ]\n    },\n    {\n        \"id\": 37,\n        \"owner\": {\n            \"id\": 3,\n            \"username\": \"mert\",\n            \"first_name\": \"Mert\",\n            \"last_name\": \"Akozcan\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate testing\",\n        \"description\": \"testing\",\n        \"date\": \"2018-12-11T11:56:09Z\",\n        \"price\": \"23.00\",\n        \"location\": {\n            \"id\": 29,\n            \"city\": \"İstanbul\",\n            \"district\": \"Beşiktaş\",\n            \"google_place_id\": \"fc3ebb6e72cc6e389452928c72669aa6fc12561b\",\n            \"name\": \"Boğaziçi Üniversitesi\",\n            \"lat\": \"41.079910\",\n            \"lng\": \"29.050471\"\n        },\n        \"created\": \"2018-12-11T11:57:36.213504Z\",\n        \"updated\": \"2018-12-11T11:57:36.213542Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Music\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            },\n            {\n                \"id\": 6,\n                \"name\": \"Contemporary Art\"\n            }\n        ]\n    },\n    {\n        \"id\": 27,\n        \"owner\": {\n            \"id\": 87,\n            \"username\": \"incisaglam\",\n            \"first_name\": \"İnci\",\n            \"last_name\": \"Sağlam\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543918544.811195_mehtap.jpeg\",\n        \"title\": \"Mehtap Turunda Fotoğraf Çekimi\",\n        \"description\": \"Mehtap gezileri, yaz tarifesi döneminde yapılmakta olan Şehir Hatları’nın gelenekselleşen bir boğaz turudur. Yaz tarifesinde cumartesi geceleri Bostancı’dan başlayarak Anadolukavağı’na uzanan gezilerimiz, müzik eşliğinde mehtabın unutulmaz keyfini sunmaktadır.\",\n        \"date\": \"2019-06-27T21:00:00Z\",\n        \"price\": \"20.00\",\n        \"location\": {\n            \"id\": 5,\n            \"city\": \"İstanbul\",\n            \"district\": \"Sarıyer\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-12-04T10:15:07.465300Z\",\n        \"updated\": \"2019-01-01T13:04:51.995896Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 1,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 3,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"Local Event\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            },\n            {\n                \"id\": 6,\n                \"name\": \"Contemporary Art\"\n            }\n        ]\n    },\n    {\n        \"id\": 29,\n        \"owner\": {\n            \"id\": 88,\n            \"username\": \"atifemre1\",\n            \"first_name\": \"Atıf\",\n            \"last_name\": \"Yüksel\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543922587.552814_atif.jpg\"\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543923041.598157_hisar1.jpeg\",\n        \"title\": \"Rumelihisari Gezisi\",\n        \"description\": \"let's meet at university. then go together\",\n        \"date\": \"2018-12-07T08:00:00Z\",\n        \"price\": \"0.00\",\n        \"location\": {\n            \"id\": 7,\n            \"city\": \"Istanbul\",\n            \"district\": \"Hisarustu\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-12-04T11:27:18.192675Z\",\n        \"updated\": \"2018-12-07T13:52:08.086014Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 1,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"Local Event\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            }\n        ]\n    },\n    {\n        \"id\": 39,\n        \"owner\": {\n            \"id\": 33,\n            \"username\": \"cerob\",\n            \"first_name\": \"Cero\",\n            \"last_name\": \"Mero\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1544531873.526484_IMG_9982.JPG\",\n        \"title\": \"Social Life in Ottoman History Conference\",\n        \"description\": \"Conference\",\n        \"date\": \"2018-12-19T11:00:00Z\",\n        \"price\": \"-5.00\",\n        \"location\": {\n            \"id\": 31,\n            \"city\": \"İstanbul\",\n            \"district\": \"Fatih\",\n            \"google_place_id\": \"9436c0f786788ece6bc381b99846712edbb37ff5\",\n            \"name\": \"İstanbul Üniversitesi\",\n            \"lat\": \"41.012180\",\n            \"lng\": \"28.962546\"\n        },\n        \"created\": \"2018-12-11T12:00:37.640943Z\",\n        \"updated\": \"2018-12-11T14:54:57.832733Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 2,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 2,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"Local Event\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            }\n        ]\n    },\n    {\n        \"id\": 41,\n        \"owner\": {\n            \"id\": 33,\n            \"username\": \"cerob\",\n            \"first_name\": \"Cero\",\n            \"last_name\": \"Mero\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1544550789.296575_fahrenheit451_774937_b57b0016-05b5-4665-a061-d7124165f54a.jpg\",\n        \"title\": \"Distopya Okumaları - Fahrenheit 451\",\n        \"description\": \"Distopya okumalarında bu kez kitapların olmadığı bir dünyayı tasvir eden Fahretheit 451 kitabını ele alıyoruz. Kitapları çok sevdiğini ve yaşamında zamanının büyük bir kısmını kütüphanelerde geçirdiğini bildiğimiz Ray Bradbury, bizlere kitapların olmadığı bir dünyada sadece eğitimin değil, toplum hafızasının da yok olacağını açık bir şekilde gösteriyor. İlgilenen tüm okuyucuları buluşmamıza bekliyoruz.\",\n        \"date\": \"2019-01-17T15:30:00Z\",\n        \"price\": \"20.00\",\n        \"location\": {\n            \"id\": 33,\n            \"city\": \"İstanbul\",\n            \"district\": \"Beşiktaş\",\n            \"google_place_id\": \"e4b0c730a20ccbef1444933860f7a0734d924dab\",\n            \"name\": \"Boğaziçi University\",\n            \"lat\": \"41.084757\",\n            \"lng\": \"29.051040\"\n        },\n        \"created\": \"2018-12-11T17:43:30.255618Z\",\n        \"updated\": \"2018-12-11T17:53:09.570801Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 6,\n                \"name\": \"Contemporary Art\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            }\n        ]\n    },\n    {\n        \"id\": 40,\n        \"owner\": {\n            \"id\": 33,\n            \"username\": \"cerob\",\n            \"first_name\": \"Cero\",\n            \"last_name\": \"Mero\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1544549619.839387_arkasokaklar599be7628685760ea85ed241.png.jpg\",\n        \"title\": \"Arka Sokaklar 25. Sezon Finali Gösterimi\",\n        \"description\": \"Yedisiyle yetmişiyle herkesin beğenisini kazanan, kah ağlatan kah güldüren sevilen dizinin 25. sezon finalini hep beraber izliyoruz.\",\n        \"date\": \"2024-07-24T17:30:00Z\",\n        \"price\": \"0.00\",\n        \"location\": {\n            \"id\": 32,\n            \"city\": \"Istanbul\",\n            \"district\": \"Beyoğlu\",\n            \"google_place_id\": \"8d5fcd6e482e02b8b609ffa17ee04c69d13c798b\",\n            \"name\": \"Taksim Square\",\n            \"lat\": \"41.037002\",\n            \"lng\": \"28.985092\"\n        },\n        \"created\": \"2018-12-11T17:33:19.005884Z\",\n        \"updated\": \"2018-12-11T17:33:40.312935Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"Local Event\"\n            }\n        ]\n    },\n    {\n        \"id\": 25,\n        \"owner\": {\n            \"id\": 59,\n            \"username\": \"deneme12\",\n            \"first_name\": \"atif\",\n            \"last_name\": \"drogba\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543918875.629745_araguler.jpg\",\n        \"title\": \"Ara Güler Anma Sergisi\",\n        \"description\": \"Taksim Meydanı'nda buluşup Şişhane'deki etkinliğe geçiyoruz.\",\n        \"date\": \"2018-12-01T13:16:43Z\",\n        \"price\": \"12.00\",\n        \"location\": {\n            \"id\": 3,\n            \"city\": \"Gaziantep\",\n            \"district\": \"Nizip\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-12-01T13:17:14.268246Z\",\n        \"updated\": \"2018-12-31T11:30:28.716991Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 1,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    },\n    {\n        \"id\": 36,\n        \"owner\": {\n            \"id\": 99,\n            \"username\": \"realmeric\",\n            \"first_name\": \"Meriç\",\n            \"last_name\": \"Turan\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1544528399.923052_Ekran_Resmi_2017-07-11_16.20.16.png\"\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1544528953.967214_Screen_Shot_2018-12-11_at_14.45.25.png\",\n        \"title\": \"Pop-up for Following Info\",\n        \"description\": \"I want to see what I follow in my profile.\",\n        \"date\": \"2019-01-02T11:46:48Z\",\n        \"price\": \"0.00\",\n        \"location\": {\n            \"id\": 28,\n            \"city\": \"İstanbul\",\n            \"district\": \"Sarıyer\",\n            \"google_place_id\": \"6ae2b78a6300f2b86eb8809bac75f895ec08cd90\",\n            \"name\": \"Bogazici University North Campus\",\n            \"lat\": \"41.085166\",\n            \"lng\": \"29.044626\"\n        },\n        \"created\": \"2018-12-11T11:49:48.509218Z\",\n        \"updated\": \"2018-12-11T12:55:11.168025Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"own_share_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    }\n]"
+				},
+				{
+					"name": "Get Event List",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events_list/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events_list",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 18 Dec 2018 12:05:22 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1901"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 2,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Sanat Art\",\n        \"description\": \"Tüm sanatseverler burada\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 3,\n            \"city\": \"Ankara\",\n            \"district\": \"Ulus\",\n            \"google_place_id\": \"0\",\n            \"name\": \"Müze\",\n            \"lat\": \"41.054636\",\n            \"lng\": \"32.645321\"\n        },\n        \"created\": \"2018-12-18T11:42:37.975193Z\",\n        \"updated\": \"2018-12-18T11:42:37.975530Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 1,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    },\n    {\n        \"id\": 3,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 6,\n            \"city\": \"Istanbul\",\n            \"district\": \"Ulus\",\n            \"google_place_id\": \"0\",\n            \"name\": \"Museum\",\n            \"lat\": \"41.054636\",\n            \"lng\": \"32.645321\"\n        },\n        \"created\": \"2018-12-18T11:47:58.510525Z\",\n        \"updated\": \"2018-12-18T11:47:58.510656Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    },\n    {\n        \"id\": 4,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"featured_image\": null,\n        \"title\": \"Cultidate Party\",\n        \"description\": \"Will be super fun...\",\n        \"date\": \"2018-11-11T14:00:00Z\",\n        \"price\": \"5.99\",\n        \"location\": {\n            \"id\": 7,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"0\",\n            \"name\": \"Reina\",\n            \"lat\": \"41.763245\",\n            \"lng\": \"42.763245\"\n        },\n        \"created\": \"2018-12-18T11:59:09.575290Z\",\n        \"updated\": \"2018-12-18T11:59:09.575315Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 0,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 1,\n                \"name\": \"Music\"\n            }\n        ]\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get Event Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/events/2/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"2",
+						""
+					]
+				},
+				"description": "Get details of an event with their all related information."
+			},
+			"response": [
+				{
+					"name": "Get Event Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events/2/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"2",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Dec 2018 16:36:53 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1431"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"owner\": {\n        \"id\": 1,\n        \"username\": \"cultidate\",\n        \"first_name\": \"Test\",\n        \"last_name\": \"User\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n    },\n    \"featured_image\": null,\n    \"title\": \"Sanat Art\",\n    \"description\": \"Tüm sanatseverler burada\",\n    \"date\": \"2018-11-11T14:00:00Z\",\n    \"price\": \"5.99\",\n    \"location\": {\n        \"id\": 3,\n        \"city\": \"Ankara\",\n        \"district\": \"Ulus\",\n        \"google_place_id\": \"0\",\n        \"name\": \"Müze\",\n        \"lat\": \"41.054636\",\n        \"lng\": \"32.645321\"\n    },\n    \"organizer_url\": \"http://www.biletix.com\",\n    \"created\": \"2018-12-18T11:42:37.975193Z\",\n    \"updated\": \"2018-12-28T16:36:49.033633Z\",\n    \"artists\": [],\n    \"attendance_status\": [\n        {\n            \"id\": 1,\n            \"owner\": {\n                \"id\": 2,\n                \"username\": \"burak\",\n                \"first_name\": \"\",\n                \"last_name\": \"\",\n                \"profile_photo\": null\n            },\n            \"status\": \"Y\"\n        }\n    ],\n    \"own_attendance_status\": {\n        \"id\": 1,\n        \"status\": \"Y\"\n    },\n    \"comments\": [\n        {\n            \"id\": 4,\n            \"owner\": {\n                \"id\": 2,\n                \"username\": \"burak\",\n                \"first_name\": \"\",\n                \"last_name\": \"\",\n                \"profile_photo\": null\n            },\n            \"content\": \"Nice one!...\",\n            \"content_type\": \"event\",\n            \"object_id\": 2,\n            \"created\": \"2018-12-28T16:35:13.600189Z\",\n            \"updated\": \"2018-12-28T16:35:13.600244Z\"\n        }\n    ],\n    \"followers\": [\n        {\n            \"id\": 3,\n            \"owner\": {\n                \"id\": 1,\n                \"username\": \"cultidate\",\n                \"first_name\": \"Test\",\n                \"last_name\": \"User\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n            }\n        }\n    ],\n    \"follower_count\": 1,\n    \"own_follow_status\": null,\n    \"share_status\": [\n        {\n            \"id\": 2,\n            \"owner\": {\n                \"id\": 2,\n                \"username\": \"burak\",\n                \"first_name\": \"\",\n                \"last_name\": \"\",\n                \"profile_photo\": null\n            }\n        }\n    ],\n    \"own_share_status\": {\n        \"id\": 2\n    },\n    \"medias\": [],\n    \"tags\": [],\n    \"vote_count\": 1,\n    \"own_vote\": {\n        \"id\": 2,\n        \"vote\": \"U\"\n    }\n}"
+				},
+				{
+					"name": "Get Event Details (with annotation)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events/25/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"25",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 Dec 2018 17:27:29 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2160"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 25,\n    \"owner\": {\n        \"id\": 59,\n        \"username\": \"deneme12\",\n        \"first_name\": \"atif\",\n        \"last_name\": \"drogba\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n    },\n    \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543918875.629745_araguler.jpg\",\n    \"title\": \"Ara Güler Anma Sergisi\",\n    \"description\": \"Taksim Meydanı'nda buluşup Şişhane'deki etkinliğe geçiyoruz.\",\n    \"date\": \"2018-12-01T13:16:43Z\",\n    \"price\": \"12.00\",\n    \"location\": {\n        \"id\": 3,\n        \"city\": \"Gaziantep\",\n        \"district\": \"Nizip\",\n        \"google_place_id\": \"\",\n        \"name\": \"\",\n        \"lat\": \"0.000000\",\n        \"lng\": \"0.000000\"\n    },\n    \"organizer_url\": \"http://google.com\",\n    \"created\": \"2018-12-01T13:17:14.268246Z\",\n    \"updated\": \"2018-12-04T10:21:16.022636Z\",\n    \"annotations\": [\n        {\n            \"id\": 1,\n            \"owner\": {\n                \"id\": 59,\n                \"username\": \"deneme12\",\n                \"first_name\": \"atif\",\n                \"last_name\": \"drogba\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n            },\n            \"data\": {\n                \"foo\": \"bar\"\n            },\n            \"content_type\": \"event\",\n            \"object_id\": 25,\n            \"created\": \"2018-12-28T17:25:38.019702Z\",\n            \"updated\": \"2018-12-28T17:26:24.486360Z\"\n        }\n    ],\n    \"artists\": [],\n    \"attendance_status\": [\n        {\n            \"id\": 11,\n            \"owner\": {\n                \"id\": 59,\n                \"username\": \"deneme12\",\n                \"first_name\": \"atif\",\n                \"last_name\": \"drogba\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543915678.148842_s.jpeg\"\n            },\n            \"status\": \"M\"\n        },\n        {\n            \"id\": 12,\n            \"owner\": {\n                \"id\": 3,\n                \"username\": \"mert\",\n                \"first_name\": \"Mert\",\n                \"last_name\": \"Akozcan\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n            },\n            \"status\": \"M\"\n        }\n    ],\n    \"own_attendance_status\": {\n        \"id\": 11,\n        \"status\": \"M\"\n    },\n    \"comments\": [\n        {\n            \"id\": 24,\n            \"owner\": {\n                \"id\": 3,\n                \"username\": \"mert\",\n                \"first_name\": \"Mert\",\n                \"last_name\": \"Akozcan\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n            },\n            \"content\": \"I missed this event. Planning to do again?\",\n            \"content_type\": \"event\",\n            \"object_id\": 25,\n            \"created\": \"2018-12-04T10:31:30.507131Z\",\n            \"updated\": \"2018-12-04T10:31:30.507183Z\"\n        }\n    ],\n    \"followers\": [\n        {\n            \"id\": 45,\n            \"owner\": {\n                \"id\": 3,\n                \"username\": \"mert\",\n                \"first_name\": \"Mert\",\n                \"last_name\": \"Akozcan\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n            }\n        }\n    ],\n    \"follower_count\": 1,\n    \"own_follow_status\": null,\n    \"share_status\": [],\n    \"own_share_status\": null,\n    \"medias\": [],\n    \"tags\": [],\n    \"vote_count\": 0,\n    \"own_vote\": {\n        \"id\": 4,\n        \"vote\": \"U\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Cultidate Party\",\n\t\"description\": \"Will be super fun...\",\n\t\"date\": \"2018-11-11T14:00:00Z\",\n\t\"price\": 5.99,\n\t\"organizer_url\": \"http://www.biletix.com\",\n\t\"artists\": [1],\n\t\"location\": {\n\t\t\"city\": \"Istanbul\",\n\t\t\"district\": \"Besiktas\",\n\t\t\"google_place_id\": \"0\",\n\t\t\"name\": \"Reina\",\n\t\t\"lat\": 41.763245,\n\t\t\"lng\": 42.763245\n\t},\n\t\"tags\": [1]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/events/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events",
+						""
+					]
+				},
+				"description": "### Information for related model fields\n\n`artists` : Array of user ids \n\n`tags`    : Array of tag ids "
+			},
+			"response": [
+				{
+					"name": "Create Event",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Cultidate Party\",\n\t\"description\": \"Will be super fun...\",\n\t\"date\": \"2018-11-11T14:00:00Z\",\n\t\"price\": 5.99,\n\t\"organizer_url\": \"http://www.biletix.com\",\n\t\"artists\": [1],\n\t\"location\": {\n\t\t\"city\":\"Istanbul\",\n\t\t\"district\":\"Besiktas\"\n\t},\n\t\"tags\": [1]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/events/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 15:51:11 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "428"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"featured_image\": null,\n    \"title\": \"Cultidate Party\",\n    \"description\": \"Will be super fun...\",\n    \"date\": \"2018-11-11T14:00:00Z\",\n    \"price\": \"5.99\",\n    \"created\": \"2018-11-23T15:51:11.226136Z\",\n    \"updated\": \"2018-11-23T15:51:11.226162Z\",\n    \"organizer_url\": \"http://www.biletix.com\",\n    \"artists\": [\n        1\n    ],\n    \"location\": {\n        \"id\": 1,\n        \"city\": \"Istanbul\",\n        \"district\": \"Besiktas\"\n    },\n    \"tags\": [\n        1\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Edit Event",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"location\": {\n    \t\"city\": \"Istanbul\",\n\t\t\"district\": \"Besiktas\",\n\t\t\"google_place_id\": \"0\",\n\t\t\"name\": \"Reina\",\n\t\t\"lat\": 50.763245,\n\t\t\"lng\": 42.763245\n    }\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/events/5/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"5",
+						""
+					]
+				},
+				"description": "### Information for related model fields\n\n`artists` : Array of user ids \n\n`tags`    : Array of tag ids "
+			},
+			"response": [
+				{
+					"name": "Edit Related Fields Of Event",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"artists\": [2],\n    \"tags\": [1,2],\n    \"location\": {\n    \t\"city\": \"Istanbul\",\n\t\t\"district\": \"Besiktas\",\n\t\t\"google_place_id\": \"0\",\n\t\t\"name\": \"Reina\",\n\t\t\"lat\": 41.763245,\n\t\t\"lng\": 42.763245\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/events/2/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"2",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 16:09:40 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "436"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"featured_image\": null,\n    \"title\": \"Cultidate After Party\",\n    \"description\": \"A fun party!!!\",\n    \"date\": \"2018-12-11T14:00:00Z\",\n    \"price\": \"10.99\",\n    \"created\": \"2018-11-23T16:05:03.080236Z\",\n    \"updated\": \"2018-11-23T16:09:40.154848Z\",\n    \"organizer_url\": \"http://www.ticketmaster.com\",\n    \"artists\": [\n        2\n    ],\n    \"location\": {\n        \"id\": 3,\n        \"city\": \"Istanbul\",\n        \"district\": \"Besiktas\"\n    },\n    \"tags\": [\n        1,\n        2\n    ]\n}"
+				},
+				{
+					"name": "Edit Own Fields Of Event",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Cultidate After Party\",\n\t\"description\": \"A fun party!!!\",\n\t\"date\": \"2018-12-11T14:00:00Z\",\n\t\"price\": \"10.99\",\n\t\"organizer_url\": \"http://www.ticketmaster.com\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/events/2/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"2",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 23 Nov 2018 16:07:54 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "434"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"owner\": {\n        \"username\": \"cultidate-user\",\n        \"first_name\": \"Cultidate\",\n        \"last_name\": \"Master\"\n    },\n    \"featured_image\": null,\n    \"title\": \"Cultidate After Party\",\n    \"description\": \"A fun party!!!\",\n    \"date\": \"2018-12-11T14:00:00Z\",\n    \"price\": \"10.99\",\n    \"created\": \"2018-11-23T16:05:03.080236Z\",\n    \"updated\": \"2018-11-23T16:07:54.240407Z\",\n    \"organizer_url\": \"http://www.ticketmaster.com\",\n    \"artists\": [\n        1\n    ],\n    \"location\": {\n        \"id\": 3,\n        \"city\": \"Istanbul\",\n        \"district\": \"Besiktas\"\n    },\n    \"tags\": [\n        1\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Event",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/events/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Conversations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/conversations_list/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"conversations_list",
+						""
+					]
+				},
+				"description": "Returns all conversations of current user. User is either the owner or the participant of returned conversations. Conversations are returned in descending order according to their update time."
+			},
+			"response": [
+				{
+					"name": "Get Conversations",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/conversations_list/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations_list",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 04 Dec 2018 22:04:31 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1587"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 2,\n        \"owner\": {\n            \"id\": 2,\n            \"username\": \"burak\",\n            \"first_name\": \"\",\n            \"last_name\": \"\",\n            \"profile_photo\": null\n        },\n        \"participant\": {\n            \"id\": 3,\n            \"username\": \"omer\",\n            \"first_name\": \"\",\n            \"last_name\": \"\",\n            \"profile_photo\": null\n        },\n        \"messages\": [\n            {\n                \"id\": 6,\n                \"owner\": {\n                    \"id\": 2,\n                    \"username\": \"burak\",\n                    \"first_name\": \"\",\n                    \"last_name\": \"\",\n                    \"profile_photo\": null\n                },\n                \"receiver\": {\n                    \"id\": 3,\n                    \"username\": \"omer\",\n                    \"first_name\": \"\",\n                    \"last_name\": \"\",\n                    \"profile_photo\": null\n                },\n                \"conversation\": 2,\n                \"content\": \"iyi sen\",\n                \"created\": \"2018-12-04T22:04:20.468125Z\"\n            }\n        ],\n        \"created\": \"2018-12-04T21:38:24.830523Z\",\n        \"updated\": \"2018-12-04T21:38:24.830556Z\"\n    },\n    {\n        \"id\": 1,\n        \"owner\": {\n            \"id\": 1,\n            \"username\": \"cultidate\",\n            \"first_name\": \"Test\",\n            \"last_name\": \"User\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n        },\n        \"participant\": {\n            \"id\": 2,\n            \"username\": \"burak\",\n            \"first_name\": \"\",\n            \"last_name\": \"\",\n            \"profile_photo\": null\n        },\n        \"messages\": [\n            {\n                \"id\": 3,\n                \"owner\": {\n                    \"id\": 1,\n                    \"username\": \"cultidate\",\n                    \"first_name\": \"Test\",\n                    \"last_name\": \"User\",\n                    \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n                },\n                \"receiver\": {\n                    \"id\": 2,\n                    \"username\": \"burak\",\n                    \"first_name\": \"\",\n                    \"last_name\": \"\",\n                    \"profile_photo\": null\n                },\n                \"conversation\": 1,\n                \"content\": \"mrb cnm\",\n                \"created\": \"2018-12-04T21:30:09.280306Z\"\n            },\n            {\n                \"id\": 4,\n                \"owner\": {\n                    \"id\": 2,\n                    \"username\": \"burak\",\n                    \"first_name\": \"\",\n                    \"last_name\": \"\",\n                    \"profile_photo\": null\n                },\n                \"receiver\": {\n                    \"id\": 1,\n                    \"username\": \"cultidate\",\n                    \"first_name\": \"Test\",\n                    \"last_name\": \"User\",\n                    \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n                },\n                \"conversation\": 1,\n                \"content\": \"slm nbr\",\n                \"created\": \"2018-12-04T21:31:43.329080Z\"\n            }\n        ],\n        \"created\": \"2018-12-04T21:14:15.609993Z\",\n        \"updated\": \"2018-12-04T21:14:15.610028Z\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Create Conversation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "participant",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/conversations/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"conversations",
+						""
+					]
+				},
+				"description": "If there is no conversation between current user and participant, a new conversation is created. Else, existing conversation is returned."
+			},
+			"response": [
+				{
+					"name": "Create Conversation",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "participant",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/conversations/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 04 Dec 2018 21:38:24 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "104"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"participant\": 3,\n    \"created\": \"2018-12-04T21:38:24.830523Z\",\n    \"updated\": \"2018-12-04T21:38:24.830556Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Conversation Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/conversations/1/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"conversations",
+						"1",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Conversation Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/conversations/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								"1",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 04 Dec 2018 21:39:02 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1038"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"owner\": {\n        \"id\": 1,\n        \"username\": \"cultidate\",\n        \"first_name\": \"Test\",\n        \"last_name\": \"User\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n    },\n    \"participant\": {\n        \"id\": 2,\n        \"username\": \"burak\",\n        \"first_name\": \"\",\n        \"last_name\": \"\",\n        \"profile_photo\": null\n    },\n    \"messages\": [\n        {\n            \"id\": 3,\n            \"owner\": {\n                \"id\": 1,\n                \"username\": \"cultidate\",\n                \"first_name\": \"Test\",\n                \"last_name\": \"User\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n            },\n            \"receiver\": {\n                \"id\": 2,\n                \"username\": \"burak\",\n                \"first_name\": \"\",\n                \"last_name\": \"\",\n                \"profile_photo\": null\n            },\n            \"conversation\": 1,\n            \"content\": \"mrb cnm\",\n            \"created\": \"2018-12-04T21:30:09.280306Z\"\n        },\n        {\n            \"id\": 4,\n            \"owner\": {\n                \"id\": 2,\n                \"username\": \"burak\",\n                \"first_name\": \"\",\n                \"last_name\": \"\",\n                \"profile_photo\": null\n            },\n            \"receiver\": {\n                \"id\": 1,\n                \"username\": \"cultidate\",\n                \"first_name\": \"Test\",\n                \"last_name\": \"User\",\n                \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543670855.912769_prf.png\"\n            },\n            \"conversation\": 1,\n            \"content\": \"slm nbr\",\n            \"created\": \"2018-12-04T21:31:43.329080Z\"\n        }\n    ],\n    \"created\": \"2018-12-04T21:14:15.609993Z\",\n    \"updated\": \"2018-12-04T21:14:15.610028Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Conversation",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "participant",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/conversations/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"conversations",
+						"1"
+					]
+				},
+				"description": "If there is no conversation between current user and participant, a new conversation is created. Else, existing conversation is returned."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Personal Message",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "receiver",
+							"value": "3",
+							"description": "Id of receiver user",
+							"type": "text"
+						},
+						{
+							"key": "conversation",
+							"value": "2",
+							"description": "Id of conversation",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "iyi sen",
+							"description": "Content of message",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/messages/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"messages",
+						""
+					]
+				},
+				"description": "Conversation must belong to current user and receiver."
+			},
+			"response": [
+				{
+					"name": "Create Personal Message",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "receiver",
+									"value": "3",
+									"description": "Id of receiver user",
+									"type": "text"
+								},
+								{
+									"key": "conversation",
+									"value": "2",
+									"description": "Id of conversation",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "iyi sen",
+									"description": "Content of message",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/messages/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 04 Dec 2018 22:04:20 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "58"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 6,\n    \"receiver\": 3,\n    \"conversation\": 2,\n    \"content\": \"iyi sen\"\n}"
+				}
+			]
+		},
+		{
+			"name": "User Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/users_list/?search=mert",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users_list",
+						""
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "mert"
+						}
+					]
+				},
+				"description": "Users can be searched by `username`, `first_name` and `last_name` fields."
+			},
+			"response": [
+				{
+					"name": "User Search",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/users_list/?search=mert",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users_list",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "mert"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Dec 2018 20:59:46 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "160"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 3,\n        \"username\": \"mert\",\n        \"first_name\": \"Mert\",\n        \"last_name\": \"Akozcan\",\n        \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Event Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/events_list/?search=art",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events_list",
+						""
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "art"
+						}
+					]
+				},
+				"description": "Events can be searched by `title` and `description`fields."
+			},
+			"response": [
+				{
+					"name": "Event Search",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events_list/?search=art",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events_list",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "art"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Dec 2018 21:00:32 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1791"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 27,\n        \"owner\": {\n            \"id\": 87,\n            \"username\": \"incisaglam\",\n            \"first_name\": \"İnci\",\n            \"last_name\": \"Sağlam\",\n            \"profile_photo\": null\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543918544.811195_mehtap.jpeg\",\n        \"title\": \"Mehtap Turunda Fotoğraf Çekimi\",\n        \"description\": \"Mehtap gezileri, yaz tarifesi döneminde yapılmakta olan Şehir Hatları’nın gelenekselleşen bir boğaz turudur. Yaz tarifesinde cumartesi geceleri Bostancı’dan başlayarak Anadolukavağı’na uzanan gezilerimiz, müzik eşliğinde mehtabın unutulmaz keyfini sunmaktadır.\",\n        \"date\": \"2019-06-27T21:00:00Z\",\n        \"price\": \"20.00\",\n        \"location\": {\n            \"id\": 5,\n            \"city\": \"İstanbul\",\n            \"district\": \"Sarıyer\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-12-04T10:15:07.465300Z\",\n        \"updated\": \"2018-12-18T11:39:07.328408Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 1,\n        \"own_follow_status\": null,\n        \"vote_count\": 2,\n        \"own_vote\": null,\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"Local Event\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Cultural\"\n            },\n            {\n                \"id\": 6,\n                \"name\": \"Contemporary Art\"\n            }\n        ]\n    },\n    {\n        \"id\": 24,\n        \"owner\": {\n            \"id\": 3,\n            \"username\": \"mert\",\n            \"first_name\": \"Mert\",\n            \"last_name\": \"Akozcan\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543315945.123539_artf.jpeg\",\n        \"title\": \"My Paintings at Bogazici University\",\n        \"description\": \"Hi I'm an amateur wannabe artist Mert. I have some paintings and want you guys to check it out.\",\n        \"date\": \"2018-12-02T07:34:00Z\",\n        \"price\": \"0.00\",\n        \"location\": {\n            \"id\": 2,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-11-27T10:49:12.876949Z\",\n        \"updated\": \"2018-12-11T13:15:24.897318Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 2,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Event Search By Location",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/events_location/?search=besiktas",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"events_location",
+						""
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "besiktas"
+						}
+					]
+				},
+				"description": "Events can be searched based on location by `city` and `district` fields."
+			},
+			"response": [
+				{
+					"name": "Event Search By Location",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/events_location/?search=besiktas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events_location",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "besiktas"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.9.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Dec 2018 21:03:50 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "787"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 24,\n        \"owner\": {\n            \"id\": 3,\n            \"username\": \"mert\",\n            \"first_name\": \"Mert\",\n            \"last_name\": \"Akozcan\",\n            \"profile_photo\": \"https://cultidate.s3.amazonaws.com/file_1543919033.435785_14350776.jpeg\"\n        },\n        \"featured_image\": \"https://cultidate.s3.amazonaws.com/file_1543315945.123539_artf.jpeg\",\n        \"title\": \"My Paintings at Bogazici University\",\n        \"description\": \"Hi I'm an amateur wannabe artist Mert. I have some paintings and want you guys to check it out.\",\n        \"date\": \"2018-12-02T07:34:00Z\",\n        \"price\": \"0.00\",\n        \"location\": {\n            \"id\": 2,\n            \"city\": \"Istanbul\",\n            \"district\": \"Besiktas\",\n            \"google_place_id\": \"\",\n            \"name\": \"\",\n            \"lat\": \"0.000000\",\n            \"lng\": \"0.000000\"\n        },\n        \"created\": \"2018-11-27T10:49:12.876949Z\",\n        \"updated\": \"2018-12-11T13:15:24.897318Z\",\n        \"own_attendance_status\": null,\n        \"follower_count\": 2,\n        \"own_follow_status\": null,\n        \"vote_count\": 0,\n        \"own_vote\": null,\n        \"tags\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get All Notifications",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/notifications/all/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"notifications",
+						"all",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Notifications",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/notifications/all/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"all",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Tue, 01 Jan 2019 19:39:06 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.6.5"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Origin"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "Content-Length",
+							"value": "113"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"count\": 1,\n    \"notifications\": [\n        {\n            \"id\": 4,\n            \"data\": \"mert followed you!\",\n            \"timestamp\": \"2019-01-01T19:38:53.322Z\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Unread Notifications",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/notifications/unread/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"notifications",
+						"unread",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark All Notifications As Read",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/notifications/mark_as_read/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"notifications",
+						"mark_as_read",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "91ddc718-cda2-412d-8eec-8b9fc036d9f4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a77c3ce3-6a29-4bd3-ac54-d51af305e111",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
